@@ -19,29 +19,30 @@ export const Profile: React.FC = () => {
         {/* Main Content Area */}
         <div className="profile-main-content">
           
-          {/* Top Profile Card */}
-          <Card className="profile-header-card glass">
-            <div className="profile-header-main">
-              <div className="profile-avatar-wrap">
-                <div className="profile-avatar-placeholder">
-                  <User size={60} strokeWidth={1} />
-                </div>
-                <div className="verified-status-tag">
-                  <ShieldCheck size={14} /> VERIFIED PARTNER
+          {/* Premium Profile Card */}
+          <Card className="profile-premium-card glass">
+            <div className="premium-header-top">
+              <div className="premium-identity">
+                <h1 className="main-org-name">McDonald's - VVCE</h1>
+                <div className="premium-badges-row">
+                  <span className="premium-role-badge">PLATINUM DONOR</span>
+                  <span className="premium-id-badge">ID: AS-7742</span>
                 </div>
               </div>
-              <div className="profile-identity">
-                <div className="profile-name-row">
-                  <h1>Akshaya Patra</h1>
-                  <div className="profile-id-group">
-                    <span className="profile-id-badge">
-                      <ShieldCheck size={14} /> ID: AS-7742
-                    </span>
-                    <Button variant="outline" size="sm" className="edit-btn-header">Edit Profile</Button>
-                  </div>
-                </div>
-                <p className="profile-joined-text">Registered as a Platinum Donor since April 2025</p>
+              <div className="premium-avatar-box">
+                <div className="mcd-logo-placeholder">M</div>
               </div>
+            </div>
+            <div className="premium-header-bottom">
+              <div className="premium-meta-info">
+                <div className="meta-info-item">
+                  <ShieldCheck size={16} /> Verified Partner
+                </div>
+                <div className="meta-info-item">
+                  <Clock size={16} /> Joined April 2025
+                </div>
+              </div>
+              <Button variant="outline" size="sm" className="premium-edit-btn">Edit Profile</Button>
             </div>
           </Card>
 
