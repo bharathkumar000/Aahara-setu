@@ -19,8 +19,7 @@ export const Navbar: React.FC = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <span className="logo-emoji">🌱</span>
-          <span className="gradient-text">CFRN</span>
+          <img src="/logo.png" alt="Aahara Setu" className="navbar-logo-img" />
         </Link>
         <div className="navbar-links">
           {navLinks.map((link) => (
