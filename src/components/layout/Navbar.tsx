@@ -12,14 +12,17 @@ export const Navbar: React.FC = () => {
     { name: 'Donate', path: '/upload', icon: <Upload size={18} /> },
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
     { name: 'Alerts', path: '/notifications', icon: <Bell size={18} /> },
-    { name: 'Feedback', path: '/feedback', icon: <Star size={18} /> },
+    { name: 'Profile', path: '/profile', icon: <Star size={18} /> },
   ];
+
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
           <img src="/logo.png" alt="Aahara Setu" className="navbar-logo-img" />
+          <span className="logo-text">Aahara Setu</span>
         </Link>
         <div className="navbar-links">
           {navLinks.map((link) => (
@@ -32,6 +35,11 @@ export const Navbar: React.FC = () => {
               <span>{link.name}</span>
             </Link>
           ))}
+          {!isAuthenticated && (
+            <Link to="/login" className="nav-login-btn">
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
