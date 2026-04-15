@@ -4,6 +4,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { Input } from '../../components/ui/Input/Input';
 import { Select } from '../../components/ui/Select/Select';
 import { MapPin, CheckSquare, Square } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
 import './Upload.css';
 
 const SAFETY_CHECKLIST = [
@@ -18,11 +19,12 @@ const FSSAI_STORAGE_KEY = 'aahara_setu_fssai_id';
 
 const FOOD_CATEGORIES = [
   { value: 'Main Course', label: 'Main Course' },
-  { value: 'Bakery', label: 'Bakery' },
-  { value: 'Dessert', label: 'Dessert' },
-  { value: 'Healthy / Salad', label: 'Healthy / Salad' },
-  { value: 'Snacks', label: 'Snacks' },
-  { value: 'Beverages', label: 'Beverages' },
+  { value: 'Fast Food', label: 'Fast Food' },
+  { value: 'Bakery & Sweets', label: 'Bakery & Sweets' },
+  { value: 'Beverages (Juices, Water, Soda)', label: 'Beverages (Juices, Water, Soda)' },
+  { value: 'Packaged Snacks (Biscuits, Chocolates)', label: 'Packaged Snacks (Biscuits, Chocolates)' },
+  { value: 'Fresh Fruits & Vegetables', label: 'Fresh Fruits & Vegetables' },
+  { value: 'Groceries & Staples', label: 'Groceries & Staples' },
   { value: 'Mixed / Other', label: 'Mixed / Other' },
 ];
 
@@ -88,14 +90,39 @@ export const Upload: React.FC = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [itemName, setItemName] = useState('');
+  const [itemQty, setItemQty] = useState('');
+  const [expiry, setExpiry] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!allChecked) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    try {
+      const { error } = await supabase
+        .from('food_listings')
+        .insert([{
+          name: itemName,
+          donor: 'Gaurav Sweets', // Demo donor name
+          category: category,
+          quantity: `${itemQty} ${unit}`,
+          expires_in: expiry,
+          dietary: dietary,
+          address: address,
+          urgency_level: 'high',
+          urgency_score: 95
+        }]);
+
+      if (error) throw error;
+      
       setSubmitted(true);
-    }, 1500);
+    } catch (error) {
+      console.error('Error uploading:', error);
+      alert('Upload failed. Check console for details.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -175,7 +202,13 @@ export const Upload: React.FC = () => {
             <h3 className="card-section-title">📦 Item Information</h3>
             <form onSubmit={handleSubmit} className="upload-form">
               <div className="form-group">
-                <Input label="What are you rescued today?" placeholder="e.g., 20 Meal Kits, 5kg Fresh Fruit" required />
+                <Input 
+                  label="What are you rescued today?" 
+                  placeholder="e.g., 20 Meal Kits, 5kg Fresh Fruit" 
+                  required 
+                  value={itemName}
+                  onChange={(e) => setItemName(e.target.value)}
+                />
               </div>
 
               <div className="form-row">
@@ -191,7 +224,16 @@ export const Upload: React.FC = () => {
                 <div className="form-group">
                   <label className="input-label">Quantity Assessment</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <input type="number" className="input-field" placeholder="Qty" min="1" required style={{ width: '90px' }} />
+                    <input 
+                      type="number" 
+                      className="input-field" 
+                      placeholder="Qty" 
+                      min="1" 
+                      required 
+                      style={{ width: '90px' }} 
+                      value={itemQty}
+                      onChange={(e) => setItemQty(e.target.value)}
+                    />
                     <div style={{ flex: 1 }}>
                       <Select 
                         options={[
@@ -199,6 +241,8 @@ export const Upload: React.FC = () => {
                           { value: 'kg', label: 'kg' },
                           { value: 'liters', label: 'liters' },
                           { value: 'pieces', label: 'pieces' },
+                          { value: 'packets', label: 'packets' },
+                          { value: 'bottles', label: 'bottles' },
                         ]} 
                         value={unit} 
                         onChange={setUnit} 
@@ -210,7 +254,13 @@ export const Upload: React.FC = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <Input label="Calculated Expiry" type="datetime-local" required />
+                  <Input 
+                    label="Calculated Expiry" 
+                    type="datetime-local" 
+                    required 
+                    value={expiry}
+                    onChange={(e) => setExpiry(e.target.value)}
+                  />
                 </div>
                 <div className="form-group">
                   <Select 

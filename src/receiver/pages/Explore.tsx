@@ -3,7 +3,10 @@ import { Card } from '../../donor/components/ui/Card/Card';
 import { Button } from '../../donor/components/ui/Button/Button';
 import { Search, Map as MapIcon, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
 import '../styles/Explore.css';
+
+import { useEffect } from 'react';
 
 interface FoodItem {
   id: string;
@@ -33,15 +36,15 @@ const MOCK_FOOD_ITEMS: FoodItem[] = [
   },
   {
     id: 'f2',
-    name: 'Paneer Butter Masala',
-    donor: "Haliram's",
-    category: 'North Indian',
-    quantity: '20 portions',
-    expiresIn: '45 mins',
-    distance: '0.4 km',
-    demand: 'Very High',
-    urgencyScore: 92,
-    urgencyLevel: 'high'
+    name: 'Orange Juice Bottles',
+    donor: "FreshPress Juices",
+    category: 'Beverages',
+    quantity: '12 bottles',
+    expiresIn: '4 hours',
+    distance: '1.5 km',
+    demand: 'High',
+    urgencyScore: 70,
+    urgencyLevel: 'medium'
   },
   {
     id: 'f3',
@@ -57,15 +60,15 @@ const MOCK_FOOD_ITEMS: FoodItem[] = [
   },
   {
     id: 'f4',
-    name: 'Mixed Veg Sandwiches',
-    donor: 'Subway',
-    category: 'Snacks',
-    quantity: '10 units',
-    expiresIn: '2 hours',
-    distance: '1.2 km',
+    name: 'Marie Gold Biscuits',
+    donor: 'More Retail Store',
+    category: 'Packaged Snacks',
+    quantity: '25 packets',
+    expiresIn: '6 months',
+    distance: '2.1 km',
     demand: 'Medium',
-    urgencyScore: 65,
-    urgencyLevel: 'medium'
+    urgencyScore: 20,
+    urgencyLevel: 'low'
   },
   {
     id: 'f5',
@@ -84,15 +87,69 @@ const MOCK_FOOD_ITEMS: FoodItem[] = [
 export const Explore: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
+  const [foodItems, setFoodItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
 
-  const filteredItems = MOCK_FOOD_ITEMS.filter(item => {
+  useEffect(() => {
+    // 1. Fetch existing items
+    const fetchItems = async () => {
+      const { data, error } = await supabase
+        .from('food_listings')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (data) {
+        const formatted = data.map((d: any) => ({
+          id: d.id,
+          name: d.name,
+          donor: d.donor,
+          category: d.category,
+          quantity: d.quantity,
+          expiresIn: d.expires_in,
+          distance: d.distance,
+          demand: d.demand,
+          urgencyScore: d.urgency_score,
+          urgencyLevel: d.urgency_level
+        }));
+        setFoodItems([...formatted, ...MOCK_FOOD_ITEMS]);
+      }
+    };
+
+    fetchItems();
+
+    // 2. Subscribe to real-time updates
+    const channel = supabase
+      .channel('realtime_food')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'food_listings' }, (payload) => {
+        const newItem = payload.new as any;
+        const formatted: FoodItem = {
+          id: newItem.id,
+          name: newItem.name,
+          donor: newItem.donor,
+          category: newItem.category,
+          quantity: newItem.quantity,
+          expiresIn: newItem.expires_in,
+          distance: newItem.distance,
+          demand: newItem.demand,
+          urgencyScore: newItem.urgency_score,
+          urgencyLevel: newItem.urgency_level
+        };
+        setFoodItems(prev => [formatted, ...prev]);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const filteredItems = foodItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.donor.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = activeFilter === 'all' || item.urgencyLevel === activeFilter;
     return matchesSearch && matchesFilter;
   });
 
-  const highUrgencyCount = MOCK_FOOD_ITEMS.filter(i => i.urgencyLevel === 'high').length;
+  const highUrgencyCount = foodItems.filter(i => i.urgencyLevel === 'high').length;
 
   return (
     <div className="explore-container">
