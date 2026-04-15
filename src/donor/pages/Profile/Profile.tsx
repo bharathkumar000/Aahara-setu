@@ -62,7 +62,7 @@ export const Profile: React.FC = () => {
                   <Clock size={16} /> Joined April 2025
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="premium-edit-btn" onClick={handleEditProfile}>Edit Profile</Button>
+              <Button variant="outline" size="sm" className="premium-edit-btn" onClick={handleEditProfile}>{t('edit_profile')}</Button>
             </div>
           </Card>
 
@@ -80,9 +80,9 @@ export const Profile: React.FC = () => {
                 <div className="trust-progress-fill" style={{ width: `${trustScore}%` }}></div>
               </div>
               <div className="trust-progress-labels">
-                <span>Rookie</span>
-                <span>Trusted</span>
-                <span>Champion</span>
+                <span>{t('rookie')}</span>
+                <span>{t('trusted')}</span>
+                <span>{t('champion')}</span>
               </div>
             </div>
           </Card>
@@ -91,7 +91,7 @@ export const Profile: React.FC = () => {
           <Card className="recent-timeline-card glass main-timeline-fix">
             <div className="timeline-header-row">
               <Clock size={18} />
-              <h3>Recent Contribution Activity</h3>
+              <h3>{t('recent_activity')}</h3>
             </div>
             <div className="timeline-items">
               <div className="timeline-item">
@@ -118,22 +118,22 @@ export const Profile: React.FC = () => {
 
           {/* Quick Actions & Meta (Moved below AI Trust Score) */}
           <div className="profile-meta-section">
-            <h4 className="meta-title">Organization Details</h4>
+            <h4 className="meta-title">{t('org_details')}</h4>
             <div className="meta-grid">
               <div className="meta-item">
-                <span className="meta-lbl">Type</span>
+                <span className="meta-lbl">{t('org_type')}</span>
                 <span className="meta-val">Platinum Partner (NGO)</span>
               </div>
               <div className="meta-item">
-                <span className="meta-lbl">Contact</span>
+                <span className="meta-lbl">{t('contact')}</span>
                 <span className="meta-val">+91 98765 43210</span>
               </div>
               <div className="meta-item">
-                <span className="meta-lbl">HQ Location</span>
+                <span className="meta-lbl">{t('location')}</span>
                 <span className="meta-val">Indiranagar, Bengaluru</span>
               </div>
               <div className="meta-item">
-                <span className="meta-lbl">FSSAI License</span>
+                <span className="meta-lbl">{t('fssai_license')}</span>
                 {isEditingFssai ? (
                   <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                     <input 
@@ -161,27 +161,27 @@ export const Profile: React.FC = () => {
           
           {/* Impact Summary */}
           <Card className="impact-summary-card glass">
-            <h3>Impact Summary</h3>
+            <h3>{t('impact_summary')}</h3>
             <div className="impact-summary-list">
               <div className="summary-item">
                 <div className="summary-icon meals"><Zap size={20} /></div>
                 <div className="summary-details">
                   <span className="summary-val">124</span>
-                  <span className="summary-lbl">Meals Provided</span>
+                  <span className="summary-lbl">{t('meals_provided')}</span>
                 </div>
               </div>
               <div className="summary-item">
                 <div className="summary-icon co2"><Activity size={20} /></div>
                 <div className="summary-details">
                   <span className="summary-val">4.2t</span>
-                  <span className="summary-lbl">CO2 Saved</span>
+                  <span className="summary-lbl">{t('co2_reduced')}</span>
                 </div>
               </div>
               <div className="summary-item">
                 <div className="summary-icon kindness"><Award size={20} /></div>
                 <div className="summary-details">
                   <span className="summary-val">12k</span>
-                  <span className="summary-lbl">Kindness Pts</span>
+                  <span className="summary-lbl">{t('kindness_pts')}</span>
                 </div>
               </div>
             </div>
@@ -197,7 +197,7 @@ export const Profile: React.FC = () => {
           {/* Organization Details was moved to main-content */}
 
           <div className="profile-badges-section">
-            <h4 className="meta-title">Achievements</h4>
+            <h4 className="meta-title">{t('achievements')}</h4>
             <div className="badges-flex">
               <div className="mini-badge" title="Fast Responder">⚡</div>
               <div className="mini-badge" title="Eco Warrior">🌱</div>
@@ -225,7 +225,7 @@ export const Profile: React.FC = () => {
           </Card>
 
           <Button variant="primary" className="profile-signout-btn" onClick={() => { localStorage.clear(); window.location.href = '/'; }}>
-            <LogOut size={16} /> SIGN OUT
+            <LogOut size={16} /> {t('sign_out')}
           </Button>
 
         </div>

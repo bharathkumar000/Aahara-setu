@@ -73,12 +73,19 @@ export const Dashboard: React.FC = () => {
     { id: 'AS-2025-02', type: 'Community Hero', date: 'March 2025', desc: 'Fed 1,200 children' },
   ];
 
-  const handleGenerateReport = () => {
+  const handleDownloadCert = (certName: string) => {
     setIsGenerating(true);
+    // Simulate generation/processing
     setTimeout(() => {
+      const link = document.createElement('a');
+      link.href = '/certificates/base.png';
+      link.download = `${certName.replace(/\s+/g, '_')}_Aahara_Setu_Certificate.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       setIsGenerating(false);
-      alert('Generating High-Resolution Impact Certificate... Your 2024 Summary is ready for LinkedIn!');
-    }, 2000);
+      alert('Your Official Impact Certificate has been downloaded! You can now share it on LinkedIn.');
+    }, 1500);
   };
 
   return (
@@ -190,6 +197,7 @@ export const Dashboard: React.FC = () => {
             </Card>
           </div>
 
+
           <Card className="heatmap-card">
             <div className="chart-header">
               <h3><MapPin size={18} /> Hunger vs Surplus Heatmap</h3>
@@ -272,7 +280,7 @@ export const Dashboard: React.FC = () => {
             <h2>Your Impact Journey</h2>
             <Button 
               className="generate-report-btn" 
-              onClick={handleGenerateReport}
+              onClick={() => handleDownloadCert('2024_Impact_Report')}
               disabled={isGenerating}
             >
               <Download size={18} /> {isGenerating ? 'Generating...' : 'Generate 2024 Impact Report'}
@@ -292,8 +300,12 @@ export const Dashboard: React.FC = () => {
                   <div className="cert-meta">
                     <span>{cert.date}</span>
                     <div className="cert-btns">
-                      <Button size="sm" variant="outline"><Share2 size={14} /></Button>
-                      <Button size="sm" variant="outline"><Download size={14} /></Button>
+                      <Button size="sm" variant="outline" onClick={() => alert('Feature coming soon: Sharing directly to LinkedIn!')}>
+                        <Star size={14} />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleDownloadCert(cert.type)}>
+                        <Download size={14} />
+                      </Button>
                     </div>
                   </div>
                 </div>

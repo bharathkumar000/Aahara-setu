@@ -134,33 +134,29 @@ export const Upload: React.FC = () => {
 
   if (!fssaiId) {
     return (
-      <div className="upload-container">
-        <div className="verification-required-state" style={{ 
-          maxWidth: '600px', margin: '80px auto', textAlign: 'center' 
-        }}>
-          <Card className="verification-card glass-card hover-lift" style={{ padding: '60px', borderRadius: '40px' }}>
-            <div style={{ fontSize: '5rem', marginBottom: '32px' }}>🔒</div>
-            <h2 className="gradient-text" style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '20px' }}>License Required</h2>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', marginBottom: '40px', lineHeight: '1.6' }}>
+      <div className="upload-container force-single-page">
+        <div className="verification-side-layout">
+          <div className="verification-info-side">
+            <div className="lock-icon-premium">🔒</div>
+            <h2 className="gradient-text">License Required</h2>
+            <p className="verification-desc">
               To ensure public safety, all donors must provide a verified **FSSAI License ID** before initiating a food rescue listing.
             </p>
-            
-            <div style={{ 
-              background: 'rgba(0,0,0,0.03)', padding: '32px', borderRadius: '24px', 
-              textAlign: 'left', marginBottom: '40px' 
-            }}>
-              <h4 style={{ marginBottom: '16px', color: 'var(--color-primary)' }}>Why is this needed?</h4>
-              <ul style={{ paddingLeft: '24px', color: 'var(--color-text)' }}>
-                <li style={{ marginBottom: '12px' }}>Indian Food Safety Compliance (FSSAI)</li>
-                <li style={{ marginBottom: '12px' }}>Builds trust with matched NGOs and shelters</li>
-                <li>Full legal traceability for every batch</li>
+          </div>
+          
+          <div className="verification-action-side">
+            <div className="why-box-premium">
+              <h4>Why is this needed?</h4>
+              <ul>
+                <li><span>🇮🇳</span> Indian Food Safety Compliance</li>
+                <li><span>🤝</span> Builds trust with NGOs & shelters</li>
+                <li><span>🛡️</span> Full legal traceability for every batch</li>
               </ul>
             </div>
-
-            <Button onClick={() => window.location.href = '/profile'} fullWidth size="lg" style={{ height: '64px', fontSize: '1.1rem' }}>
+            <Button onClick={() => window.location.href = '/profile'} fullWidth size="lg" className="activate-license-btn">
               ACTIVATE DONOR LICENSE
             </Button>
-          </Card>
+          </div>
         </div>
       </div>
     );

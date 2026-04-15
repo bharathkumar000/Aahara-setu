@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
               <span>{link.name}</span>
             </Link>
           ))}
-          
+
           {/* Language Switcher MAGIC TOGGLE */}
           <div className="lang-switcher-wrap">
             <Globe size={16} className="lang-icon" />
