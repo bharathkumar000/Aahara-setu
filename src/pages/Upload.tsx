@@ -200,7 +200,7 @@ export const Upload: React.FC = () => {
           <Card className="volunteer-card">
             <h4>🚚 Need Pickup Help?</h4>
             <p>We can connect you with nearby volunteers or delivery partners for hassle-free pickup.</p>
-            <Button variant="outline" size="sm">Request Volunteer</Button>
+            <Button variant="outline" size="sm" onClick={() => alert('Broadcasting request to local volunteer network...')}>Request Volunteer</Button>
           </Card>
         </div>
       </div>

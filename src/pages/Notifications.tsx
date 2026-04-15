@@ -145,7 +145,7 @@ export const Notifications: React.FC = () => {
                   <p className="notif-message">{n.message}</p>
                   {n.type === 'urgent' && (
                     <div className="notif-action-row">
-                      <Button size="sm">
+                      <Button size="sm" onClick={(e) => { e.stopPropagation(); alert(`Navigating to claim for: ${n.title}`); }}>
                         <MapPin size={14} /> Claim Now
                       </Button>
                     </div>

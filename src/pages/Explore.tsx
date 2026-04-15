@@ -104,7 +104,7 @@ export const Explore: React.FC = () => {
             </button>
           ))}
         </div>
-        <Button variant="glass" className="map-btn">
+        <Button variant="glass" className="map-btn" onClick={() => alert('Interactive Map View is loading...')}>
           <MapPin size={16} /> Map View
         </Button>
       </div>
