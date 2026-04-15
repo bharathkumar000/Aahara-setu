@@ -63,6 +63,8 @@ export const Explore: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   const [items, setItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
   const [claimedIds, setClaimedIds] = useState<string[]>([]);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
+  const [claimQuantity, setClaimQuantity] = useState<string>('');
 
   const filteredItems = items.filter(item => {
     const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -71,12 +73,50 @@ export const Explore: React.FC = () => {
     return matchSearch && matchFilter && !claimedIds.includes(item.id);
   });
 
-  const handleClaim = (id: string) => {
-    setClaimedIds(prev => [...prev, id]);
+  const handleConfirmClaim = () => {
+    if (selectedFoodId) {
+      setClaimedIds(prev => [...prev, selectedFoodId]);
+      setSelectedFoodId(null);
+      // Simulating a success toast or notification
+      alert(`Claim confirmed for ${claimQuantity || 'selected quantity'}! The donor has been notified.`);
+    }
   };
+
+  const selectedFood = items.find(i => i.id === selectedFoodId);
 
   return (
     <div className="explore-container">
+      {/* Dynamic Pop-up Modal for Claiming */}
+      {selectedFood && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+          <Card className="glass" style={{ maxWidth: '400px', width: '90%', padding: '24px', position: 'relative' }}>
+            <h2 style={{ marginBottom: '16px', fontSize: '1.4rem' }}>Claim Donation</h2>
+            
+            <div style={{ marginBottom: '16px', fontSize: '0.95rem', color: 'var(--color-text-muted)', background: 'rgba(0,0,0,0.05)', padding: '12px', borderRadius: '8px' }}>
+              <p style={{ marginBottom: '4px' }}><strong>Donor:</strong> {selectedFood.donor}</p>
+              <p style={{ marginBottom: '4px' }}><strong>Item:</strong> {selectedFood.name}</p>
+              <p><strong>Available:</strong> {selectedFood.quantity}</p>
+            </div>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600, color: 'var(--color-text)' }}>How much quantity do you need?</label>
+              <input 
+                type="text" 
+                value={claimQuantity} 
+                onChange={(e) => setClaimQuantity(e.target.value)} 
+                placeholder="e.g., 5 portions, or 'all'" 
+                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--color-secondary-light)', background: 'var(--color-bg)', color: 'var(--color-text)', fontSize: '1rem' }}
+                autoFocus
+              />
+            </div>
+            
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <Button onClick={() => setSelectedFoodId(null)} variant="outline" style={{ flex: 1 }}>Cancel</Button>
+              <Button onClick={handleConfirmClaim} style={{ flex: 1 }}>Confirm Claim</Button>
+            </div>
+          </Card>
+        </div>
+      )}
       <div className="explore-header">
         <h1 className="page-title">Find Food <span className="gradient-text">Nearby</span></h1>
         <p className="page-subtitle">Real-time surplus food available, sorted by urgency. Claim before it expires!</p>
@@ -169,7 +209,7 @@ export const Explore: React.FC = () => {
                 </div>
               </div>
 
-              <Button fullWidth onClick={() => handleClaim(item.id)}>
+              <Button fullWidth onClick={() => { setSelectedFoodId(item.id); setClaimQuantity(''); }}>
                 Claim Now
               </Button>
             </Card>
