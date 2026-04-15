@@ -112,14 +112,36 @@ export const Receiver: React.FC = () => {
     setSelectedImages([]);
   };
 
+  const [demands, setDemands] = useState([
+    { id: 'd1', item: 'Rice & Sambar', priority: 'High', status: 'monitoring' },
+    { id: 'd2', item: 'Baby Food', priority: 'Critical', status: 'matched' }
+  ]);
+  const [newDemand, setNewDemand] = useState('');
+
+  const handleAddDemand = () => {
+    if (!newDemand.trim()) return;
+    const demand = {
+      id: Math.random().toString(36).substr(2, 9),
+      item: newDemand,
+      priority: 'High',
+      status: 'monitoring'
+    };
+    setDemands(prev => [demand, ...prev]);
+    setNewDemand('');
+  };
+
+  const matchedDemand = demands.find(d => d.status === 'matched');
+
   return (
     <div className="receiver-dashboard-container">
+      {/* ... header ... */}
       <div className="receiver-header">
         <h1 className="page-title">Receiver <span className="gradient-text">Dashboard</span></h1>
-        <p className="page-subtitle">Welcome back, Hope Shelter! Validate your deliveries and track orders here.</p>
+        <p className="page-subtitle">Welcome back, Hope Shelter! Manage your rescues and set priority demands.</p>
       </div>
 
-      {/* Account Status Banners */}
+      {/* Account Status Banners ... */}
+      {/* (keeping current logic) */}
       {accountLocked && (
         <>
           {requiresProof ? (
@@ -164,7 +186,6 @@ export const Receiver: React.FC = () => {
         </div>
       )}
 
-
       <div className="receiver-kpi-grid">
         <Card className="kpi-card">
           <div className="kpi-icon-row">
@@ -182,73 +203,108 @@ export const Receiver: React.FC = () => {
         </Card>
         <Card className="kpi-card">
           <div className="kpi-icon-row">
-            <div className="kpi-icon text-danger bg-danger-light"><Camera size={22} /></div>
+            <div className="kpi-icon text-primary bg-primary-light"><Zap size={22} /></div>
           </div>
-          <div className="kpi-value">{items.proofs.length}</div>
-          <div className="kpi-label">Pending Proofs</div>
+          <div className="kpi-value">{demands.length}</div>
+          <div className="kpi-label">Priority Demands</div>
         </Card>
       </div>
 
       <div className="claims-section">
         <div className="claims-tabs">
-          <button 
-            className={`claims-tab ${activeTab === 'active' ? 'active' : ''}`} 
-            onClick={() => setActiveTab('active')}
-          >
-            Food Listings
+          <button className={`claims-tab ${activeTab === 'active' ? 'active' : ''}`} onClick={() => setActiveTab('active')}>Food Listings</button>
+          <button className={`claims-tab ${activeTab === 'pending_proofs' ? 'active' : ''}`} onClick={() => setActiveTab('pending_proofs')}>
+            Proof Required {items.proofs.length > 0 && <span className="tab-badge">{items.proofs.length}</span>}
           </button>
-          <button 
-            className={`claims-tab ${activeTab === 'pending_proofs' ? 'active' : ''}`} 
-            onClick={() => setActiveTab('pending_proofs')}
-          >
-            Proof Required
-             {items.proofs.length > 0 && <span className="tab-badge">{items.proofs.length}</span>}
-          </button>
-          <button 
-            className={`claims-tab ${activeTab === 'history' ? 'active' : ''}`} 
-            onClick={() => setActiveTab('history')}
-          >
-            Completed History
-          </button>
-          <button 
-            className={`claims-tab ai-match-tab ${activeTab === 'ai_match' ? 'active' : ''}`} 
-            onClick={() => setActiveTab('ai_match')}
-          >
+          <button className={`claims-tab ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>Completed History</button>
+          <button className={`claims-tab ai-match-tab ${activeTab === 'ai_match' ? 'active' : ''}`} onClick={() => setActiveTab('ai_match')}>
             <Zap size={14} /> Aahara AI Match
-            <span className="tab-badge pulse-badge">1</span>
+            <span className="tab-badge pulse-badge">{demands.filter(d => d.status === 'matched').length + 1}</span>
           </button>
         </div>
 
         <div className="claims-list">
           {activeTab === 'ai_match' ? (
-            <div className="ai-match-view">
-              <Card className="ai-discovery-card glass">
+            <div className="ai-match-container">
+               {/* 1. Demand Management Area */}
+               <Card className="demand-management-card glass">
+                  <div className="demand-header">
+                    <h4><Utensils size={18} /> SET PRIORITY DEMANDS</h4>
+                    <p>Tell Aahara AI what you need most. We'll notify you instantly when a match is listed.</p>
+                  </div>
+                  <div className="add-demand-row">
+                    <input 
+                       type="text" 
+                       placeholder="e.g. Rice & Sambar, Milk, Biscuits..." 
+                       value={newDemand}
+                       onChange={(e) => setNewDemand(e.target.value)}
+                       onKeyDown={(e) => e.key === 'Enter' && handleAddDemand()}
+                    />
+                    <Button onClick={handleAddDemand} size="sm">Add Demand</Button>
+                  </div>
+                  <div className="active-demands-pills">
+                    {demands.map(d => (
+                       <div key={d.id} className={`demand-pill ${d.status}`}>
+                          <span className="p-dot" /> {d.item}
+                          <button className="remove-p" onClick={() => setDemands(prev => prev.filter(x => x.id !== d.id))}>×</button>
+                       </div>
+                    ))}
+                  </div>
+               </Card>
+
+               {/* 2. MATCHED DEMAND ALERTS */}
+               {matchedDemand && (
+                  <Card className="ai-discovery-card matched-alert animate-pulse-border">
+                    <div className="ai-discovery-header">
+                       <div className="ai-tag urgency-critical">DEMAND MATCH FOUND!</div>
+                       <h3>Targeted Supply Found: {matchedDemand.item}</h3>
+                    </div>
+                    <div className="match-visual-row">
+                       <div className="match-item-bubble highlight">
+                          <span className="bubble-label">Your Demand</span>
+                          <p>{matchedDemand.item}</p>
+                       </div>
+                       <div className="match-connector"><Zap size={24} className="text-warning" /></div>
+                       <div className="match-item-bubble success">
+                          <span className="bubble-label">Available Now</span>
+                          <p>Baskin & Scones</p>
+                       </div>
+                    </div>
+                    <p className="ai-suggestion-text">
+                       A matching item for your priority demand <strong>"{matchedDemand.item}"</strong> was just listed 
+                       by <strong>Baskin & Scones</strong> (0.8km away). Claim it now before others!
+                    </p>
+                    <Button fullWidth className="btn-claim-matched">Claim Early (Priority Access)</Button>
+                  </Card>
+               )}
+
+               {/* 3. Existing Smart Pairs */}
+               <Card className="ai-discovery-card glass" style={{ marginTop: '20px' }}>
                 <div className="ai-discovery-header">
                   <div className="ai-tag">SMART BUNDLE READY</div>
-                  <h3>We found a perfect pairing!</h3>
+                  <h3>Complementary Pairing Found!</h3>
                 </div>
+                {/* ... same visual row as before ... */}
                 <div className="match-visual-row">
-                  <div className="match-item-bubble">
-                    <span className="bubble-label">You Claimed</span>
-                    <p>Rice</p>
-                  </div>
-                  <div className="match-connector">
-                    <Zap size={20} className="text-warning" />
-                  </div>
-                  <div className="match-item-bubble highlight">
-                    <span className="bubble-label">AI Suggests</span>
-                    <p>Sambar</p>
-                  </div>
+                   <div className="match-item-bubble">
+                      <span className="bubble-label">You Claimed</span>
+                      <p>Rice</p>
+                   </div>
+                   <div className="match-connector"><Zap size={20} className="text-warning" /></div>
+                   <div className="match-item-bubble highlight">
+                      <span className="bubble-label">AI Suggests</span>
+                      <p>Sambar</p>
+                   </div>
                 </div>
                 <p className="ai-suggestion-text">
-                  Distributing <strong>Rice</strong> alone often leads to lower satisfaction. 
-                  A donor just listed <strong>Mixed Vegetable Sambar</strong> 0.6km away. 
-                  Claiming them together increases your impact score by <strong>+45%</strong>.
+                  A donor just listed <strong>Mixed Vegetable Sambar</strong> nearby. 
+                  Pairing this with your rice increases impact score by <strong>+45%</strong>.
                 </p>
-                <Button fullWidth className="ai-primary-btn">Claim Matching Sambar Now</Button>
+                <Button fullWidth variant="outline">Claim Matching Item</Button>
               </Card>
             </div>
-          ) : displayItems.length === 0 ? (
+          ) : 
+displayItems.length === 0 ? (
             <div className="empty-claims">No records found.</div>
           ) : (
             displayItems.map(item => (

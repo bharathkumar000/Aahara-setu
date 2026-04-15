@@ -563,6 +563,132 @@
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 158, 11, 0.05) 100%);
 }
 
+.ai_match_tab {
+  background: linear-gradient(135deg, rgba(79, 99, 61, 0.1), rgba(163, 230, 53, 0.1)) !important;
+}
+
+.demand-management-card {
+  margin-bottom: 24px;
+  padding: 24px;
+  border: 1px dashed rgba(79, 99, 61, 0.3);
+}
+
+.demand-header h4 {
+  color: #4f633d;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.demand-header p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.add-demand-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.add-demand-row input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.add-demand-row input:focus {
+  border-color: #4f633d;
+}
+
+.active-demands-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.demand-pill {
+  background: white;
+  padding: 8px 14px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.demand-pill.matched {
+  border-color: #a3e635;
+  background: #f7fee7;
+  color: #365314;
+}
+
+.demand-pill .p-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.demand-pill.matched .p-dot {
+  background: #a3e635;
+  box-shadow: 0 0 10px #a3e635;
+  animation: pulse-dot 1.5s infinite;
+}
+
+.remove-p {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0 4px;
+}
+
+.matched-alert {
+  background: linear-gradient(135deg, #fff, #f7fee7);
+  border: 2px solid #a3e635 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.matched-alert::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 2px solid #a3e635;
+  animation: pulse-border 2s infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.btn-claim-matched {
+  background: #4f633d !important;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-border {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.02); opacity: 0; }
+}
+
 .match-visual-row {
   display: flex;
   align-items: center;
