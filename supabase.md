@@ -1,24 +1,24 @@
-# 🚀 Aahara Setu: Supabase Backend & Database Setup Guide
+# 🚀 Aahara Setu: Unified Supabase & Data Architecture
 
-This document contains all the SQL code required to initialize the full backend architecture for Aahara Setu. Execute these queries in your **Supabase SQL Editor** to set up the database, security policies, real-time engines, and geo-spatial matching logic.
+This document tracks the complete SQL schema and data architecture for **Aahara Setu**. It combines the core setup guides for database initialization, real-time sync, and security policies.
 
 ---
 
 ## 1. Core Extensions & Initialization
-We use `postgis` for ultra-fast location matching (finding donors within 2km) and `uuid-ossp` for secure unique identifiers.
+We use `postgis` for location-based matching (finding donors within 2km) and `uuid-ossp` for primary keys.
 
 ```sql
--- Enable PostGIS for geography data types and location-based logic
+-- Enable PostGIS for geography logic
 CREATE EXTENSION IF NOT EXISTS postgis;
 
--- Enable UUID generation for primary keys
+-- Enable UUID generation
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ```
 
 ---
 
-## 2. Main Database Schema
-Run this to create the primary structural tables. Modified to include FSSAI verification and improved role management.
+## 2. Global Database Schema (Updated)
+Execute this block to create the primary tables. Includes `is_disaster` support for emergency relief.
 
 ```sql
 /**
@@ -29,21 +29,20 @@ CREATE TABLE public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   full_name TEXT NOT NULL,
   email TEXT UNIQUE,
-  role TEXT CHECK (role IN ('donor', 'receiver')) NOT NULL,
+  role TEXT CHECK (role IN ('donor', 'receiver', 'admin')) NOT NULL,
   organization_name TEXT, 
-  fssai_id TEXT, -- Required for Donor Verification
+  fssai_id TEXT, -- Mandatory for Donor Verification
   phone_number TEXT,
   avatar_url TEXT,
   coords geography(POINT, 4326), 
   kindness_score INT DEFAULT 0,
-  trust_score INT DEFAULT 50 CHECK (trust_score BETWEEN 0 AND 100), -- AI Trust Score
+  trust_score INT DEFAULT 50 CHECK (trust_score BETWEEN 0 AND 100),
   is_verified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 /**
- * 🍱 FOOD DONATIONS TABLE
- * Tracks all surplus food listings.
+ * 🍱 DONATIONS TABLE (Core)
  */
 CREATE TABLE public.donations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -51,14 +50,14 @@ CREATE TABLE public.donations (
   food_name TEXT NOT NULL,
   category TEXT NOT NULL,
   dietary_type TEXT DEFAULT 'Veg',
-  is_disaster BOOLEAN DEFAULT FALSE,
+  is_disaster BOOLEAN DEFAULT FALSE, -- SOS / Relief Mode
   quantity_value NUMERIC NOT NULL,
   quantity_unit TEXT NOT NULL,
   expiry_time TIMESTAMPTZ NOT NULL,
   pickup_address TEXT NOT NULL,
   pickup_location geography(POINT, 4326) NOT NULL,
   urgency_score INT DEFAULT 0,
-  is_audit_approved BOOLEAN DEFAULT FALSE, -- Set by AI Audit System
+  is_audit_approved BOOLEAN DEFAULT FALSE,
   status TEXT CHECK (status IN ('available', 'claiming', 'claimed', 'expired', 'completed')) DEFAULT 'available',
   image_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -66,7 +65,6 @@ CREATE TABLE public.donations (
 
 /**
  * 🤝 CLAIMS TABLE
- * Triggers when a Receiver initiates a claim.
  */
 CREATE TABLE public.claims (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -74,21 +72,20 @@ CREATE TABLE public.claims (
   receiver_id UUID REFERENCES public.profiles(id) NOT NULL,
   status TEXT CHECK (status IN ('pending', 'approved', 'dispatched', 'delivered', 'cancelled')) DEFAULT 'pending',
   verification_code TEXT DEFAULT upper(substring(uuid_generate_v4()::text, 1, 6)),
+  proof_images TEXT[], -- Evidence for impact verification
   created_at TIMESTAMPTZ DEFAULT NOW(),
   fulfilled_at TIMESTAMPTZ
 );
 
 /**
  * ⚠️ DISASTER ALERTS TABLE
- * Drives the Disaster Relief Portal.
  */
 CREATE TABLE public.disaster_alerts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   location_name TEXT NOT NULL,
   location_point geography(POINT, 4326) NOT NULL,
   severity TEXT CHECK (severity IN ('low', 'medium', 'high', 'critical')),
-  affected_count INT,
-  needs TEXT[], -- e.g., ['Water', 'Cooked Meals', 'Blankets']
+  needs TEXT[], -- e.g., ['Water', 'Cooked Meals']
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -96,184 +93,90 @@ CREATE TABLE public.disaster_alerts (
 
 ---
 
-## 3. PostGIS: Urgency-Based Matching
-This function powers the discovery engine, sorting food by proximity and expiry urgency.
+## 3. Advanced Views & Analytics
+Run this to enable the Global Impact Leaderboard.
 
 ```sql
-CREATE OR REPLACE FUNCTION get_nearby_food(
-  user_lon DOUBLE PRECISION,
-  user_lat DOUBLE PRECISION,
-  radius_meters INT DEFAULT 5000
-)
-RETURNS TABLE (
-  id UUID,
-  food_name TEXT,
-  donor_name TEXT,
-  distance_meters FLOAT,
-  urgency_score INT,
-  dietary_type TEXT
-) LANGUAGE plpgsql AS $$
-BEGIN
-  RETURN QUERY
-  SELECT 
-    d.id, 
-    d.food_name, 
-    p.organization_name,
-    ST_Distance(d.pickup_location, ST_SetSRID(ST_MakePoint(user_lon, user_lat), 4326)::geography) AS distance,
-    d.urgency_score,
-    d.dietary_type
-  FROM public.donations d
-  JOIN public.profiles p ON d.donor_id = p.id
-  WHERE d.status = 'available'
-    AND ST_DWithin(d.pickup_location, ST_SetSRID(ST_MakePoint(user_lon, user_lat), 4326)::geography, radius_meters)
-  ORDER BY d.urgency_score DESC, distance ASC;
-END;
-$$;
+CREATE OR REPLACE VIEW public.impact_summary AS
+SELECT 
+  p.id,
+  p.organization_name,
+  p.role,
+  p.kindness_score,
+  COUNT(d.id) as total_contributions,
+  SUM(CASE WHEN c.status = 'delivered' THEN 1 ELSE 0 END) as successful_impact_events
+FROM public.profiles p
+LEFT JOIN public.donations d ON p.id = d.donor_id
+LEFT JOIN public.claims c ON p.id = c.receiver_id
+GROUP BY p.id, p.organization_name, p.role, p.kindness_score;
 ```
 
 ---
 
-## 4. Automation & AI Trust Logic
-Maintains data integrity and gamifies the experience.
+## 4. PostGIS & Automation Functions
+These power the "Urgency-Based Matching" and automatic score updates.
 
 ```sql
-/**
- * Function: award_kindness_points
- * Updates kindness score and trust scores upon successful delivery.
- */
+-- Search nearby food (PostGIS)
+CREATE OR REPLACE FUNCTION get_nearby_food(user_lon FLOAT, user_lat FLOAT, radius INT DEFAULT 5000)
+RETURNS TABLE (id UUID, food_name TEXT, distance_meters FLOAT, urgency_score INT) LANGUAGE plpgsql AS $$
+BEGIN
+  RETURN QUERY
+  SELECT d.id, d.food_name, 
+    ST_Distance(d.pickup_location, ST_SetSRID(ST_MakePoint(user_lon, user_lat), 4326)::geography) AS distance,
+    d.urgency_score
+  FROM public.donations d
+  WHERE d.status = 'available'
+    AND ST_DWithin(d.pickup_location, ST_SetSRID(ST_MakePoint(user_lon, user_lat), 4326)::geography, radius)
+  ORDER BY d.urgency_score DESC, distance ASC;
+END;
+$$;
+
+-- Automatic Impact Scoring (Trigger)
 CREATE OR REPLACE FUNCTION update_impact_scores()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
-    -- Donor Rewards: Points + Trust boost
-    UPDATE public.profiles 
-    SET kindness_score = kindness_score + 100,
-        trust_score = LEAST(trust_score + 5, 100)
-    WHERE id = (SELECT donor_id FROM public.donations WHERE id = NEW.donation_id);
-    
-    -- Receiver Rewards: Impact pts
-    UPDATE public.profiles 
-    SET kindness_score = kindness_score + 25 
-    WHERE id = NEW.receiver_id;
+    UPDATE public.profiles SET kindness_score = kindness_score + 100 WHERE id = (SELECT donor_id FROM public.donations WHERE id = NEW.donation_id);
+    UPDATE public.profiles SET kindness_score = kindness_score + 25 WHERE id = NEW.receiver_id;
   END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER on_impact_event
-AFTER UPDATE ON public.claims
-FOR EACH ROW EXECUTE FUNCTION update_impact_scores();
+CREATE TRIGGER on_impact_event AFTER UPDATE ON public.claims FOR EACH ROW EXECUTE FUNCTION update_impact_scores();
 ```
 
 ---
 
-## 5. Security: Role-Based RLS
-Ensures Donors can only create listings and Receivers can only claim.
+## 5. Security (RLS) & Real-Time Sync
 
 ```sql
--- Enable RLS
+-- Step 1: Enable RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.donations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.claims ENABLE ROW LEVEL SECURITY;
 
--- Policy: Only verified donors can list food
-CREATE POLICY "Donors can create donations" ON public.donations 
-FOR INSERT WITH CHECK (
-  auth.uid() = donor_id AND 
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'donor')
-);
+-- Step 2: Policy (Example: Only verified receivers see food)
+CREATE POLICY "Public filtered access" ON public.donations FOR SELECT USING (status = 'available');
 
--- Policy: Only receivers can initiate claims
-CREATE POLICY "Receivers can initiate claims" ON public.claims 
-FOR INSERT WITH CHECK (
-  auth.uid() = receiver_id AND 
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'receiver')
-);
+-- Step 3: Enable Real-Time (Crucial for Dashboard matching)
+CREATE PUBLICATION aahara_setu_realtime FOR TABLE public.donations, public.claims;
 ```
 
 ---
 
-## 6. Global Real-Time Sync
-Enables instant coordination for the logistics engine.
+## 6. Auth Integration (Role-Based Sync)
+Ensures every Supabase Auth user gets a profile with the correct role.
 
 ```sql
--- Enable Realtime for core tables
-CREATE PUBLICATION aahara_setu_realtime FOR TABLE 
-  public.donations, 
-  public.claims, 
-  public.disaster_alerts;
-
-ALTER TABLE public.donations REPLICA IDENTITY FULL;
-ALTER TABLE public.claims REPLICA IDENTITY FULL;
-
----
-
-## 7. Role-Based Authentication Flow (Client & Server)
-
-To ensure that a user is always directed to their respective portal (**Donor Dashboard** vs **NGO/Receiver Marketplace**) after every login, follow these implementation steps.
-
-### A. Automatic Profile Creation (SQL Trigger)
-Running this script in Supabase ensures that every time a new user signs up via Supabase Auth, a corresponding row is created in `public.profiles` automatically.
-
-```sql
-/**
- * Function: handle_new_user
- * Triggered on auth.users INSERT to create a public profile.
- * Extracts 'role' from user_metadata.
- */
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email, role)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', 'Unnamed User'),
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'role', 'donor') -- Defaults to donor 
-  );
+  INSERT INTO public.profiles (id, full_name, role)
+  VALUES (NEW.id, NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'role');
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql;
 
--- Trigger the function every time a user is created
-CREATE OR REPLACE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-```
-
-### B. Passing Role during Sign Up (React/Vite)
-When calling the Supabase `signUp` method, you **must** pass the role in `options.data` so the trigger above can catch it and save it to the DB.
-
-```typescript
-const { data, error } = await supabase.auth.signUp({
-  email: 'user@example.com',
-  password: 'password123',
-  options: {
-    data: {
-      full_name: 'Skyline Hotels', // Matches metadata in Trigger
-      role: 'donor' // critical for redirection logic
-    }
-  }
-});
-```
-
-### C. Persistent Role-Based Redirection 
-Once the user is logged in, your `AuthContext` must fetch the profile from `public.profiles` to determine where to send the user.
-
-```typescript
-// Inside AuthContext on login
-const { data: profile } = await supabase
-  .from('profiles')
-  .select('role')
-  .eq('id', user.id)
-  .single();
-
-if (profile?.role === 'donor') {
-  navigate('/dashboard'); // Take to Donor page
-} else if (profile?.role === 'receiver') {
-  navigate('/receiver'); // Take to NGO page
-}
-```
-
-This architecture ensures that **once a Donor, always a Donor** (unless the profile is manually updated in the DB), providing a consistent and secure role-based experience.
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 ```

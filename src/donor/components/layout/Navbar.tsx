@@ -7,9 +7,8 @@ import './Navbar.css';
 
 export const Navbar: React.FC = () => {
   const { t } = useTranslation();
-  const { role, isAuthenticated, logout } = useAuth();
+  const { role } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
 
 
   const donorLinks = [

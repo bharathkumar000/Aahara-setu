@@ -32,7 +32,7 @@ const HEATMAP_ZONES = [
 
 export const Dashboard: React.FC = () => {
   const { t } = useTranslation();
-  const [activeView, setActiveView] = useState<'analytics' | 'leaderboard' | 'certificates'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'leaderboard' | 'certificates'>('analytics');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const stats = [
@@ -203,10 +203,10 @@ export const Dashboard: React.FC = () => {
               ))}
             </div>
           </Card>
-        </>
+        </div>
       )}
 
-      {activeView === 'leaderboard' && (
+      {activeTab === 'leaderboard' && (
         <div className="leaderboard-view kindness-hub" style={{ animation: 'fadeIn 0.5s ease' }}>
           <div className="top-three">
             {leaders.slice(0, 3).map((l) => (
@@ -244,7 +244,7 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {activeView === 'certificates' && (
+      {activeTab === 'certificates' && (
         <div className="certificates-view kindness-hub" style={{ animation: 'fadeIn 0.5s ease' }}>
           <div className="cert-header-row">
             <h2>Your Impact Journey</h2>

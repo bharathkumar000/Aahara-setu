@@ -41,7 +41,7 @@ export const ClaimView: React.FC = () => {
   useEffect(() => {
     const fetchItem = async () => {
       // 1. Try fetching from Supabase first
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('donations')
         .select('*, profiles(organization_name, phone_number)')
         .eq('id', id)
