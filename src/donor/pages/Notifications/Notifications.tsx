@@ -63,7 +63,12 @@ const TYPE_STYLES: Record<string, { label: string; bg: string; color: string }> 
 export const Notifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const [toastMessage] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
   const unreadCount = notifications.filter(n => !n.read).length;
   const filtered = filter === 'unread' ? notifications.filter(n => !n.read) : notifications;
@@ -139,7 +144,7 @@ export const Notifications: React.FC = () => {
                   
                   <div className="notif-action-row">
                     {n.type === 'urgent' && (
-                      <Button size="sm" onClick={(e) => { e.stopPropagation(); }}>
+                      <Button size="sm" onClick={(e) => { e.stopPropagation(); showToast('Redistribution Priority Escalated! NGOs notified via SMS.'); }}>
                         FAST TRACK ACTION
                       </Button>
                     )}
