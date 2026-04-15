@@ -56,7 +56,7 @@ export const Landing: React.FC = () => {
       {/* Hero */}
       <section className="hero-section">
         <div className="hero-content">
-          <div className="hero-eyebrow">🌱 Aahar Setu — Circular Food Redistribution Network</div>
+          <div className="hero-eyebrow">🌱 Circular Food Redistribution Network</div>
           <h1 className="hero-title">
             Reduce Waste.<br />
             <span className="gradient-text">Feed Lives.</span>
