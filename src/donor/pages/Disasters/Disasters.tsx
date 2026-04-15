@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Flame, AlertTriangle, MapPin, Users, Heart, ArrowRight, Zap, Shield } from 'lucide-react';
 import './Disasters.css';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 interface DisasterAlert {
   id: string;

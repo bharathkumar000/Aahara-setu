@@ -8,7 +8,7 @@ import {
 import { useTranslation } from '../../context/LanguageContext';
 import './Dashboard.css';
 import '../KindnessHub/KindnessHub.css';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 const WEEKLY_DATA = [
   { day: 'Mon', meals: 45, kg: 22 },
