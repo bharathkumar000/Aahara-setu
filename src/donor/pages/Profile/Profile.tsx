@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { useTranslation } from '../../context/LanguageContext';
+import { useAuth } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, Award, Info, LogOut, Activity,
   Clock, Zap, Globe
@@ -12,6 +14,8 @@ const FSSAI_STORAGE_KEY = 'aahara_setu_fssai_id';
 
 export const Profile: React.FC = () => {
   const { lang, setLang, t } = useTranslation();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   const [fssaiInput, setFssaiInput] = useState(localStorage.getItem(FSSAI_STORAGE_KEY) || '');
   const [isEditingFssai, setIsEditingFssai] = useState(false);
@@ -224,7 +228,7 @@ export const Profile: React.FC = () => {
             </div>
           </Card>
 
-          <Button variant="primary" className="profile-signout-btn" onClick={() => { localStorage.clear(); window.location.href = '/'; }}>
+          <Button variant="primary" className="profile-signout-btn" onClick={() => { logout(); navigate('/login'); }}>
             <LogOut size={16} /> {t('sign_out')}
           </Button>
 
