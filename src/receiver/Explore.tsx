@@ -98,6 +98,7 @@ export const Explore: React.FC = () => {
   const [claimedIds, setClaimedIds] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
   const [claimQuantity, setClaimQuantity] = useState<string>('');
+  const [claimStep, setClaimStep] = useState<'details' | 'logistics' | 'success'>('details');
 
   const filteredItems = items.filter(item => {
     const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,12 +107,16 @@ export const Explore: React.FC = () => {
     return matchSearch && matchFilter && !claimedIds.includes(item.id);
   });
 
-  const handleConfirmClaim = () => {
+  const handleConfirmDetails = () => {
+    setClaimStep('logistics');
+  };
+
+  const handleFinalSuccess = () => {
     if (selectedItem) {
       setClaimedIds(prev => [...prev, selectedItem.id]);
       setSelectedItem(null);
-      // Simulating a success toast or notification
-      alert(`Claim confirmed for ${claimQuantity || 'selected quantity'}! The donor has been notified.`);
+      setClaimStep('details');
+      alert(`Claim finalized for ${claimQuantity || 'selected quantity'}!`);
     }
   };
 
@@ -121,7 +126,9 @@ export const Explore: React.FC = () => {
       {selectedItem && (
         <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
           <Card className="claim-modal glass" onClick={e => e.stopPropagation()}>
-            <div className="claim-modal-header">
+            {claimStep === 'details' ? (
+              <>
+                <div className="claim-modal-header">
               <h2 className="modal-title">Claim Donation</h2>
               <button className="close-x" onClick={() => setSelectedItem(null)}><X size={20} /></button>
             </div>
@@ -141,19 +148,24 @@ export const Explore: React.FC = () => {
                 </a>
               </div>
 
-              {/* Right Column: Receiver Info (The one who clicks) */}
+              <div className="info-divider"></div>
+
+              {/* Right Column: Logistics Info */}
               <div className="info-column">
-                <div className="info-label-group">CLAIMER DETAILS</div>
-                <div className="info-row"><strong>Verified By:</strong> Aahara Setu</div>
-                <div className="info-row"><strong>Receiver:</strong> Robin NGO</div>
-                <div className="info-row"><strong>Status:</strong> Approved</div>
+                <div className="info-label-group">LOGISTICS INFO</div>
+                <div className="info-row"><strong>Distance:</strong> {selectedItem.distance}</div>
+                <div className="info-row">
+                  <strong>Expires In:</strong> 
+                  <span className="text-danger-bold"> {selectedItem.expiry}</span>
+                </div>
+                <div className="info-row"><strong>Demand:</strong> {selectedItem.demand}</div>
                 <div className="contact-link">
-                   <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Line)</span>
+                   <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Logistics)</span>
                 </div>
               </div>
             </div>
 
-            {/* Embedded Interactive Map - RESTORED */}
+            {/* Embedded Interactive Map */}
             <div className="map-view-container">
               <LeafletMap location={selectedItem.donor} />
             </div>
@@ -178,10 +190,71 @@ export const Explore: React.FC = () => {
               </div>
             </div>
             
-            <div className="modal-primary-actions">
-              <Button onClick={() => setSelectedItem(null)} variant="outline" className="modal-close-btn">Close</Button>
-              <Button onClick={handleConfirmClaim} className="modal-confirm-btn">Confirm Claim</Button>
-            </div>
+                <div className="modal-primary-actions">
+                  <Button onClick={() => setSelectedItem(null)} variant="outline" className="modal-close-btn">Close</Button>
+                  <Button onClick={handleConfirmDetails} className="modal-confirm-btn">Confirm Claim</Button>
+                </div>
+              </>
+            ) : (
+              <div className="logistics-flow-wrapper">
+                <div className="claim-modal-header">
+                  <h2 className="modal-title">Logistics Support</h2>
+                  <button className="close-x" onClick={() => setClaimStep('details')}><X size={20} /></button>
+                </div>
+
+                <p className="logistics-intro" style={{ textAlign: 'center', margin: '20px 0', color: 'var(--color-text-muted)' }}>
+                  Choose your pickup method from <strong>{selectedItem.donor}</strong>
+                </p>
+
+                <div className="logistics-options-stack" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <Button 
+                    fullWidth 
+                    variant="glass" 
+                    className="self-pickup-btn"
+                    style={{ height: '70px', justifyContent: 'flex-start', padding: '0 20px', gap: '15px' }}
+                    onClick={handleFinalSuccess}
+                  >
+                    <span style={{ fontSize: '1.5rem' }}>🏡</span>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontWeight: 800 }}>Self Pickup</div>
+                      <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>I'll handle transport myself</div>
+                    </div>
+                  </Button>
+
+                  <div style={{ textAlign: 'center', fontSize: '10px', fontWeight: 800, color: 'var(--color-text-muted)', margin: '5px 0' }}>OR BOOK THROUGH PARTNERS</div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                    <Button 
+                      onClick={() => window.open('https://www.olacabs.com/', '_blank')}
+                      variant="outline" style={{ fontSize: '11px', padding: '10px 0' }}
+                    >
+                      🚕 Ola
+                    </Button>
+                    <Button 
+                      onClick={() => window.open('https://www.rapido.bike/', '_blank')}
+                      variant="outline" style={{ fontSize: '11px', padding: '10px 0' }}
+                    >
+                      🏍️ Rapido
+                    </Button>
+                    <Button 
+                      onClick={() => window.open('https://www.uber.com/in/en/', '_blank')}
+                      variant="outline" style={{ fontSize: '11px', padding: '10px 0' }}
+                    >
+                      🚙 Uber
+                    </Button>
+                  </div>
+                </div>
+
+                <Button 
+                  fullWidth 
+                  variant="outline" 
+                   style={{ marginTop: '20px', borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                  onClick={handleFinalSuccess}
+                >
+                   I've Booked / Confirm Offline
+                </Button>
+              </div>
+            )}
 
             <Button 
               variant="outline"
