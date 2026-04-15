@@ -34,7 +34,10 @@ function AppContent() {
     }
 
     if (isAuthenticated) {
-      if (role === 'receiver' && !location.pathname.startsWith('/receiver') && location.pathname !== '/profile') {
+      const isReceiverAllowed = location.pathname.startsWith('/receiver') || 
+                                ['/profile', '/traceability', '/disasters', '/'].includes(location.pathname);
+      
+      if (role === 'receiver' && !isReceiverAllowed) {
         navigate('/receiver');
       }
       if (role === 'donor' && location.pathname.startsWith('/receiver')) {
