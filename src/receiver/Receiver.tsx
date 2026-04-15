@@ -122,26 +122,46 @@ export const Receiver: React.FC = () => {
 
       {/* Account Status Banners */}
       {accountLocked && (
-        <div className={`account-lock-banner ${requiresProof ? 'banner-danger' : 'banner-warning'}`}>
-          {requiresProof ? <AlertTriangle size={24} /> : <Clock size={24} />}
-          <div className="lock-banner-content">
-            <h3>Account Locked: Order Limit Reached</h3>
-            {requiresProof ? (
-              <p>You have reached the maximum limit of 2 unverified deliveries! Please upload images showing the proper utilization of your received food to unlock your account and place new orders.</p>
-            ) : (
-              <p>Your uploaded proofs are currently under review by an Admin. Since you have hit the 2-order limit, you must wait for approval before placing new claims.</p>
-            )}
-          </div>
-        </div>
+        <>
+          {requiresProof ? (
+            <div className="account-lock-banner banner-danger">
+              <AlertTriangle size={24} />
+              <div className="lock-banner-content">
+                <h3>Account Locked: Verification Required</h3>
+                <p>You have reached the limit of 2 unverified deliveries. Please upload utilization images to unlock your account.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="account-lock-banner banner-warning">
+              <Clock size={24} />
+              <div className="lock-banner-content">
+                <h3>Account Standing: Under Review</h3>
+                <p>Thank you for uploading! Your photos are now being verified by our Admin. Your account limit will be lifted once approval is complete.</p>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {unverifiedCount === 1 && (
         <div className="account-lock-banner banner-info">
-          <AlertTriangle size={24} />
-          <div className="lock-banner-content">
-            <h3>Note: Pending Proof of Utilization</h3>
-            <p>You have 1 unverified order! Please make sure to upload images showing the proper utilization of the food you received. <strong>If you accumulate 2 or more unverified orders, your account will be frozen and you will not be able to place new orders.</strong></p>
-          </div>
+          {requiresProof ? (
+            <>
+              <AlertTriangle size={24} />
+              <div className="lock-banner-content">
+                <h3>Pending Proof of Utilization</h3>
+                <p>You have 1 order awaiting verification photos. Upload them now to avoid account limits.</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <Clock size={24} />
+              <div className="lock-banner-content">
+                <h3>Verification in Progress</h3>
+                <p>Your delivery proof is currently being reviewed by our team.</p>
+              </div>
+            </>
+          )}
         </div>
       )}
 
