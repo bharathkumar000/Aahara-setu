@@ -2,21 +2,16 @@ import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { 
-  ShieldCheck, 
-  Award, 
-  Info, LogOut, Activity,
-  Clock, Zap
+  User, ShieldCheck, MapPin, Camera, 
+  Award, TrendingUp, History, 
+  Info, LogOut, Activity, Heart, Users,
+  CheckCircle2, Clock, Zap
 } from 'lucide-react';
 import './Profile.css';
 
 export const Profile: React.FC = () => {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
   const trustScore = 88;
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
 
   return (
     <div className="profile-page-container">
@@ -47,7 +42,7 @@ export const Profile: React.FC = () => {
                   <Clock size={16} /> Joined April 2025
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="premium-edit-btn" onClick={() => showToast('Profile editing is restricted for verified partners.')}>Edit Profile</Button>
+              <Button variant="outline" size="sm" className="premium-edit-btn">Edit Profile</Button>
             </div>
           </Card>
 
@@ -181,18 +176,6 @@ export const Profile: React.FC = () => {
 
         </div>
       </div>
-
-
-      {toastMessage && (
-        <div style={{
-          position: 'fixed', bottom: '100px', left: '50%', transform: 'translateX(-50%)',
-          background: 'var(--color-primary)', color: 'white', padding: '16px 32px', borderRadius: '100px',
-          boxShadow: '0 8px 32px rgba(79, 99, 61, 0.4)', zIndex: 10000, fontWeight: 700,
-          display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem'
-        }}>
-          <span>🛡️</span> {toastMessage}
-        </div>
-      )}
     </div>
   );
 };
