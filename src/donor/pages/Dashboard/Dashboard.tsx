@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { 
   BarChart3, TrendingDown, Package, CheckCircle2, 
-  Leaf, Zap, Trophy, MapPin, RefreshCw 
+  Leaf, Zap, Trophy, MapPin, RefreshCw, Award,
+  Medal, Star, Heart, ExternalLink, Download
 } from 'lucide-react';
 import { useTranslation } from '../../context/LanguageContext';
 import './Dashboard.css';
+import '../KindnessHub/KindnessHub.css'; // Reuse Kindness Hub styles
 
 const WEEKLY_DATA = [
   { day: 'Mon', meals: 45, kg: 22 },
@@ -31,6 +33,8 @@ const HEATMAP_ZONES = [
 
 export const Dashboard: React.FC = () => {
   const { t } = useTranslation();
+  const [activeView, setActiveView] = useState<'analytics' | 'leaderboard' | 'certificates'>('analytics');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const stats = [
     { label: t('food_saved'), value: '452 kg', icon: <Package size={22} />, color: '#4F633D', trend: '+12%' },
@@ -56,161 +60,248 @@ export const Dashboard: React.FC = () => {
     { icon: '🚚', text: 'Volunteer pickup confirmed for Biryani', time: '2 hrs ago', type: 'success' },
   ];
 
+  const leaders = [
+    { rank: 1, name: "McDonald's - VVCE", impact: "12,450 meals", pts: 8500, avatar: "M", color: "#FFD700", badge: 'Golden Plate' },
+    { rank: 2, name: "Taj Hotel - City Center", impact: "8,300 meals", pts: 6200, avatar: "T", color: "#C0C0C0", badge: 'Elite Circle' },
+    { rank: 3, name: "KFC - Mall Road", impact: "5,120 meals", pts: 4100, avatar: "K", color: "#CD7F32", badge: 'Rising Star' },
+    { rank: 4, name: "Akshaya Patra", impact: "4,200 meals", pts: 3800, avatar: "A", color: "#E2E8F0" },
+    { rank: 5, name: "Doner King", impact: "3,100 meals", pts: 2900, avatar: "D", color: "#E2E8F0" },
+  ];
+
+  const certificatesList = [
+    { id: 'AS-2025-01', type: 'Platinum Sustainability', date: 'April 2025', desc: 'Offsets 3,200kg of CO₂' },
+    { id: 'AS-2025-02', type: 'Community Hero', date: 'March 2025', desc: 'Fed 1,200 children' },
+  ];
+
+  const handleGenerateReport = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      alert('Generating High-Resolution Impact Certificate... Your 2024 Summary is ready for LinkedIn!');
+    }, 2000);
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1 className="page-title">{t('impact_dash')}</h1>
-        <p className="page-subtitle">Real-time analytics for your contribution to the circular food economy.</p>
+        <div className="header-left">
+          <h1 className="page-title">{t('impact_dash')}</h1>
+          <p className="page-subtitle">Real-time metrics & community recognition.</p>
+        </div>
+        
+        {/* Unified Tab Switcher */}
+        <div className="dashboard-view-switcher glass">
+          <button 
+            className={`view-btn ${activeView === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveView('analytics')}
+          >
+            <BarChart3 size={18} /> {t('analytics_tab') || 'Analytics'}
+          </button>
+          <button 
+            className={`view-btn ${activeView === 'leaderboard' ? 'active' : ''}`}
+            onClick={() => setActiveView('leaderboard')}
+          >
+            <Trophy size={18} /> {t('global_leaderboard')}
+          </button>
+          <button 
+            className={`view-btn ${activeView === 'certificates' ? 'active' : ''}`}
+            onClick={() => setActiveView('certificates')}
+          >
+            <Award size={18} /> {t('impact_certs')}
+          </button>
+        </div>
       </div>
 
-      <Card className="ai-insights-banner glass">
-        <div className="ai-visual">
-          <div className="ai-pulse" />
-          <Zap size={24} className="ai-icon" />
-        </div>
-        <div className="ai-text">
-          <div className="ai-badge">AI PREDICTIVE INSIGHT</div>
-          <h4>Expected Surplus: <strong>12-15 kg</strong> (Next 4 hours)</h4>
-          <p>Based on your historical patterns, we predict a surplus of Biryani & Salads. <strong>Pre-matching is active</strong> with 3 verified NGOs nearby.</p>
-        </div>
-        <div className="ai-actions">
-          <Button variant="outline" size="sm">Adjust Forecast</Button>
-          <Button variant="primary" size="sm">Auto-Notify NGOs</Button>
-        </div>
-      </Card>
-
-      <div className="kpi-grid">
-        {stats.map((stat, i) => (
-          <Card key={i} className="kpi-card">
-            <div className="kpi-top-row">
-              <div className="kpi-icon-badge" style={{ background: stat.color + '15', borderColor: stat.color + '30', color: stat.color }}>
-                {stat.icon}
-              </div>
-              <span className="kpi-trend-pill" style={{ color: stat.color, background: stat.color + '10' }}>↑ {stat.trend}</span>
+      {activeView === 'analytics' && (
+        <>
+          <Card className="ai-insights-banner glass">
+            <div className="ai-visual">
+              <div className="ai-pulse" />
+              <Zap size={24} className="ai-icon" />
             </div>
-            <div className="kpi-content">
-              <div className="kpi-value-text">{stat.value}</div>
-              <div className="kpi-label-text">{stat.label}</div>
+            <div className="ai-text">
+              <div className="ai-badge">AI PREDICTIVE INSIGHT</div>
+              <h4>Expected Surplus: <strong>12-15 kg</strong> (Next 4 hours)</h4>
+              <p>Based on your historical patterns, we predict a surplus of Biryani & Salads. <strong>Pre-matching is active</strong> with 3 verified NGOs nearby.</p>
+            </div>
+            <div className="ai-actions">
+              <Button variant="outline" size="sm">Adjust Forecast</Button>
+              <Button variant="primary" size="sm">Auto-Notify NGOs</Button>
             </div>
           </Card>
-        ))}
-      </div>
 
-      <div className="dashboard-main-row">
-        <Card className="chart-card">
-          <div className="chart-header">
-            <h3>Weekly Redistribution</h3>
-            <span className="tag-badge">Last 7 Days</span>
-          </div>
-          <div className="bar-chart">
-            {WEEKLY_DATA.map((d, i) => (
-              <div key={i} className="bar-col">
-                <div className="bar-tooltip">{d.meals} meals</div>
-                <div
-                  className="chart-bar"
-                  style={{ height: `${(d.meals / MAX_MEALS) * 100}%` }}
-                />
-                <span className="bar-label">{d.day}</span>
-              </div>
+          <div className="kpi-grid">
+            {stats.map((stat, i) => (
+              <Card key={i} className="kpi-card">
+                <div className="kpi-top-row">
+                  <div className="kpi-icon-badge" style={{ background: stat.color + '15', borderColor: stat.color + '30', color: stat.color }}>
+                    {stat.icon}
+                  </div>
+                  <span className="kpi-trend-pill" style={{ color: stat.color, background: stat.color + '10' }}>↑ {stat.trend}</span>
+                </div>
+                <div className="kpi-content">
+                  <div className="kpi-value-text">{stat.value}</div>
+                  <div className="kpi-label-text">{stat.label}</div>
+                </div>
+              </Card>
             ))}
           </div>
-        </Card>
 
-        <Card className="flow-tracker-card">
-          <h3>System Flow Tracker</h3>
-          <p className="card-desc">Active redistribution status</p>
-          <div className="flow-tracker">
-            {flowSteps.map((step, i) => (
-              <div key={step.name} className="flow-track-step">
-                <div className={`flow-track-circle ${step.status}`}>
-                  {step.status === 'completed' ? <CheckCircle2 size={16} /> :
-                   step.status === 'active' ? <Zap size={16} /> : i + 1}
-                </div>
-                <div className="flow-track-info">
-                  <span className="flow-track-name">{step.name}</span>
-                  {step.count > 0 && <span className="flow-track-count">{step.count} items</span>}
-                </div>
-                {i < flowSteps.length - 1 && (
-                  <div className={`flow-track-line ${step.status === 'completed' ? 'filled' : ''}`} />
-                )}
+          <div className="dashboard-main-row">
+            <Card className="chart-card">
+              <div className="chart-header">
+                <h3>Weekly Redistribution</h3>
+                <span className="tag-badge">Last 7 Days</span>
               </div>
-            ))}
-          </div>
-          <div className="flow-active-info glass">
-            <Zap size={14} />
-            <span><strong>Active:</strong> NGO claiming "Assorted Pastries" from Baskin &amp; Scones.</span>
-          </div>
-        </Card>
-      </div>
+              <div className="bar-chart">
+                {WEEKLY_DATA.map((d, i) => (
+                  <div key={i} className="bar-col">
+                    <div className="bar-tooltip">{d.meals} meals</div>
+                    <div
+                      className="chart-bar"
+                      style={{ height: `${(d.meals / MAX_MEALS) * 100}%` }}
+                    />
+                    <span className="bar-label">{d.day}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
-      <Card className="heatmap-card">
-        <div className="chart-header">
-          <h3><MapPin size={18} /> Hunger vs Surplus Heatmap</h3>
-          <span className="tag-badge">Live Zones</span>
-        </div>
-        <div className="heatmap-legend">
-          <div className="legend-item"><div className="legend-dot surplus" /> High Surplus</div>
-          <div className="legend-item"><div className="legend-dot demand" /> High Demand</div>
-          <div className="legend-item"><div className="legend-dot balanced" /> Balanced</div>
-        </div>
-        <div className="heatmap-zones">
-          {HEATMAP_ZONES.map((zone, i) => (
-            <div key={i} className={`heatmap-zone zone-${zone.type}`}>
-              <div className="zone-name">{zone.name}</div>
-              <div className="zone-bars">
-                <div className="zone-bar-row">
-                  <span className="zone-bar-lbl">Surplus</span>
-                  <div className="zone-bar"><div className="zone-bar-fill surplus-fill" style={{ width: `${zone.waste}%` }} /></div>
-                  <span className="zone-bar-val">{zone.waste}%</span>
-                </div>
-                <div className="zone-bar-row">
-                  <span className="zone-bar-lbl">Demand</span>
-                  <div className="zone-bar"><div className="zone-bar-fill demand-fill" style={{ width: `${zone.demand}%` }} /></div>
-                  <span className="zone-bar-val">{zone.demand}%</span>
-                </div>
+            <Card className="flow-tracker-card">
+              <h3>System Flow Tracker</h3>
+              <p className="card-desc">Active redistribution status</p>
+              <div className="flow-tracker">
+                {flowSteps.map((step, i) => (
+                  <div key={step.name} className="flow-track-step">
+                    <div className={`flow-track-circle ${step.status}`}>
+                      {step.status === 'completed' ? <CheckCircle2 size={16} /> :
+                       step.status === 'active' ? <Zap size={16} /> : i + 1}
+                    </div>
+                    <div className="flow-track-info">
+                      <span className="flow-track-name">{step.name}</span>
+                      {step.count > 0 && <span className="flow-track-count">{step.count} items</span>}
+                    </div>
+                    {i < flowSteps.length - 1 && (
+                      <div className={`flow-track-line ${step.status === 'completed' ? 'filled' : ''}`} />
+                    )}
+                  </div>
+                ))}
               </div>
-              <div className={`zone-action-badge ${zone.type}`}>
-                {zone.type === 'demand' ? '🍽️ Needs Food' : zone.type === 'surplus' ? '📦 High Surplus' : '✅ Balanced'}
-              </div>
+            </Card>
+          </div>
+
+          <Card className="heatmap-card">
+            <div className="chart-header">
+              <h3><MapPin size={18} /> Hunger vs Surplus Heatmap</h3>
+              <span className="tag-badge">Live Zones</span>
             </div>
-          ))}
-        </div>
-      </Card>
-
-      <div className="bottom-grid">
-        <Card className="activity-card">
-          <h3>Recent Activity</h3>
-          <div className="activity-list">
-            {recentActivity.map((act, i) => (
-              <div key={i} className={`activity-item activity-${act.type}`}>
-                <div className="activity-icon">{act.icon}</div>
-                <div className="activity-body">
-                  <p className="activity-text">{act.text}</p>
-                  <span className="activity-time">{act.time}</span>
+            <div className="heatmap-zones">
+              {HEATMAP_ZONES.map((zone, i) => (
+                <div key={i} className={`heatmap-zone zone-${zone.type}`}>
+                  <div className="zone-name">{zone.name}</div>
+                  <div className="zone-bars">
+                    <div className="zone-bar-row">
+                      <span className="zone-bar-lbl">Surplus</span>
+                      <div className="zone-bar"><div className="zone-bar-fill surplus-fill" style={{ width: `${zone.waste}%` }} /></div>
+                      <span className="zone-bar-val">{zone.waste}%</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+              ))}
+            </div>
+          </Card>
+        </>
+      )}
 
-        <Card className="fallback-card">
-          <div className="fallback-header"><RefreshCw size={18} /><h3>Auto Redistribution Stats</h3></div>
-          <p className="card-desc">Fallback system performance this week</p>
-          <div className="fallback-stats">
-            {[
-              { label: 'Items Fallback-Triggered', val: '6' },
-              { label: 'Shelters Notified', val: '12' },
-              { label: 'Backup NGOs Alerted', val: '9' },
-              { label: 'Recovery Rate', val: '91%' },
-            ].map((s, i) => (
-              <div key={i} className="fallback-stat">
-                <div className="fallback-stat-val">{s.val}</div>
-                <div className="fallback-stat-lbl">{s.label}</div>
-              </div>
+      {activeView === 'leaderboard' && (
+        <div className="leaderboard-view kindness-hub" style={{ animation: 'fadeIn 0.5s ease' }}>
+          <div className="top-three">
+            {leaders.slice(0, 3).map((l) => (
+              <Card key={l.rank} className={`top-card rank-${l.rank}`}>
+                <div className="rank-badge">
+                  {l.rank === 1 ? <Trophy size={24} /> : <Medal size={20} />}
+                </div>
+                <div className="top-avatar" style={{ background: l.color }}>{l.avatar}</div>
+                <h3>{l.name}</h3>
+                <div className="badge-pill">
+                  <Star size={12} fill="currentColor" /> {l.badge}
+                </div>
+                <div className="top-stat">
+                  <Heart size={14} /> {l.pts} kindness pts
+                </div>
+                <p>{l.impact} shared</p>
+                <div className="top-progress" />
+              </Card>
             ))}
           </div>
-        </Card>
-      </div>
+
+          <Card className="leaderboard-table-card">
+            <div className="table-header">
+              <span># RANK</span>
+              <span>ORGANIZATION</span>
+              <span>KINDNESS SCORE</span>
+              <span>IMPACT (MEALS)</span>
+              <span>ACTION</span>
+            </div>
+            <div className="table-rows">
+              {leaders.map((l) => (
+                <div key={l.rank} className="table-row">
+                  <span className="row-rank">{l.rank}</span>
+                  <div className="row-name">
+                    <div className="mini-avatar" style={{ background: l.color }}>{l.avatar}</div>
+                    <div className="name-vitals">
+                      <strong>{l.name}</strong>
+                      {l.badge && <span className="mini-badge-txt">{l.badge}</span>}
+                    </div>
+                  </div>
+                  <span className="row-pts">{l.pts.toLocaleString()}</span>
+                  <span className="row-impact">{l.impact}</span>
+                  <div className="row-actions">
+                    <Button size="sm" variant="outline"><ExternalLink size={14} /></Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeView === 'certificates' && (
+        <div className="certificates-view kindness-hub" style={{ animation: 'fadeIn 0.5s ease' }}>
+          <div className="cert-header-row">
+            <h2>Your Impact Journey</h2>
+            <Button 
+              className="generate-report-btn" 
+              onClick={handleGenerateReport}
+              disabled={isGenerating}
+            >
+              <Download size={18} /> {isGenerating ? 'Generating...' : 'Generate 2024 Impact Report'}
+            </Button>
+          </div>
+          <div className="cert-grid">
+            {certificatesList.map(cert => (
+              <Card key={cert.id} className="cert-card">
+                <div className="cert-visual">
+                  <div className="cert-logo">Aahara Setu</div>
+                  <Award className="cert-icon" size={48} />
+                  <div className="cert-id">{cert.id}</div>
+                </div>
+                <div className="cert-body">
+                  <h4>{cert.type}</h4>
+                  <p>{cert.desc}</p>
+                  <div className="cert-meta">
+                    <span>{cert.date}</span>
+                    <div className="cert-btns">
+                      <Button size="sm" variant="outline"><Share2 size={14} /></Button>
+                      <Button size="sm" variant="outline"><Download size={14} /></Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

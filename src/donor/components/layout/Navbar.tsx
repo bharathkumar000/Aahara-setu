@@ -5,13 +5,12 @@ import { useTranslation } from '../../context/LanguageContext';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
-  const { lang, setLang, t } = useTranslation();
+  const { t } = useTranslation();
   const location = useLocation();
 
   const navLinks = [
     { name: t('nav_home'), path: '/', icon: <Home size={18} /> },
     { name: t('nav_dashboard'), path: '/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: t('nav_kindness'), path: '/kindness-hub', icon: <Trophy size={18} /> },
     { name: t('nav_traceability'), path: '/traceability', icon: <Radio size={18} /> },
     { name: t('nav_donate'), path: '/upload', icon: <Upload size={18} /> },
     { name: t('nav_disasters'), path: '/disasters', icon: <Flame size={18} /> },
@@ -39,21 +38,6 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
           
-          {/* Language Switcher MAGIC TOGGLE */}
-          <div className="lang-switcher-wrap">
-            <Globe size={16} className="lang-icon" />
-            <div className="lang-btns">
-              {(['EN', 'HI', 'KA'] as const).map(l => (
-                <button 
-                  key={l}
-                  className={`lang-toggle-btn ${lang === l ? 'active' : ''}`}
-                  onClick={() => setLang(l)}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </nav>

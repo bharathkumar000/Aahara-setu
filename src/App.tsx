@@ -52,7 +52,6 @@ function AppContent() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/disasters" element={<Disasters />} />
           <Route path="/traceability" element={<Traceability />} />
-          <Route path="/kindness-hub" element={<KindnessHub />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="*" element={<div style={{ padding: '40px', textAlign: 'center' }}><h2>404: Page Not Found</h2><Link to="/">Go Home</Link></div>} />
         </Routes>

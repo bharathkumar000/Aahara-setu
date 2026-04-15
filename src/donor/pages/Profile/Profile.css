@@ -422,3 +422,50 @@
   .profile-name-row { align-items: center; }
   .profile-id-group { justify-content: center; }
 }
+
+/* Profile Language Switcher */
+.profile-lang-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-lang-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.profile-lang-btn:hover {
+  background: #f8fafc;
+  transform: translateX(4px);
+}
+
+.profile-lang-btn.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow);
+  box-shadow: 0 4px 12px rgba(79, 99, 61, 0.1);
+}
+
+.lang-code {
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+}
+
+.lang-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.profile-lang-btn.active .lang-name {
+  color: var(--color-primary);
+}

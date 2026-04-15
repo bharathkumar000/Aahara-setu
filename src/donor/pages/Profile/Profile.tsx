@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
+import { useTranslation } from '../../context/LanguageContext';
 import { 
   ShieldCheck, Award, Info, LogOut, Activity,
-  Clock, Zap
+  Clock, Zap, Globe
 } from 'lucide-react';
 import './Profile.css';
 
 const FSSAI_STORAGE_KEY = 'aahara_setu_fssai_id';
 
 export const Profile: React.FC = () => {
+  const { lang, setLang, t } = useTranslation();
   const [showToast, setShowToast] = useState(false);
   const [fssaiInput, setFssaiInput] = useState(localStorage.getItem(FSSAI_STORAGE_KEY) || '');
   const [isEditingFssai, setIsEditingFssai] = useState(false);
@@ -203,6 +205,24 @@ export const Profile: React.FC = () => {
               <div className="mini-badge" title="Top 1% Donor">🏆</div>
             </div>
           </div>
+
+          <Card className="profile-settings-card glass" style={{ marginTop: '24px', padding: '24px' }}>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Globe size={18} /> {t('settings_lang_title') || 'Language Preferences'}
+            </h3>
+            <div className="profile-lang-switcher">
+              {(['EN', 'HI', 'KA'] as const).map(l => (
+                <button 
+                  key={l}
+                  className={`profile-lang-btn ${lang === l ? 'active' : ''}`}
+                  onClick={() => setLang(l)}
+                >
+                  <span className="lang-code">{l}</span>
+                  <span className="lang-name">{l === 'EN' ? 'English' : l === 'HI' ? 'Hindi' : 'Kannada'}</span>
+                </button>
+              ))}
+            </div>
+          </Card>
 
           <Button variant="primary" className="profile-signout-btn" onClick={() => { localStorage.clear(); window.location.href = '/'; }}>
             <LogOut size={16} /> SIGN OUT
