@@ -92,6 +92,8 @@ export const Auth: React.FC = () => {
                 placeholder="User ID or Email" 
                 required 
                 value={email}
+                autoComplete="off"
+                spellCheck="false"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -103,6 +105,7 @@ export const Auth: React.FC = () => {
                 placeholder="Password" 
                 required 
                 value={password}
+                autoComplete="new-password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
