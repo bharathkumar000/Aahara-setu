@@ -35,11 +35,6 @@ export const Navbar: React.FC = () => {
               <span>{link.name}</span>
             </Link>
           ))}
-          {!isAuthenticated && (
-            <Link to="/login" className="nav-login-btn">
-              Login
-            </Link>
-          )}
         </div>
       </div>
     </nav>
