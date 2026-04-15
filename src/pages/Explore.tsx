@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Search, MapPin, Clock, AlertCircle, Zap, ShieldCheck, Users, X, Upload } from 'lucide-react';
+import { Search, MapPin, Clock, AlertCircle, Zap, ShieldCheck, Users } from 'lucide-react';
+import { LeafletMap } from '../components/ui/LeafletMap';
 import './Explore.css';
 
 interface FoodItem {
   id: string;
   name: string;
   type: string;
-  totalQuantity: number;
-  unit: string;
+  quantity: string;
   distance: string;
   expiry: string;
   donor: string;
-  urgencyScore: number;
+  urgencyScore: number; // 0-100
   urgencyLevel: 'high' | 'medium' | 'low';
   urgencyLabel: string;
   verified: boolean;
@@ -22,40 +22,40 @@ interface FoodItem {
 
 const MOCK_FOOD_ITEMS: FoodItem[] = [
   {
-    id: '1', name: 'Assorted Gourmet Pastries', type: 'Bakery',
-    totalQuantity: 15, unit: 'pieces', distance: '0.8 km', expiry: '30 mins',
-    donor: 'Baskin & Scones', urgencyScore: 95, urgencyLevel: 'high',
-    urgencyLabel: '⚡ High Priority – expires in 30 mins', verified: true, demand: 'Very High'
+    id: '1', name: 'KFC Fried Chicken Bucket', type: 'Fast Food',
+    quantity: '15 pieces', distance: '0.8 km', expiry: '30 mins',
+    donor: 'KFC', urgencyScore: 95, urgencyLevel: 'high',
+    urgencyLabel: '⚡ High Priority - 30 min', verified: true, demand: 'Very High'
   },
   {
-    id: '2', name: 'Vegetable Biryani', type: 'Main Course',
-    totalQuantity: 10, unit: 'portions', distance: '1.2 km', expiry: '4 hours',
-    donor: 'Heritage Heights Hotel', urgencyScore: 60, urgencyLevel: 'medium',
-    urgencyLabel: '⏰ Medium – expires in 4 hrs', verified: true, demand: 'High'
+    id: '2', name: 'Veg Dum Biryani', type: 'Main Course',
+    quantity: '10 portions', distance: '1.2 km', expiry: '4 hours',
+    donor: 'Taj Hotel', urgencyScore: 60, urgencyLevel: 'medium',
+    urgencyLabel: '⏰ Medium - 4 hr', verified: true, demand: 'High'
   },
   {
-    id: '3', name: 'Fresh Salad Bowls', type: 'Healthy',
-    totalQuantity: 5, unit: 'bowls', distance: '2.5 km', expiry: '1 hour',
-    donor: 'Green Leaf Cafe', urgencyScore: 85, urgencyLevel: 'high',
-    urgencyLabel: '⚡ High Priority – expires in 1 hr', verified: false, demand: 'Medium'
+    id: '3', name: 'Masala Dosa & Sambar', type: 'South Indian',
+    quantity: '5 portions', distance: '2.5 km', expiry: '1 hour',
+    donor: 'MTR (Mavalli Tiffin Room)', urgencyScore: 85, urgencyLevel: 'high',
+    urgencyLabel: '⚡ High Priority - 1 hr', verified: false, demand: 'Medium'
   },
   {
-    id: '4', name: 'Mixed Fruit Platters', type: 'Dessert',
-    totalQuantity: 3, unit: 'platters', distance: '3.1 km', expiry: '5 hours',
-    donor: 'The Grand Palace', urgencyScore: 30, urgencyLevel: 'low',
-    urgencyLabel: '✅ Low Priority – 5 hrs remaining', verified: true, demand: 'Low'
+    id: '4', name: 'McDonald\'s Happy Meals', type: 'Fast Food',
+    quantity: '3 meals', distance: '3.1 km', expiry: '5 hours',
+    donor: 'McDonald\'s', urgencyScore: 30, urgencyLevel: 'low',
+    urgencyLabel: '✅ Low Priority - 5 hr', verified: true, demand: 'Low'
   },
   {
-    id: '5', name: 'Paneer Tikka (Surplus Event)', type: 'Main Course',
-    totalQuantity: 20, unit: 'portions', distance: '0.4 km', expiry: '45 mins',
-    donor: 'Skyline Banquets', urgencyScore: 92, urgencyLevel: 'high',
-    urgencyLabel: '⚡ High Priority – expires in 45 mins', verified: true, demand: 'Very High'
+    id: '5', name: 'Paneer Butter Masala', type: 'North Indian',
+    quantity: '20 portions', distance: '0.4 km', expiry: '45 mins',
+    donor: 'Haldiram\'s', urgencyScore: 92, urgencyLevel: 'high',
+    urgencyLabel: '⚡ High Priority - 45 min', verified: true, demand: 'Very High'
   },
   {
-    id: '6', name: 'Bread Loaves (Assorted)', type: 'Bakery',
-    totalQuantity: 8, unit: 'loaves', distance: '1.8 km', expiry: '8 hours',
-    donor: 'Morning Dew Bakery', urgencyScore: 20, urgencyLevel: 'low',
-    urgencyLabel: '✅ Low Priority – 8 hrs remaining', verified: true, demand: 'Moderate'
+    id: '6', name: 'Chole Bhature', type: 'North Indian',
+    quantity: '8 portions', distance: '1.8 km', expiry: '8 hours',
+    donor: 'Bikanerwala', urgencyScore: 20, urgencyLevel: 'low',
+    urgencyLabel: '✅ Low Priority - 8 hr', verified: true, demand: 'Moderate'
   },
 ];
 
@@ -63,77 +63,105 @@ export const Explore: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   const [items, setItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
-  const [claimModaltem, setClaimModalItem] = useState<FoodItem | null>(null);
-  const [claimAmount, setClaimAmount] = useState<number>(1);
-  
-  // Verification State
-  const [claimsMade, setClaimsMade] = useState(0);
-  const [isVerified, setIsVerified] = useState(false);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [uploadingProof, setUploadingProof] = useState(false);
+  const [claimedIds, setClaimedIds] = useState<string[]>([]);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
+  const [claimQuantity, setClaimQuantity] = useState<string>('');
 
   const filteredItems = items.filter(item => {
     const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.type.toLowerCase().includes(searchQuery.toLowerCase());
     const matchFilter = filter === 'all' || item.urgencyLevel === filter;
-    return matchSearch && matchFilter && item.totalQuantity > 0;
+    return matchSearch && matchFilter && !claimedIds.includes(item.id);
   });
 
-  const openClaimModal = (item: FoodItem) => {
-    setClaimModalItem(item);
-    setClaimAmount(1);
-  };
-
-  const handleClaimConfirm = () => {
-    if (!claimModaltem) return;
-
-    if (!isVerified && claimsMade >= 1) {
-      setClaimModalItem(null);
-      setShowVerifyModal(true);
-      return;
-    }
-
-    setItems(prev => prev.map(item => {
-      if (item.id === claimModaltem.id) {
-        return { ...item, totalQuantity: Math.max(0, item.totalQuantity - claimAmount) };
-      }
-      return item;
-    }));
-    
-    setClaimsMade(prev => prev + 1);
-    setClaimModalItem(null);
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadingProof(true);
-      // Simulate verification upload
-      setTimeout(() => {
-        setUploadingProof(false);
-        setIsVerified(true);
-        setShowVerifyModal(false);
-        if (claimModaltem) {
-          openClaimModal(claimModaltem); // re-open the claim modal they were trying to access
-        }
-      }, 1500);
+  const handleConfirmClaim = () => {
+    if (selectedFoodId) {
+      setClaimedIds(prev => [...prev, selectedFoodId]);
+      setSelectedFoodId(null);
+      // Simulating a success toast or notification
+      alert(`Claim confirmed for ${claimQuantity || 'selected quantity'}! The donor has been notified.`);
     }
   };
+
+  const selectedFood = items.find(i => i.id === selectedFoodId);
 
   return (
-    <div className="explore-container relative">
+    <div className="explore-container">
+      {/* Dynamic Pop-up Modal for Claiming */}
+      {selectedFood && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+          <Card className="glass" style={{ maxWidth: '450px', width: '90%', padding: '24px', position: 'relative' }}>
+            <h2 style={{ marginBottom: '16px', fontSize: '1.4rem', borderBottom: '1px solid rgba(139, 161, 148, 0.3)', paddingBottom: '12px' }}>Claim Donation</h2>
+            
+            <div style={{ marginBottom: '16px', fontSize: '0.9rem', color: 'var(--color-text-muted)', background: 'rgba(0,0,0,0.05)', padding: '16px', borderRadius: '8px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              
+              {/* Left Column: Donor Info */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderRight: '1px dashed rgba(139, 161, 148, 0.2)', paddingRight: '16px' }}>
+                <h4 style={{ margin: 0, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-primary)', fontWeight: 800 }}>Donor Details</h4>
+                <p><strong>Name:</strong> {selectedFood.donor}</p>
+                <p><strong>Item:</strong> {selectedFood.name}</p>
+                <p><strong>Available:</strong> <span style={{ color: 'var(--color-primary)', fontWeight: 800 }}>{selectedFood.quantity}</span></p>
+                <p style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', fontSize: '0.85rem' }}>📞 <strong>+91 98765 43210</strong></p>
+              </div>
+
+              {/* Right Column: Receiver Info */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <h4 style={{ margin: 0, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-primary)', fontWeight: 800 }}>Logistics Info</h4>
+                <p><strong>Distance:</strong> {selectedFood.distance}</p>
+                <p><strong>Expires In:</strong> <span style={{ color: selectedFood.urgencyLevel === 'high' ? 'var(--color-error)' : 'inherit', fontWeight: 'bold' }}>{selectedFood.expiry}</span></p>
+                <p><strong>Demand:</strong> {selectedFood.demand}</p>
+                <p style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', fontSize: '0.85rem' }}>📞 <strong>+91 98221 00334</strong></p>
+              </div>
+
+            </div>
+
+            {/* Embedded Interactive Map */}
+            <LeafletMap location={selectedFood.donor} />
+            
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600, color: 'var(--color-text)' }}>How much quantity do you need?</label>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <input 
+                  type="number" 
+                  min="1"
+                  max={parseInt(selectedFood.quantity, 10) || 20}
+                  value={claimQuantity || 1} 
+                  onChange={(e) => setClaimQuantity(e.target.value)} 
+                  style={{ width: '70px', padding: '10px', borderRadius: '8px', border: '2px solid rgba(139, 161, 148, 0.4)', background: 'var(--color-bg)', color: 'var(--color-primary)', fontSize: '1.1rem', textAlign: 'center', fontWeight: 'bold', outline: 'none' }}
+                />
+                <input 
+                  type="range"
+                  min="1"
+                  max={parseInt(selectedFood.quantity, 10) || 20}
+                  value={claimQuantity || 1} 
+                  onChange={(e) => setClaimQuantity(e.target.value)} 
+                  style={{ flex: 1, accentColor: 'var(--color-primary)', cursor: 'pointer', height: '6px' }}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '8px', marginLeft: '86px' }}>
+                <span>1</span>
+                <span>Max: {selectedFood.quantity}</span>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+              <Button onClick={() => setSelectedFoodId(null)} style={{ flex: 1, background: 'rgba(0,0,0,0.1)', color: 'var(--color-text)', boxShadow: 'none' }}>Close</Button>
+              <Button onClick={handleConfirmClaim} style={{ flex: 1 }}>Confirm Claim</Button>
+            </div>
+
+            <Button 
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedFood.donor)}`, '_blank')}
+              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              <MapPin size={16} /> Open in Google Maps
+            </Button>
+          </Card>
+        </div>
+      )}
       <div className="explore-header">
         <h1 className="page-title">Find Food <span className="gradient-text">Nearby</span></h1>
-        <p className="page-subtitle">Real-time surplus food available, sorted by urgency. Claim what you need before it expires!</p>
-      </div>
-
-      {/* Stats row for demo state */}
-      <div className="user-verification-status">
-        <div className="status-pill">
-          Claims Made: <strong>{claimsMade}</strong>
-        </div>
-        <div className={`status-pill ${isVerified ? 'verified-true' : 'verified-false'}`}>
-          Status: <strong>{isVerified ? '✅ Verified ID' : '❌ Unverified'}</strong>
-        </div>
+        <p className="page-subtitle">Real-time surplus food available, sorted by urgency. Claim before it expires!</p>
       </div>
 
       <div className="search-filter-bar glass">
@@ -158,11 +186,12 @@ export const Explore: React.FC = () => {
             </button>
           ))}
         </div>
-        <Button variant="glass" className="map-btn">
+        <Button variant="glass" className="map-btn" onClick={() => alert('Interactive Map View is loading...')}>
           <MapPin size={16} /> Map View
         </Button>
       </div>
 
+      {/* Fallback alert for high urgency */}
       {filteredItems.some(i => i.urgencyLevel === 'high') && (
         <div className="urgency-alert">
           <Zap size={16} />
@@ -193,7 +222,7 @@ export const Explore: React.FC = () => {
               <div className="food-meta-grid">
                 <div className="meta-item">
                   <span className="meta-label">Quantity</span>
-                  <span className="meta-value">{item.totalQuantity} {item.unit}</span>
+                  <span className="meta-value">{item.quantity}</span>
                 </div>
                 <div className="meta-item">
                   <span className="meta-label"><Clock size={12} /> Expires in</span>
@@ -222,7 +251,7 @@ export const Explore: React.FC = () => {
                 </div>
               </div>
 
-              <Button fullWidth onClick={() => openClaimModal(item)}>
+              <Button fullWidth onClick={() => { setSelectedFoodId(item.id); setClaimQuantity(''); }}>
                 Claim Now
               </Button>
             </Card>
@@ -233,118 +262,17 @@ export const Explore: React.FC = () => {
           <Card className="empty-card">
             <AlertCircle size={48} className="empty-icon" />
             <h3>No Food Available</h3>
-            <p>There is currently no surplus food matching your filters or all items have been fully claimed.</p>
+            <p>There is currently no surplus food matching your filters. Try expanding your search or check back soon.</p>
             <div className="fallback-info">
               <RefreshCwIcon />
               <p><strong>Auto-Redistribution Active:</strong> We are notifying backup NGOs and nearest shelters automatically.</p>
             </div>
-            <Button variant="outline" onClick={() => { setItems(MOCK_FOOD_ITEMS); setFilter('all'); setSearchQuery(''); setClaimsMade(0); setIsVerified(false); }}>
-              Reset App Data
+            <Button variant="outline" onClick={() => { setItems(MOCK_FOOD_ITEMS); setFilter('all'); setSearchQuery(''); setClaimedIds([]); }}>
+              Refresh Listings
             </Button>
           </Card>
         </div>
       )}
-
-      {/* Claim Modal Overlay */}
-      {claimModaltem && !showVerifyModal && (
-        <div className="claim-modal-overlay">
-          <Card className="claim-modal-card">
-            <div className="claim-modal-header">
-              <h3>Claim: {claimModaltem.name}</h3>
-              <button className="close-modal-btn" onClick={() => setClaimModalItem(null)}>
-                <X size={20} />
-              </button>
-            </div>
-            
-            <p className="claim-modal-desc">
-              How many <strong>{claimModaltem.unit}</strong> do you need? 
-              <br/>Total available: {claimModaltem.totalQuantity} {claimModaltem.unit}
-            </p>
-
-            <div className="claim-slider-area">
-              <input 
-                type="range" 
-                className="claim-slider" 
-                min="1" 
-                max={claimModaltem.totalQuantity} 
-                value={claimAmount} 
-                onChange={(e) => setClaimAmount(Number(e.target.value))}
-              />
-              <div className="slider-labels">
-                <span>1</span>
-                <span>{claimModaltem.totalQuantity}</span>
-              </div>
-            </div>
-
-            <div className="claim-input-area">
-              <label className="input-label">Enter exact amount</label>
-              <div className="claim-input-row">
-                <input 
-                  type="number"
-                  className="input-field claim-number-input"
-                  min="1"
-                  max={claimModaltem.totalQuantity}
-                  value={claimAmount}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val > 0 && val <= claimModaltem.totalQuantity) setClaimAmount(val);
-                    else if (e.target.value === '') setClaimAmount(0); // temporary state for typing
-                  }}
-                  onBlur={() => {
-                    if (claimAmount < 1) setClaimAmount(1);
-                    if (claimAmount > claimModaltem.totalQuantity) setClaimAmount(claimModaltem.totalQuantity);
-                  }}
-                />
-                <span className="claim-unit">{claimModaltem.unit}</span>
-              </div>
-            </div>
-
-            <Button fullWidth onClick={handleClaimConfirm}>
-              Confirm Claim
-            </Button>
-          </Card>
-        </div>
-      )}
-
-      {/* Verification Modal for Unverified Individual claiming > 1 */}
-      {showVerifyModal && (
-        <div className="claim-modal-overlay">
-          <Card className="claim-modal-card verification-card-center">
-            <div className="claim-modal-header">
-              <h3>Verification Required</h3>
-              <button className="close-modal-btn" onClick={() => setShowVerifyModal(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="verify-icon-wrap">
-              <ShieldCheck size={48} className="verify-shield" />
-            </div>
-
-            <p className="claim-modal-desc text-center">
-              You have already used your <strong>free one-time claim</strong>. To prevent platform misuse and ensure food reaches genuine individuals and NGOs, please verify your identity to continue unrestricted access.
-            </p>
-
-            <div className="proof-upload-area">
-              <input 
-                type="file" 
-                id="proof-upload" 
-                style={{display: 'none'}} 
-                onChange={handleFileUpload} 
-              />
-              <label htmlFor="proof-upload" className={`upload-btn-label ${uploadingProof ? 'uploading' : ''}`}>
-                <Upload size={18} /> 
-                {uploadingProof ? 'Checking Identity...' : 'Upload Govt ID / Certificate'}
-              </label>
-            </div>
-
-            <p className="verify-note text-center">
-              Aahar Setu employs a strict Anti-Misuse policy. Verified profiles get unlimited access and Priority status.
-            </p>
-          </Card>
-        </div>
-      )}
-
     </div>
   );
 };

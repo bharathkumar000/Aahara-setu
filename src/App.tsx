@@ -8,6 +8,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Feedback } from './pages/Feedback';
 import { Notifications } from './pages/Notifications';
 import { Login } from './pages/Login';
+import { Profile } from './pages/Profile';
 import { Toast } from './components/ui/Toast';
 import type { ToastMessage } from './components/ui/Toast';
 import './App.css';
@@ -42,11 +43,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/feedback" element={<Feedback />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <Toast messages={toasts} onRemove={removeToast} />
