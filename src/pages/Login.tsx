@@ -166,7 +166,7 @@ export const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required 
-              minLength={6}
+              minLength={isLogin ? 1 : 6}
             />
             
             {error && <div className="auth-error" style={{ color: 'var(--color-danger)', fontSize: '0.85rem', background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '6px' }}>{error}</div>}
