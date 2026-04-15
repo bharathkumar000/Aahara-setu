@@ -46,7 +46,10 @@ function AppContent() {
     }
 
     // Disable demo notifications on the Landing/Login page
-    if (location.pathname === '/' || location.pathname === '/login') return;
+    if (location.pathname === '/' || location.pathname === '/login') {
+      if (toasts.length > 0) setToasts([]);
+      return;
+    }
 
     const t1 = setTimeout(() => {
       addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
