@@ -222,6 +222,7 @@
 
 .tag.blue { background: #3b82f6; }
 .tag.green { background: #22c55e; }
+.tag.yellow { background: #eab308; }
 
 .toggle-auth-state {
   text-align: center;

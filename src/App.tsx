@@ -13,6 +13,7 @@ import { Receiver } from './receiver/Receiver';
 import { Explore as ReceiverExplore } from './receiver/Explore';
 import { Notifications as ReceiverNotifications } from './receiver/Notifications';
 import { ClaimView } from './receiver/ClaimView';
+import { Admin } from './pages/Admin';
 import { Toast } from './donor/components/ui/Toast/Toast';
 import { LanguageProvider } from './donor/context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -38,6 +39,9 @@ function AppContent() {
       }
       if (role === 'donor' && location.pathname.startsWith('/receiver')) {
         navigate('/');
+      }
+      if (role === 'admin' && location.pathname !== '/admin') {
+        navigate('/admin');
       }
     }
 
@@ -90,6 +94,7 @@ function AppContent() {
           <Route path="/receiver/explore" element={<ReceiverExplore />} />
           <Route path="/receiver/notifications" element={<ReceiverNotifications />} />
           <Route path="/receiver/claim/:id" element={<ClaimView />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Auth />} />
           <Route path="*" element={<div style={{ padding: '40px', textAlign: 'center' }}><h2>404: Page Not Found</h2><Link to="/">Go Home</Link></div>} />
         </Routes>

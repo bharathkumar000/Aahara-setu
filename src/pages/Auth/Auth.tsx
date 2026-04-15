@@ -15,12 +15,18 @@ export const Auth: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email || 'demo@aaharasetu.org', role);
-    if (role === 'donor') {
-      navigate('/');
-    } else {
-      navigate('/receiver');
-    }
+    
+    // Demo identification logic
+    let targetRole: UserRole = role;
+    if (email === '1' && password === '1') targetRole = 'donor';
+    if (email === '2' && password === '2') targetRole = 'receiver';
+    if (email === '3' && password === '3') targetRole = 'admin';
+
+    login(email, targetRole);
+    
+    if (targetRole === 'donor') navigate('/');
+    else if (targetRole === 'receiver') navigate('/receiver');
+    else if (targetRole === 'admin') navigate('/admin');
   };
 
   return (
@@ -109,10 +115,11 @@ export const Auth: React.FC = () => {
           <div className="auth-extra-links">
              {activeTab === 'login' && (
                <div className="demo-creds">
-                  <span>DEMO CREDENTIALS:</span>
+                  <span>DEMO CREDENTIALS (ID - PASS):</span>
                   <div className="creds-tags">
-                     <span className="tag blue">DONOR: D-1</span>
-                     <span className="tag green">NGO: R-2</span>
+                     <span className="tag blue">DONOR: 1 - 1</span>
+                     <span className="tag green">NGO: 2 - 2</span>
+                     <span className="tag yellow">ADMIN: 3 - 3</span>
                   </div>
                </div>
              )}
