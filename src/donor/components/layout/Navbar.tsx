@@ -18,6 +18,16 @@ export const Navbar: React.FC = () => {
     { name: t('nav_profile'), path: '/profile', icon: <Star size={18} /> },
   ];
 
+  const receiverLinks = [
+    { name: 'Dashboard', path: '/receiver', icon: <LayoutDashboard size={18} /> },
+    { name: 'Notifications', path: '/receiver/notifications', icon: <Bell size={18} /> },
+    { name: 'Explore Food', path: '/disasters', icon: <Globe size={18} /> },
+    { name: 'Profile', path: '/profile', icon: <Star size={18} /> },
+  ];
+
+  const isReceiver = location.pathname.startsWith('/receiver');
+  const links = isReceiver ? receiverLinks : navLinks;
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -26,8 +36,15 @@ export const Navbar: React.FC = () => {
           <span className="logo-text">Aahara Setu</span>
         </Link>
         
+        <div className="role-switcher-wrap">
+           <Link to={isReceiver ? "/" : "/receiver"} className="role-switch-btn glass">
+              {isReceiver ? "NGO Mode" : "Donor Mode"}
+              <div className="role-dot" />
+           </Link>
+        </div>
+
         <div className="navbar-links">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.path}
               to={link.path}
