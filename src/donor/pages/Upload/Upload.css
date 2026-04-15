@@ -111,12 +111,21 @@
 .upload-sidebar { display: flex; flex-direction: column; gap: 24px; }
 
 .impact-preview-card {
-  padding: 30px !important;
-  background: var(--color-primary);
-  color: white;
+  padding: 35px !important;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #2d3a24 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 20px 40px rgba(79, 99, 61, 0.2) !important;
 }
 
-.impact-preview-card h4 { color: white; opacity: 0.9; margin-bottom: 24px; }
+.impact-preview-card h4 { 
+  color: white; 
+  opacity: 0.9; 
+  margin-bottom: 30px; 
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+}
 
 .impact-metrics {
   display: grid;
@@ -125,16 +134,23 @@
 }
 
 .impact-metric {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 24px;
   border-radius: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 }
 
-.impact-val { font-size: 1.6rem; font-weight: 900; color: #ffffff; }
-.impact-lbl { font-size: 0.8rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); text-transform: uppercase; }
+.impact-metric:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.02);
+}
+
+.impact-val { font-size: 1.8rem; font-weight: 900; color: #ffffff; }
+.impact-lbl { font-size: 0.75rem; font-weight: 800; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Success State Premium */
 .success-state { display: flex; justify-content: center; padding: 100px 0; }

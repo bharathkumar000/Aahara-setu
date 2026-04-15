@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import {
   Heart, Users, Utensils, Leaf, Zap, ShieldCheck,
-  MapPin, Star, Truck, Wifi, RefreshCw
+  MapPin, Star, Truck, Wifi, RefreshCw, Upload, Tag, Link, CheckCircle2
 } from 'lucide-react';
 import { useTranslation } from '../../context/LanguageContext';
 import './Landing.css';
@@ -113,6 +113,79 @@ export const Landing: React.FC = () => {
               <div className="stat-label-text">{s.label}</div>
             </div>
           ))}
+        </div>
+      </section>
+      
+      {/* How It Works */}
+      <section className="how-it-works-section">
+        <div className="section-header">
+          <h2 className="section-title">How It <span className="title-accent">Works</span></h2>
+          <p className="section-subtitle">From surplus to satisfied — in under 30 minutes.</p>
+        </div>
+        
+        <div className="steps-container">
+          <div className="steps-row">
+            <div className="work-step">
+              <div className="step-card">
+                 <div className="step-icon-box blue"><Upload size={20} /></div>
+                 <h4 className="step-title">Upload</h4>
+                 <p className="step-desc">Donor lists surplus food</p>
+              </div>
+              <div className="step-arrow">→</div>
+            </div>
+
+            <div className="work-step">
+              <div className="step-card">
+                 <div className="step-icon-box yellow"><Tag size={20} /></div>
+                 <h4 className="step-title">Tag & Score</h4>
+                 <p className="step-desc">Urgency computed</p>
+              </div>
+              <div className="step-arrow">→</div>
+            </div>
+
+            <div className="work-step">
+              <div className="step-card">
+                 <div className="step-icon-box purple"><Link size={20} /></div>
+                 <h4 className="step-title">Match</h4>
+                 <p className="step-desc">Nearest NGO matched</p>
+              </div>
+              <div className="step-arrow">→</div>
+            </div>
+
+            <div className="work-step">
+              <div className="step-card">
+                 <div className="step-icon-box green"><CheckCircle2 size={20} /></div>
+                 <h4 className="step-title">Claim</h4>
+                 <p className="step-desc">NGO claims instantly</p>
+              </div>
+              <div className="step-arrow">→</div>
+            </div>
+
+            <div className="work-step last">
+              <div className="step-card">
+                 <div className="step-icon-box orange"><Truck size={20} /></div>
+                 <h4 className="step-title">Pickup</h4>
+                 <p className="step-desc">Logistics triggered</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="steps-row-center">
+            <div className="work-step">
+              <div className="step-card">
+                 <div className="step-icon-box gold"><Star size={20} /></div>
+                 <h4 className="step-title">Feedback</h4>
+                 <p className="step-desc">System learns & improves</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="banner-how">
+           <div className="banner-content">
+              <Zap size={16} className="zap-icon" />
+              <span>Dynamic urgency-based matching with fallback redistribution ensures near-zero food waste in real-time.</span>
+           </div>
         </div>
       </section>
 

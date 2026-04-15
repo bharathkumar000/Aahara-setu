@@ -269,7 +269,7 @@ export const Upload: React.FC = () => {
         </div>
 
         <div className="upload-sidebar">
-          <Card className="impact-preview-card hover-lift">
+          <Card className="impact-preview-card hover-lift" glass={false}>
             <h4>📈 PREDICTED SOCIAL IMPACT</h4>
             <div className="impact-metrics">
               <div className="impact-metric">
