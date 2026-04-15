@@ -141,24 +141,19 @@ export const Explore: React.FC = () => {
                 </a>
               </div>
 
-              <div className="info-divider"></div>
-
-              {/* Right Column: Logistics Info */}
+              {/* Right Column: Receiver Info (The one who clicks) */}
               <div className="info-column">
-                <div className="info-label-group">LOGISTICS INFO</div>
-                <div className="info-row"><strong>Distance:</strong> {selectedItem.distance}</div>
-                <div className="info-row">
-                  <strong>Expires In:</strong> 
-                  <span className="text-danger-bold"> {selectedItem.expiry}</span>
-                </div>
-                <div className="info-row"><strong>Demand:</strong> {selectedItem.demand}</div>
+                <div className="info-label-group">CLAIMER DETAILS</div>
+                <div className="info-row"><strong>Verified By:</strong> Aahara Setu</div>
+                <div className="info-row"><strong>Receiver:</strong> Robin NGO</div>
+                <div className="info-row"><strong>Status:</strong> Approved</div>
                 <div className="contact-link">
-                   <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Logistics)</span>
+                   <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Line)</span>
                 </div>
               </div>
             </div>
 
-            {/* Embedded Interactive Map */}
+            {/* Embedded Interactive Map - RESTORED */}
             <div className="map-view-container">
               <LeafletMap location={selectedItem.donor} />
             </div>
