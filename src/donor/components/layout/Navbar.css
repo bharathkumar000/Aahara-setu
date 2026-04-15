@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 10px 24px; /* Increased padding for better tap-target and spacing */
   border-radius: 100px;
   color: var(--color-text-muted);
   font-weight: 700;
@@ -35,7 +35,7 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 40px rgba(79, 99, 61, 0.1);
-  padding: 0 32px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   animation: slideDownNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -61,8 +61,9 @@
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   text-decoration: none;
+  margin-right: 24px; 
 }
 
 .navbar-logo-img {
@@ -76,30 +77,31 @@
 }
 
 .logo-text {
-  font-size: 1.4rem;
-  font-weight: 900;
+  font-size: 1.2rem;
+  font-weight: 800;
   letter-spacing: -0.5px;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px; 
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 8px 12px;
   border-radius: 100px;
   color: var(--color-text-muted);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
@@ -149,9 +151,10 @@
 
 /* Donate Pill Specifics */
 .nav-link.donate-pill {
-  background: rgba(79, 99, 61, 0.1);
+  background: transparent;
   color: #4F633D;
-  padding: 12px 28px !important;
+  border: 1.5px solid rgba(79, 99, 61, 0.2);
+  padding: 8px 20px !important;
   font-weight: 800 !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) ;
 }
@@ -159,11 +162,13 @@
 .nav-link.donate-pill.active {
   background: #4F633D !important;
   color: white !important;
+  border-color: #4F633D !important;
   box-shadow: 0 10px 20px rgba(79, 99, 61, 0.2) !important;
 }
 
 .nav-link.donate-pill:hover:not(.active) {
-  background: rgba(79, 99, 61, 0.2);
+  background: rgba(79, 99, 61, 0.05);
+  border-color: rgba(79, 99, 61, 0.4);
   transform: translateY(-2px);
 }
 
