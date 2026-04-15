@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link, useNavigate } from 'react-router-dom';
 import { Navbar } from './donor/components/layout/Navbar';
 import { Footer } from './donor/components/layout/Footer';
 import { Landing } from './donor/pages/Landing/Landing';
@@ -10,20 +10,39 @@ import { Profile } from './donor/pages/Profile/Profile';
 import { Disasters } from './donor/pages/Disasters/Disasters';
 import { Traceability } from './donor/pages/Traceability/Traceability';
 import { Receiver } from './receiver/Receiver';
+import { Explore as ReceiverExplore } from './receiver/Explore';
 import { Notifications as ReceiverNotifications } from './receiver/Notifications';
 import { ClaimView } from './receiver/ClaimView';
 import { Toast } from './donor/components/ui/Toast/Toast';
 import { LanguageProvider } from './donor/context/LanguageContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { Auth } from './pages/Auth/Auth';
 import type { ToastMessage } from './donor/components/ui/Toast/Toast';
 import './donor/styles/App.css';
 
 function AppContent() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const { isAuthenticated, role } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Auth Redirects
+    if (!isAuthenticated && location.pathname !== '/login') {
+      navigate('/login');
+    }
+
+    if (isAuthenticated) {
+      if (role === 'receiver' && !location.pathname.startsWith('/receiver') && location.pathname !== '/profile') {
+        navigate('/receiver');
+      }
+      if (role === 'donor' && location.pathname.startsWith('/receiver')) {
+        navigate('/');
+      }
+    }
+
     // Disable demo notifications on the Landing/Login page
-    if (location.pathname === '/' || location.pathname === '/receiver-login') return;
+    if (location.pathname === '/' || location.pathname === '/login') return;
 
     const t1 = setTimeout(() => {
       addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
@@ -46,10 +65,17 @@ function AppContent() {
 
   const showFooter = location.pathname === '/' || location.pathname === '/profile';
 
+  const isAuthPage = location.pathname === '/login';
+
   return (
     <>
-      <Navbar />
-      <main style={{ padding: '120px 24px 0', maxWidth: '1200px', margin: '0 auto', minHeight: '80vh' }}>
+      {!isAuthPage && <Navbar />}
+      <main style={{ 
+        padding: isAuthPage ? '0' : '120px 24px 0', 
+        maxWidth: isAuthPage ? 'none' : '1200px', 
+        margin: '0 auto', 
+        minHeight: '80vh' 
+      }}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/profile" element={<Profile />} />
@@ -61,8 +87,10 @@ function AppContent() {
           
           {/* Receiver Routes */}
           <Route path="/receiver" element={<Receiver />} />
+          <Route path="/receiver/explore" element={<ReceiverExplore />} />
           <Route path="/receiver/notifications" element={<ReceiverNotifications />} />
           <Route path="/receiver/claim/:id" element={<ClaimView />} />
+          <Route path="/login" element={<Auth />} />
           <Route path="*" element={<div style={{ padding: '40px', textAlign: 'center' }}><h2>404: Page Not Found</h2><Link to="/">Go Home</Link></div>} />
         </Routes>
       </main>
@@ -74,11 +102,13 @@ function AppContent() {
 
 function App() {
   return (
-    <LanguageProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }
 
