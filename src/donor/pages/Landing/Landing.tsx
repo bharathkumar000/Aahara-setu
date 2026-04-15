@@ -9,7 +9,7 @@ import {
 import { useTranslation } from '../../context/LanguageContext';
 import './Landing.css';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
 
 const COUNTER_TARGETS = { meals: 12450, people: 8300, donors: 450, co2: 3200 };
 

@@ -103,54 +103,60 @@ export const Disasters: React.FC = () => {
         </p>
       </header>
 
-      <section className="active-alerts">
-        <div className="section-header-row">
-          <h2 className="alert-section-title">
-            <AlertTriangle className="alert-icon-pulse" /> Active Critical Zones
-          </h2>
-          <span className="live-badge">LIVE UPDATES</span>
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '100px', color: '#666' }}>
+          <Zap className="animate-pulse" size={48} />
         </div>
-        
-        <div className="alerts-grid">
-          {activeDisasters.map(disaster => (
-            <Card key={disaster.id} className="disaster-alert-card">
-              <div className="disaster-card-header">
-                <div>
-                  <h3 className="disaster-type">{disaster.type}</h3>
-                  <div className="disaster-loc">
-                    <MapPin size={14} /> {disaster.location}
+      ) : (
+        <section className="active-alerts">
+          <div className="section-header-row">
+            <h2 className="alert-section-title">
+              <AlertTriangle className="alert-icon-pulse" /> Active Critical Zones
+            </h2>
+            <span className="live-badge">LIVE UPDATES</span>
+          </div>
+          
+          <div className="alerts-grid">
+            {activeDisasters.map(disaster => (
+              <Card key={disaster.id} className="disaster-alert-card">
+                <div className="disaster-card-header">
+                  <div>
+                    <h3 className="disaster-type">{disaster.type}</h3>
+                    <div className="disaster-loc">
+                      <MapPin size={14} /> {disaster.location}
+                    </div>
+                  </div>
+                  <div className={`urgency-pill ${disaster.urgency.toLowerCase()}`}>
+                    {disaster.urgency}
                   </div>
                 </div>
-                <div className={`urgency-pill ${disaster.urgency.toLowerCase()}`}>
-                  {disaster.urgency}
-                </div>
-              </div>
 
-              <div className="disaster-stats">
-                <div className="dstat">
-                  <Users size={18} />
-                  <span><strong>{disaster.peopleInNeed}+</strong> in need</span>
+                <div className="disaster-stats">
+                  <div className="dstat">
+                    <Users size={18} />
+                    <span><strong>{disaster.peopleInNeed}+</strong> in need</span>
+                  </div>
+                  <div className="dstat">
+                    <Zap size={18} />
+                    <span>Need: {disaster.suppliesNeeded}</span>
+                  </div>
                 </div>
-                <div className="dstat">
-                  <Zap size={18} />
-                  <span>Need: {disaster.suppliesNeeded}</span>
-                </div>
-              </div>
 
-              <div className="disaster-footer">
-                <Link to="/upload" state={{ isDisaster: true }} style={{ textDecoration: 'none' }}>
-                  <Button variant="primary" className="emergency-btn">
-                    Donate Now <Heart size={16} fill="white" />
-                  </Button>
-                </Link>
-                <div className="eta-tag">
-                  Target: {disaster.timeRemaining}
+                <div className="disaster-footer">
+                  <Link to="/upload" state={{ isDisaster: true }} style={{ textDecoration: 'none' }}>
+                    <Button variant="primary" className="emergency-btn">
+                      Donate Now <Heart size={16} fill="white" />
+                    </Button>
+                  </Link>
+                  <div className="eta-tag">
+                    Target: {disaster.timeRemaining}
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="disaster-process">
         <div className="process-header">
