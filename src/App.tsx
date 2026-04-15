@@ -49,6 +49,7 @@ function AppContent() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/disasters" element={<Disasters />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="*" element={<div style={{ padding: '40px', textAlign: 'center' }}><h2>404: Page Not Found</h2><Link to="/">Go Home</Link></div>} />
         </Routes>
       </main>
       {showFooter && <Footer />}

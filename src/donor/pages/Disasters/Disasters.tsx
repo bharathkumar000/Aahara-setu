@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
-import { Flame, AlertTriangle, MapPin, Users, Heart, ArrowRight, Zap, ShieldAlert } from 'lucide-react';
+import { Flame, AlertTriangle, MapPin, Users, Heart, ArrowRight, Zap, Shield } from 'lucide-react';
 import './Disasters.css';
 
 export const Disasters: React.FC = () => {
@@ -104,7 +104,7 @@ export const Disasters: React.FC = () => {
         </div>
         <div className="process-grid">
           <div className="process-item">
-            <div className="p-icon"><ShieldAlert /></div>
+            <div className="p-icon"><Shield /></div>
             <h4>Vetted NGOs</h4>
             <p>Donations routed only to on-ground NGOs with disaster clearance.</p>
           </div>
@@ -124,7 +124,7 @@ export const Disasters: React.FC = () => {
       <div className="cta-disaster">
         <h3>Institutional Donor?</h3>
         <p>Large-scale corporate or hotel donations are handled via our express hotline.</p>
-        <Button variant="secondary" onClick={() => showToast('Connecting to Institutional Hotline...')}>Contact Response Team <ArrowRight size={16} /></Button>
+        <Button variant="outline" onClick={() => showToast('Connecting to Institutional Hotline...')}>Contact Response Team <ArrowRight size={16} /></Button>
       </div>
 
       {toast && (
