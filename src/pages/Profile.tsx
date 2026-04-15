@@ -4,7 +4,7 @@ import { Button } from '../components/ui/Button';
 import { 
   User, ShieldCheck, MapPin, Camera, 
   Award, TrendingUp, History, Star,
-  Info, CheckCircle2
+  Info
 } from 'lucide-react';
 import './Profile.css';
 

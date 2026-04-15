@@ -47,6 +47,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/notifications" element={<Notifications />} />
         </Routes>
       </main>
