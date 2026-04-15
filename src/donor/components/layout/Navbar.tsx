@@ -25,6 +25,7 @@ export const Navbar: React.FC = () => {
   const receiverLinks = [
     { name: 'Dashboard', path: '/receiver', icon: <LayoutDashboard size={18} /> },
     { name: 'Explore Food', path: '/receiver/explore', icon: <Globe size={18} /> },
+    { name: t('nav_traceability'), path: '/traceability', icon: <Radio size={18} /> },
     { name: 'Notifications', path: '/receiver/notifications', icon: <Bell size={18} /> },
     { name: 'Profile', path: '/profile', icon: <Star size={18} /> },
   ];
