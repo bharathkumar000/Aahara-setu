@@ -196,7 +196,7 @@ export const Receiver: React.FC = () => {
             className={`claims-tab ${activeTab === 'active' ? 'active' : ''}`} 
             onClick={() => setActiveTab('active')}
           >
-            Active Deliveries
+            Food Listings
           </button>
           <button 
             className={`claims-tab ${activeTab === 'pending_proofs' ? 'active' : ''}`} 
