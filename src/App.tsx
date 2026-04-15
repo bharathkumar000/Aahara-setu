@@ -8,6 +8,7 @@ import { Dashboard } from './donor/pages/Dashboard/Dashboard';
 import { Notifications } from './donor/pages/Notifications/Notifications';
 import { Profile } from './donor/pages/Profile/Profile';
 import { Disasters } from './donor/pages/Disasters/Disasters';
+import { Traceability } from './donor/pages/Traceability/Traceability';
 import { Toast } from './donor/components/ui/Toast/Toast';
 import type { ToastMessage } from './donor/components/ui/Toast/Toast';
 import './donor/styles/App.css';
@@ -48,6 +49,7 @@ function AppContent() {
           <Route path="/upload" element={<Upload />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/disasters" element={<Disasters />} />
+          <Route path="/traceability" element={<Traceability />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="*" element={<div style={{ padding: '40px', textAlign: 'center' }}><h2>404: Page Not Found</h2><Link to="/">Go Home</Link></div>} />
         </Routes>
