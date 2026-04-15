@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, type UserRole } from '../../context/AuthContext';
 import { Button } from '../../donor/components/ui/Button/Button';
-import { Heart, Mail, Lock } from 'lucide-react';
+import { Heart, Mail, Lock, User } from 'lucide-react';
 import './Auth.css';
 
 export const Auth: React.FC = () => {
@@ -46,26 +46,39 @@ export const Auth: React.FC = () => {
         {/* Right Panel: Form Logic */}
         <div className="auth-form-panel">
           <div className="auth-form-header">
-            <h2 className="welcome-text">Welcome Back</h2>
-            <p className="access-line">ACCESS THE IMPACT CORE</p>
+            <h2 className="welcome-text">
+              {activeTab === 'login' ? 'Welcome Back' : 'Join Network'}
+            </h2>
+            <p className="access-line">
+              {activeTab === 'login' ? 'ACCESS THE IMPACT CORE' : 'REGISTER YOUR ORGANIZATION'}
+            </p>
           </div>
 
-          <div className="role-selector-premium">
-            <button 
-              className={`role-pill ${role === 'donor' ? 'active' : ''}`}
-              onClick={() => setRole('donor')}
-            >
-              Donor
-            </button>
-            <button 
-              className={`role-pill ${role === 'receiver' ? 'active' : ''}`}
-              onClick={() => setRole('receiver')}
-            >
-              Receiver
-            </button>
-          </div>
+          {activeTab === 'signup' && (
+            <div className="role-selector-premium">
+              <button 
+                className={`role-pill ${role === 'donor' ? 'active' : ''}`}
+                onClick={() => setRole('donor')}
+              >
+                Donor
+              </button>
+              <button 
+                className={`role-pill ${role === 'receiver' ? 'active' : ''}`}
+                onClick={() => setRole('receiver')}
+              >
+                Receiver
+              </button>
+            </div>
+          )}
 
           <form className="auth-form-premium" onSubmit={handleSubmit}>
+            {activeTab === 'signup' && (
+              <div className="input-field-wrap">
+                <User size={18} className="input-icon" />
+                <input type="text" placeholder="Organization Name" required />
+              </div>
+            )}
+            
             <div className="input-field-wrap">
               <Mail size={18} className="input-icon" />
               <input 
@@ -89,18 +102,20 @@ export const Auth: React.FC = () => {
             </div>
 
             <Button fullWidth size="lg" className="auth-main-btn">
-               {activeTab === 'login' ? 'ENTER THE GATES' : 'JOIN THE MISSION'}
+               {activeTab === 'login' ? 'ENTER THE GATES' : 'VERIFY & JOIN'}
             </Button>
           </form>
 
           <div className="auth-extra-links">
-             <div className="demo-creds">
-                <span>DEMO CREDENTIALS:</span>
-                <div className="creds-tags">
-                   <span className="tag blue">DONOR: D-1</span>
-                   <span className="tag green">NGO: R-2</span>
-                </div>
-             </div>
+             {activeTab === 'login' && (
+               <div className="demo-creds">
+                  <span>DEMO CREDENTIALS:</span>
+                  <div className="creds-tags">
+                     <span className="tag blue">DONOR: D-1</span>
+                     <span className="tag green">NGO: R-2</span>
+                  </div>
+               </div>
+             )}
              <p className="toggle-auth-state" onClick={() => setActiveTab(activeTab === 'login' ? 'signup' : 'login')}>
                 {activeTab === 'login' ? "Don't have an account? Join Network" : "Already a member? Sign In"}
              </p>
