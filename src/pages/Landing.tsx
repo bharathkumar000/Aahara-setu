@@ -88,16 +88,16 @@ export const Landing: React.FC = () => {
           <div className="hero-blob blob-2"></div>
           <div className="hero-blob blob-3"></div>
           <div className="floating-card fcard-1">
-            <div className="fcard-icon">🍛</div>
+            <div className="fcard-icon">🍔</div>
             <div>
-              <div className="fcard-title">Veg Biryani</div>
+              <div className="fcard-title">McDonald's Meals</div>
               <div className="fcard-sub urgency-high">⚡ High Priority</div>
             </div>
           </div>
           <div className="floating-card fcard-2">
-            <div className="fcard-icon">🥗</div>
+            <div className="fcard-icon">🍗</div>
             <div>
-              <div className="fcard-title">Salad Bowls</div>
+              <div className="fcard-title">KFC Chicken</div>
               <div className="fcard-sub urgency-medium">⏰ 2 hrs left</div>
             </div>
           </div>

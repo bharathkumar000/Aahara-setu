@@ -21,39 +21,39 @@ interface FoodItem {
 
 const MOCK_FOOD_ITEMS: FoodItem[] = [
   {
-    id: '1', name: 'Assorted Gourmet Pastries', type: 'Bakery',
+    id: '1', name: 'KFC Fried Chicken Bucket', type: 'Fast Food',
     quantity: '15 pieces', distance: '0.8 km', expiry: '30 mins',
-    donor: 'Baskin & Scones', urgencyScore: 95, urgencyLevel: 'high',
+    donor: 'KFC', urgencyScore: 95, urgencyLevel: 'high',
     urgencyLabel: '⚡ High Priority – expires in 30 mins', verified: true, demand: 'Very High'
   },
   {
-    id: '2', name: 'Vegetable Biryani', type: 'Main Course',
+    id: '2', name: 'Veg Dum Biryani', type: 'Main Course',
     quantity: '10 portions', distance: '1.2 km', expiry: '4 hours',
-    donor: 'Heritage Heights Hotel', urgencyScore: 60, urgencyLevel: 'medium',
+    donor: 'Taj Hotel', urgencyScore: 60, urgencyLevel: 'medium',
     urgencyLabel: '⏰ Medium – expires in 4 hrs', verified: true, demand: 'High'
   },
   {
-    id: '3', name: 'Fresh Salad Bowls', type: 'Healthy',
-    quantity: '5 bowls', distance: '2.5 km', expiry: '1 hour',
-    donor: 'Green Leaf Cafe', urgencyScore: 85, urgencyLevel: 'high',
+    id: '3', name: 'Masala Dosa & Sambar', type: 'South Indian',
+    quantity: '5 portions', distance: '2.5 km', expiry: '1 hour',
+    donor: 'MTR (Mavalli Tiffin Room)', urgencyScore: 85, urgencyLevel: 'high',
     urgencyLabel: '⚡ High Priority – expires in 1 hr', verified: false, demand: 'Medium'
   },
   {
-    id: '4', name: 'Mixed Fruit Platters', type: 'Dessert',
-    quantity: '3 platters', distance: '3.1 km', expiry: '5 hours',
-    donor: 'The Grand Palace', urgencyScore: 30, urgencyLevel: 'low',
+    id: '4', name: 'McDonald\'s Happy Meals', type: 'Fast Food',
+    quantity: '3 meals', distance: '3.1 km', expiry: '5 hours',
+    donor: 'McDonald\'s', urgencyScore: 30, urgencyLevel: 'low',
     urgencyLabel: '✅ Low Priority – 5 hrs remaining', verified: true, demand: 'Low'
   },
   {
-    id: '5', name: 'Paneer Tikka (Surplus Event)', type: 'Main Course',
+    id: '5', name: 'Paneer Butter Masala', type: 'North Indian',
     quantity: '20 portions', distance: '0.4 km', expiry: '45 mins',
-    donor: 'Skyline Banquets', urgencyScore: 92, urgencyLevel: 'high',
+    donor: 'Haldiram\'s', urgencyScore: 92, urgencyLevel: 'high',
     urgencyLabel: '⚡ High Priority – expires in 45 mins', verified: true, demand: 'Very High'
   },
   {
-    id: '6', name: 'Bread Loaves (Assorted)', type: 'Bakery',
-    quantity: '8 loaves', distance: '1.8 km', expiry: '8 hours',
-    donor: 'Morning Dew Bakery', urgencyScore: 20, urgencyLevel: 'low',
+    id: '6', name: 'Chole Bhature', type: 'North Indian',
+    quantity: '8 portions', distance: '1.8 km', expiry: '8 hours',
+    donor: 'Bikanerwala', urgencyScore: 20, urgencyLevel: 'low',
     urgencyLabel: '✅ Low Priority – 8 hrs remaining', verified: true, demand: 'Moderate'
   },
 ];

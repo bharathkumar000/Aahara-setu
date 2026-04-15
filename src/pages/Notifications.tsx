@@ -17,27 +17,27 @@ interface Notification {
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: '1', type: 'urgent', title: '⚡ High Priority Food Alert',
-    message: 'Paneer Tikka (20 portions) from Skyline Banquets is expiring in 45 mins — 0.4 km away!',
+    message: 'Paneer Butter Masala (20 portions) from Haldiram\'s is expiring in 45 mins — 0.4 km away!',
     time: '2 mins ago', read: false, icon: '⚡'
   },
   {
     id: '2', type: 'match', title: '🔗 New Match Found',
-    message: 'Vegetable Biryani from Heritage Heights has been matched with Hope NGO. Pickup in progress.',
+    message: 'Veg Dum Biryani from Taj Hotel has been matched with Hope NGO. Pickup in progress.',
     time: '18 mins ago', read: false, icon: '🔗'
   },
   {
     id: '3', type: 'claim', title: '✅ Food Claimed Successfully',
-    message: 'Your donation "Assorted Gourmet Pastries" was claimed by Green NGO. Great work!',
+    message: 'Your donation "KFC Fried Chicken Bucket" was claimed by Green NGO. Great work!',
     time: '1 hour ago', read: true, icon: '✅'
   },
   {
     id: '4', type: 'fallback', title: '🔄 Auto-Redistribution Triggered',
-    message: 'Mixed Fruit Platters were unclaimed. We have notified 3 backup NGOs and 2 shelters automatically.',
+    message: 'McDonald\'s Happy Meals were unclaimed. We have notified 3 backup NGOs and 2 shelters automatically.',
     time: '2 hours ago', read: true, icon: '🔄'
   },
   {
     id: '5', type: 'urgent', title: '⚡ Urgent: Food Expiring Soon',
-    message: 'Fresh Salad Bowls from Green Leaf Cafe expire in 1 hour — only 2.5km away. Claim now!',
+    message: 'Masala Dosa & Sambar from MTR expires in 1 hour — only 2.5km away. Claim now!',
     time: '3 hours ago', read: false, icon: '⚡'
   },
   {
