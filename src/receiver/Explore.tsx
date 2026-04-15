@@ -96,7 +96,7 @@ export const Explore: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   const [items, setItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
   const [claimedIds, setClaimedIds] = useState<string[]>([]);
-  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
   const [claimQuantity, setClaimQuantity] = useState<string>('');
 
   const filteredItems = items.filter(item => {
@@ -107,39 +107,37 @@ export const Explore: React.FC = () => {
   });
 
   const handleConfirmClaim = () => {
-    if (selectedFoodId) {
-      setClaimedIds(prev => [...prev, selectedFoodId]);
-      setSelectedFoodId(null);
+    if (selectedItem) {
+      setClaimedIds(prev => [...prev, selectedItem.id]);
+      setSelectedItem(null);
       // Simulating a success toast or notification
       alert(`Claim confirmed for ${claimQuantity || 'selected quantity'}! The donor has been notified.`);
     }
   };
 
-  const selectedFood = items.find(i => i.id === selectedFoodId);
-
   return (
     <div className="explore-container">
       {/* Dynamic Pop-up Modal for Claiming */}
-      {selectedFood && (
-        <div className="modal-overlay" onClick={() => setSelectedFoodId(null)}>
+      {selectedItem && (
+        <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
           <Card className="claim-modal glass" onClick={e => e.stopPropagation()}>
             <div className="claim-modal-header">
               <h2 className="modal-title">Claim Donation</h2>
-              <button className="close-x" onClick={() => setSelectedFoodId(null)}><X size={20} /></button>
+              <button className="close-x" onClick={() => setSelectedItem(null)}><X size={20} /></button>
             </div>
             
             <div className="claim-info-container">
               {/* Left Column: Donor Info */}
               <div className="info-column">
                 <div className="info-label-group">DONOR DETAILS</div>
-                <div className="info-row"><strong>Name:</strong> {selectedFood.donor}</div>
-                <div className="info-row"><strong>Item:</strong> {selectedFood.name}</div>
+                <div className="info-row"><strong>Name:</strong> {selectedItem.donor}</div>
+                <div className="info-row"><strong>Item:</strong> {selectedItem.name}</div>
                 <div className="info-row">
                   <strong>Available:</strong> 
-                  <span className="text-primary-bold"> {selectedFood.quantity}</span>
+                  <span className="text-primary-bold"> {selectedItem.quantity}</span>
                 </div>
-                <a href={`tel:${selectedFood.phone || '+919876543210'}`} className="contact-link">
-                  <Phone size={14} /> {selectedFood.phone || '+91 98765 43210'}
+                <a href={`tel:${selectedItem.phone || '+919876543210'}`} className="contact-link">
+                  <Phone size={14} /> {selectedItem.phone || '+91 98765 43210'}
                 </a>
               </div>
 
@@ -148,12 +146,12 @@ export const Explore: React.FC = () => {
               {/* Right Column: Logistics Info */}
               <div className="info-column">
                 <div className="info-label-group">LOGISTICS INFO</div>
-                <div className="info-row"><strong>Distance:</strong> {selectedFood.distance}</div>
+                <div className="info-row"><strong>Distance:</strong> {selectedItem.distance}</div>
                 <div className="info-row">
                   <strong>Expires In:</strong> 
-                  <span className="text-danger-bold"> {selectedFood.expiry}</span>
+                  <span className="text-danger-bold"> {selectedItem.expiry}</span>
                 </div>
-                <div className="info-row"><strong>Demand:</strong> {selectedFood.demand}</div>
+                <div className="info-row"><strong>Demand:</strong> {selectedItem.demand}</div>
                 <div className="contact-link">
                    <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Logistics)</span>
                 </div>
@@ -162,7 +160,7 @@ export const Explore: React.FC = () => {
 
             {/* Embedded Interactive Map */}
             <div className="map-view-container">
-              <LeafletMap location={selectedFood.donor} />
+              <LeafletMap location={selectedItem.donor} />
             </div>
             
             <div className="quantity-section">
@@ -173,7 +171,7 @@ export const Explore: React.FC = () => {
                 <input 
                   type="range"
                   min="1"
-                  max={parseInt(selectedFood.quantity) || 1} 
+                  max={parseInt(selectedItem.quantity) || 1} 
                   value={claimQuantity || 1} 
                   onChange={(e) => setClaimQuantity(e.target.value)} 
                   className="pretty-slider"
@@ -181,19 +179,19 @@ export const Explore: React.FC = () => {
               </div>
               <div className="quantity-labels-flex">
                 <span>1</span>
-                <span>Max: {selectedFood.quantity}</span>
+                <span>Max: {selectedItem.quantity}</span>
               </div>
             </div>
             
             <div className="modal-primary-actions">
-              <Button onClick={() => setSelectedFoodId(null)} variant="outline" className="modal-close-btn">Close</Button>
+              <Button onClick={() => setSelectedItem(null)} variant="outline" className="modal-close-btn">Close</Button>
               <Button onClick={handleConfirmClaim} className="modal-confirm-btn">Confirm Claim</Button>
             </div>
 
             <Button 
               variant="outline"
               className="google-maps-action"
-              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedFood.donor)}`, '_blank')}
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedItem.donor)}`, '_blank')}
             >
               <MapPin size={18} /> Open in Google Maps
             </Button>
@@ -298,7 +296,11 @@ export const Explore: React.FC = () => {
                 </div>
               </div>
 
-              <Button fullWidth onClick={() => { setSelectedFoodId(item.id); setClaimQuantity(''); }}>
+              <Button fullWidth onClick={() => { 
+                console.log("Claiming item:", item.name);
+                setSelectedItem(item); 
+                setClaimQuantity(''); 
+              }}>
                 Claim Now
               </Button>
             </Card>
