@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Landing } from './pages/Landing';
 import { Explore } from './pages/Explore';
@@ -39,25 +39,36 @@ function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const userRole = localStorage.getItem('userType');
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
   return (
     <>
       {showLoader && <Loader onComplete={() => setShowLoader(false)} />}
       <Router>
-        <Navbar />
-        <main style={{ padding: '84px 24px 0', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh' }}>
+        {isAuthenticated && <Navbar />}
+        <main style={{ padding: isAuthenticated ? '84px 24px 0' : '0', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh' }}>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/receiver" element={<Receiver />} />
+          {/* Public Route */}
+          <Route path="/login" element={!isAuthenticated ? <Login /> : (userRole === 'donor' ? <Navigate to="/upload" /> : <Navigate to="/explore" />)} />
+
+          {/* Root Gatekeeper */}
+          <Route path="/" element={!isAuthenticated ? <Navigate to="/login" /> : (userRole === 'donor' ? <Navigate to="/upload" /> : <Navigate to="/explore" />)} />
+
+          {/* Protected Routes */}
+          <Route path="/explore" element={isAuthenticated ? <Explore /> : <Navigate to="/login" />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+          <Route path="/upload" element={isAuthenticated ? <Upload /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={isAuthenticated ? (userRole === 'donor' ? <Dashboard /> : <Navigate to="/receiver" />) : <Navigate to="/login" />} />
+          <Route path="/receiver" element={isAuthenticated ? <Receiver /> : <Navigate to="/login" />} />
+          <Route path="/feedback" element={isAuthenticated ? <Feedback /> : <Navigate to="/login" />} />
+          <Route path="/notifications" element={isAuthenticated ? <Notifications /> : <Navigate to="/login" />} />
+          
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
-      <Toast messages={toasts} onRemove={removeToast} />
+      {isAuthenticated && <Toast messages={toasts} onRemove={removeToast} />}
     </Router>
     </>
   );
