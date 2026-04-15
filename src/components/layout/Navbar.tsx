@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Upload, MapPin, LayoutDashboard, Star, Bell } from 'lucide-react';
+import { Home, Upload, MapPin, LayoutDashboard, Star, Bell, LogIn } from 'lucide-react';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
@@ -15,15 +15,17 @@ export const Navbar: React.FC = () => {
     { name: 'Feedback', path: '/feedback', icon: <Star size={18} /> },
   ];
 
+  const isLoginPage = location.pathname === '/login';
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <span className="logo-emoji">🌱</span>
-          <span className="gradient-text">CFRN</span>
+          <img src="/logo.png" alt="Aahar Setu" className="navbar-logo-img" />
+          <span className="navbar-brand-text">Aahar Setu</span>
         </Link>
         <div className="navbar-links">
-          {navLinks.map((link) => (
+          {!isLoginPage && navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -33,6 +35,10 @@ export const Navbar: React.FC = () => {
               <span>{link.name}</span>
             </Link>
           ))}
+          <Link to="/login" className={`nav-link nav-login-btn ${location.pathname === '/login' ? 'active' : ''}`}>
+            <LogIn size={18} />
+            <span>Login</span>
+          </Link>
         </div>
       </div>
     </nav>
