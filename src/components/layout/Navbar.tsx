@@ -10,7 +10,6 @@ export const Navbar: React.FC = () => {
     { name: 'Home', path: '/', icon: <Home size={18} /> },
     { name: 'Explore', path: '/explore', icon: <MapPin size={18} /> },
     { name: 'Receivers', path: '/receiver', icon: <Target size={18} /> },
-    { name: 'Donate', path: '/upload', icon: <Upload size={18} /> },
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
     { name: 'Alerts', path: '/notifications', icon: <Bell size={18} /> },
     { name: 'Feedback', path: '/feedback', icon: <Star size={18} /> },
