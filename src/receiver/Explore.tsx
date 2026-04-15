@@ -123,80 +123,77 @@ export const Explore: React.FC = () => {
   return (
     <div className="explore-container">
       {/* Dynamic Pop-up Modal for Claiming */}
+      {/* Dynamic Pop-up Modal for Claiming */}
       {selectedItem && (
-        <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
+        <div className="modal-overlay" onClick={() => { setSelectedItem(null); setClaimStep('details'); }}>
           <Card className="claim-modal glass" onClick={e => e.stopPropagation()}>
             {claimStep === 'details' ? (
               <>
                 <div className="claim-modal-header">
-              <h2 className="modal-title">Claim Donation</h2>
-              <button className="close-x" onClick={() => setSelectedItem(null)}><X size={20} /></button>
-            </div>
-            
-            <div className="claim-info-container">
-              {/* Left Column: Donor Info */}
-              <div className="info-column">
-                <div className="info-label-group">DONOR DETAILS</div>
-                <div className="info-row"><strong>Name:</strong> {selectedItem.donor}</div>
-                <div className="info-row"><strong>Item:</strong> {selectedItem.name}</div>
-                <div className="info-row">
-                  <strong>Available:</strong> 
-                  <span className="text-primary-bold"> {selectedItem.quantity}</span>
+                  <h2 className="modal-title">Claim Donation</h2>
+                  <button className="close-x" onClick={() => { setSelectedItem(null); setClaimStep('details'); }}><X size={20} /></button>
                 </div>
-                <a href={`tel:${selectedItem.phone || '+919876543210'}`} className="contact-link">
-                  <Phone size={14} /> {selectedItem.phone || '+91 98765 43210'}
-                </a>
-              </div>
+                
+                <div className="claim-info-container">
+                  {/* Left Column: Donor Info */}
+                  <div className="info-column">
+                    <div className="info-label-group">DONOR DETAILS</div>
+                    <div className="info-row"><strong>Name:</strong> {selectedItem.donor}</div>
+                    <div className="info-row"><strong>Item:</strong> {selectedItem.name}</div>
+                    <div className="info-row">
+                      <strong>Available:</strong> 
+                      <span className="text-primary-bold"> {selectedItem.quantity}</span>
+                    </div>
+                    <a href={`tel:${selectedItem.phone || '+919876543210'}`} className="contact-link">
+                      <Phone size={14} /> {selectedItem.phone || '+91 98765 43210'}
+                    </a>
+                  </div>
 
-              <div className="info-divider"></div>
+                  <div className="info-divider"></div>
 
-              {/* Right Column: Logistics Info */}
-              <div className="info-column">
-                <div className="info-label-group">LOGISTICS INFO</div>
-                <div className="info-row"><strong>Distance:</strong> {selectedItem.distance}</div>
-                <div className="info-row">
-                  <strong>Expires In:</strong> 
-                  <span className="text-danger-bold"> {selectedItem.expiry}</span>
+                  {/* Right Column: Receiver Info */}
+                  <div className="info-column">
+                    <div className="info-label-group">CLAIMER DETAILS</div>
+                    <div className="info-row"><strong>Verified By:</strong> Aahara Setu</div>
+                    <div className="info-row"><strong>Receiver:</strong> Robin NGO</div>
+                    <div className="info-row"><strong>Status:</strong> Approved</div>
+                    <div className="contact-link">
+                       <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Line)</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="info-row"><strong>Demand:</strong> {selectedItem.demand}</div>
-                <div className="contact-link">
-                   <Phone size={14} /> +91 98221 00334 <span style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>(Receiver Logistics)</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Embedded Interactive Map */}
-            <div className="map-view-container">
-              <LeafletMap location={selectedItem.donor} />
-            </div>
-            
-            <div className="quantity-section">
-              <p className="quantity-prompt">How much quantity do you need?</p>
-              
-              <div className="quantity-interaction">
-                <div className="quantity-bubble">{claimQuantity || 1}</div>
-                <input 
-                  type="range"
-                  min="1"
-                  max={parseInt(selectedItem.quantity) || 1} 
-                  value={claimQuantity || 1} 
-                  onChange={(e) => setClaimQuantity(e.target.value)} 
-                  className="pretty-slider"
-                />
-              </div>
-              <div className="quantity-labels-flex">
-                <span>1</span>
-                <span>Max: {selectedItem.quantity}</span>
-              </div>
-            </div>
-            
+                {/* Embedded Interactive Map */}
+                <div className="map-view-container">
+                  <LeafletMap location={selectedItem.donor} />
+                </div>
+                
+                <div className="quantity-section">
+                  <p className="quantity-prompt">How much quantity do you need?</p>
+                  <div className="quantity-interaction">
+                    <div className="quantity-bubble">{claimQuantity || 1}</div>
+                    <input 
+                      type="range"
+                      min="1"
+                      max={parseInt(selectedItem.quantity) || 1} 
+                      value={claimQuantity || 1} 
+                      onChange={(e) => setClaimQuantity(e.target.value)} 
+                      className="pretty-slider"
+                    />
+                  </div>
+                  <div className="quantity-labels-flex">
+                    <span>1</span>
+                    <span>Max: {selectedItem.quantity}</span>
+                  </div>
+                </div>
+                
                 <div className="modal-primary-actions">
-                  <Button onClick={() => setSelectedItem(null)} variant="outline" className="modal-close-btn">Close</Button>
+                  <Button onClick={() => { setSelectedItem(null); setClaimStep('details'); }} variant="outline" className="modal-close-btn">Close</Button>
                   <Button onClick={handleConfirmDetails} className="modal-confirm-btn">Confirm Claim</Button>
                 </div>
               </>
             ) : (
-              <div className="logistics-flow-wrapper">
+              <div className="logistics-step-container">
                 <div className="claim-modal-header">
                   <h2 className="modal-title">Logistics Support</h2>
                   <button className="close-x" onClick={() => setClaimStep('details')}><X size={20} /></button>
@@ -259,6 +256,7 @@ export const Explore: React.FC = () => {
             <Button 
               variant="outline"
               className="google-maps-action"
+              style={{ marginTop: '12px' }}
               onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedItem.donor)}`, '_blank')}
             >
               <MapPin size={18} /> Open in Google Maps
