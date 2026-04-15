@@ -1,0 +1,158 @@
+.feedback-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px 0 100px 0;
+}
+
+.feedback-header { display: flex; flex-direction: column; gap: 8px; }
+
+.feedback-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Kindness Card Premium */
+.kindness-card {
+  padding: 32px !important;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kindness-card.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.kindness-header { display: flex; align-items: center; gap: 10px; opacity: 0.9; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; }
+.kindness-header h3 { margin: 0; font-size: 1rem; }
+
+.kindness-score-circle {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 4px solid rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.ks-number { font-size: 3.5rem; font-weight: 900; line-height: 1; }
+.ks-label { font-size: 0.8rem; font-weight: 700; opacity: 0.8; }
+
+.ks-milestone-badge {
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  background: white !important;
+  color: var(--color-primary) !important;
+}
+
+.ks-progress-wrap { width: 100%; margin-top: 10px; }
+.ks-progress-bar { height: 12px; border-radius: 100px; background: rgba(255,255,255,0.2); overflow: hidden; margin: 8px 0; }
+.ks-progress-fill { height: 100%; background: white; border-radius: 100px; }
+
+.ks-stats-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-top: 16px;
+}
+
+.ks-stat {
+  background: rgba(255,255,255,0.1);
+  padding: 16px 8px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ks-stat-val { font-size: 1.1rem; font-weight: 800; }
+.ks-stat-lbl { font-size: 0.65rem; font-weight: 700; opacity: 0.8; }
+
+/* Feedback Form Section */
+.feedback-form-section { display: flex; flex-direction: column; gap: 24px; }
+
+.rating-card { padding: 40px !important; display: flex; flex-direction: column; gap: 16px; }
+.card-desc { font-size: 0.9rem; color: var(--color-text-muted); }
+
+.category-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.cat-chip {
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(0,0,0,0.05);
+  background: #f8fafc;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.cat-chip:hover { background: rgba(79, 99, 61, 0.06); }
+.cat-chip.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+.star-rating { display: flex; gap: 12px; justify-content: center; margin: 24px 0; }
+.star-btn { background: none; border: none; cursor: pointer; transition: transform 0.2s; }
+.star-btn:hover { transform: scale(1.2); }
+.star-btn.active { color: #f59e0b; }
+
+.rating-label { text-align: center; font-size: 1rem; font-weight: 600; color: var(--color-text); }
+
+.feedback-form-group { display: flex; flex-direction: column; gap: 8px; }
+
+.feedback-area { min-height: 120px; border-radius: 20px; padding: 20px; resize: vertical; }
+
+.rating-hint { text-align: center; font-size: 0.83rem; color: var(--color-text-muted); margin-top: -8px; }
+
+/* Thank You */
+.thank-you-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 40px 32px;
+}
+.ty-icon { font-size: 4rem; color: var(--color-primary); }
+.ty-score-gain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+/* Info cards */
+.feedback-info-cards { display: flex; flex-direction: column; gap: 14px; }
+
+.info-mini-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.info-mini-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  background: rgba(79, 99, 61, 0.08);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+.info-mini-card h4 { font-size: 0.95rem; margin: 0 0 4px; }
+.info-mini-card p { font-size: 0.85rem; }
+
+@media (max-width: 768px) {
+  .feedback-layout { grid-template-columns: 1fr; }
+}
