@@ -83,16 +83,16 @@ export const Landing: React.FC = () => {
           <div className="hero-blob blob-2"></div>
           <div className="hero-blob blob-3"></div>
           <div className="floating-card fcard-1">
-            <div className="fcard-icon">🍛</div>
+            <div className="fcard-icon">🍔</div>
             <div>
-              <div className="fcard-title">Veg Biryani</div>
+              <div className="fcard-title">McDonald's Meals</div>
               <div className="fcard-sub urgency-high">⚡ High Priority</div>
             </div>
           </div>
           <div className="floating-card fcard-2">
-            <div className="fcard-icon">🥗</div>
+            <div className="fcard-icon">🍗</div>
             <div>
-              <div className="fcard-title">Salad Bowls</div>
+              <div className="fcard-title">KFC Chicken</div>
               <div className="fcard-sub urgency-medium">⏰ 2 hrs left</div>
             </div>
           </div>
@@ -170,7 +170,7 @@ export const Landing: React.FC = () => {
       {/* CTA */}
       <section className="cta-section">
         <div className="cta-content">
-          <h2>Start Making a Difference <span className="gradient-text">Today</span></h2>
+          <h2>Start Making a Difference <span style={{ color: '#FFF7E2' }}>Today</span></h2>
           <p>Join 450+ donors and 120+ NGOs transforming food waste into community impact.</p>
           <div className="cta-actions">
             <Link to="/explore"><Button variant="glass" size="lg"><Search size={18} /> Find Food</Button></Link>
