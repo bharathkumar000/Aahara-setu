@@ -9,6 +9,8 @@ import {
 import { useTranslation } from '../../context/LanguageContext';
 import './Landing.css';
 
+import { useAuth } from '../../context/AuthContext';
+
 const COUNTER_TARGETS = { meals: 12450, people: 8300, donors: 450, co2: 3200 };
 
 function useCounter(target: number, duration: number) {
@@ -28,10 +30,16 @@ function useCounter(target: number, duration: number) {
 
 export const Landing: React.FC = () => {
   const { t } = useTranslation();
+  const { role } = useAuth();
   const meals = useCounter(COUNTER_TARGETS.meals, 1800);
   const people = useCounter(COUNTER_TARGETS.people, 1800);
   const donors = useCounter(COUNTER_TARGETS.donors, 1800);
   const co2 = useCounter(COUNTER_TARGETS.co2, 1800);
+
+  const isReceiver = role === 'receiver';
+  const ctaLink = isReceiver ? '/receiver/explore' : '/upload';
+  const ctaText = isReceiver ? 'Request Food' : t('donate_btn');
+  const ctaIcon = isReceiver ? <Utensils size={20} /> : <Heart size={20} />;
 
   const features = [
     { icon: <Zap size={20} />, title: 'Urgency Score System', desc: 'Real-time priority based on expiry, quantity, distance & demand.' },
@@ -58,9 +66,9 @@ export const Landing: React.FC = () => {
             {t('hero_subtitle')}
           </p>
           <div className="hero-actions">
-            <Link to="/upload" style={{ textDecoration: 'none' }}>
+            <Link to={ctaLink} style={{ textDecoration: 'none' }}>
               <Button size="lg" className="hero-btn">
-                <Heart size={20} /> {t('donate_btn')}
+                {ctaIcon} {ctaText}
               </Button>
             </Link>
           </div>
@@ -212,7 +220,7 @@ export const Landing: React.FC = () => {
           <h2>Start Making a Difference <span style={{ color: '#FFF7E2' }}>Today</span></h2>
           <p>Join 450+ donors and 120+ NGOs transforming food waste into community impact.</p>
           <div className="cta-actions">
-            <Link to="/upload"><Button size="lg"><Heart size={18} /> {t('donate_btn')}</Button></Link>
+            <Link to={ctaLink}><Button size="lg">{ctaIcon} {ctaText}</Button></Link>
           </div>
         </div>
       </section>
