@@ -128,35 +128,36 @@ export const Profile: React.FC = () => {
 
   return (
     <div className="profile-wrapper">
-      <div className="profile-header-strip glass">
+      <div className="profile-header-strip">
         <div className="header-left">
           <div className="user-avatar-large">
-            <User size={32} />
+            <User size={36} />
             <div className="status-indicator online"></div>
           </div>
           <div className="user-title-wrap">
             <h1>{userName} <span className="verified-check">✓</span></h1>
             <div className="badges-row">
-              <span className="badge gold">Platinum {userType === 'donor' ? 'Donor' : 'Partner'}</span>
-              <span className="badge id">ID: {userAaharaId}</span>
+              <span className="badge gold">Platinum Partner</span>
+              <span className="badge id">AaharaID: {userAaharaId}</span>
             </div>
           </div>
         </div>
         <div className="header-right">
           <Button variant="outline" className="signout-btn" onClick={handleLogout}>
-            <LogOut size={16} /> Sign Out
+            <LogOut size={16} /> SIGN OUT
           </Button>
         </div>
       </div>
 
       <div className="profile-content-grid">
+        {/* Left Column */}
         <div className="profile-column-left">
           
           <Card className="trust-vision-card">
             <div className="vision-header">
               <div className="text-side">
                 <h3>Trust Ecosystem</h3>
-                <p>Real-time AI Trust Score & Reliability Metric</p>
+                <p>Real-time AI Reliability Analytics</p>
               </div>
               <div className="score-side">
                 <div className="score-circle">
@@ -167,9 +168,38 @@ export const Profile: React.FC = () => {
             <div className="trust-meter">
               <div className="meter-bar"><div className="fill" style={{ width: `${trustScore}%` }}></div></div>
               <div className="meter-labels">
-                <span>Novice</span>
-                <span>Verified</span>
-                <span>Elite Community Member</span>
+                <span>NEWBIE</span>
+                <span>VERIFIED PARTNER</span>
+                <span>ELITE CONTRIBUTOR</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="impact-matrix-card">
+            <div className="section-title-wrap">
+              <Activity size={20} />
+              <h4>Sustainability Impact Report</h4>
+            </div>
+            <div className="matrix-grid">
+              <div className="matrix-cell">
+                <TrendingUp size={24} className="icon green" />
+                <div className="v">4,280</div>
+                <div className="l">CO2 Offset (kg)</div>
+              </div>
+              <div className="matrix-cell">
+                <Heart size={24} className="icon red" />
+                <div className="v">124</div>
+                <div className="l">Shelters Supported</div>
+              </div>
+              <div className="matrix-cell">
+                <Award size={24} className="icon yellow" />
+                <div className="v">12k</div>
+                <div className="l">Kindness Points</div>
+              </div>
+              <div className="matrix-cell">
+                <Users size={24} className="icon blue" />
+                <div className="v">15,400</div>
+                <div className="l">Total Lives Impacted</div>
               </div>
             </div>
           </Card>
@@ -177,69 +207,41 @@ export const Profile: React.FC = () => {
           <Card className="business-details-card">
             <div className="section-title-wrap">
               <Building2 size={20} />
-              <h4>Partner Profile</h4>
+              <h4>Partner Profile Details</h4>
             </div>
             <div className="details-grid">
               <div className="detail-item">
-                <MapPin size={16} />
+                <MapPin size={18} />
                 <div className="dt-val">12/A, Brigade Road, Bengaluru</div>
               </div>
               <div className="detail-item">
-                <Phone size={16} />
+                <Phone size={18} />
                 <div className="dt-val">+91 94432 00112</div>
               </div>
               <div className="detail-item">
-                <Mail size={16} />
-                <div className="dt-val">contact@haldirams.in</div>
+                <Mail size={18} />
+                <div className="dt-val">operations@aharasethu.org</div>
               </div>
               <div className="detail-item">
-                <Globe size={16} />
-                <div className="dt-val">www.haldirams.in</div>
+                <Globe size={18} />
+                <div className="dt-val">www.aharasetu.org</div>
               </div>
             </div>
             <div className="bio-area">
-              <p>We are committed to a zero-waste policy. Since 2025, we have redirected over 5 tons of edible surplus to local shelters and community kitchens.</p>
-            </div>
-          </Card>
-
-          <Card className="impact-matrix-card">
-            <div className="section-title-wrap">
-              <Activity size={20} />
-              <h4>Sustainability Impact</h4>
-            </div>
-            <div className="matrix-grid">
-              <div className="matrix-cell">
-                <TrendingUp size={20} className="icon green" />
-                <div className="v">4,280</div>
-                <div className="l">CO2 Offset (kg)</div>
-              </div>
-              <div className="matrix-cell">
-                <Heart size={20} className="icon red" />
-                <div className="v">124</div>
-                <div className="l">Shelters Supported</div>
-              </div>
-              <div className="matrix-cell">
-                <Award size={20} className="icon yellow" />
-                <div className="v">12k</div>
-                <div className="l">Kindness Reward Pts</div>
-              </div>
-              <div className="matrix-cell">
-                <Users size={20} className="icon blue" />
-                <div className="v">15,400</div>
-                <div className="l">Mouths Fed</div>
-              </div>
+              <p>Active contributor to the National Food Policy. Dedicated to zero-waste food distribution systems and real-time logistics optimization for surplus recovery.</p>
             </div>
           </Card>
         </div>
 
+        {/* Right Column */}
         <div className="profile-column-right">
           
           <Card className="action-hub-card">
-            <h4>Quick Verification</h4>
-            <p>Have surplus? Record and verify before dispatch.</p>
+            <h4>Safety Audit Hub</h4>
+            <p>Ready to dispatch surplus? Complete the AI photo verification now.</p>
             <div className="action-btns">
-              <Button variant="outline" onClick={handleVerification} disabled={isVerifying}>
-                <Camera size={18} /> {isVerifying ? 'Scanning...' : 'Upload Proof'}
+              <Button onClick={handleVerification} disabled={isVerifying} style={{ width: '100%' }}>
+                <Camera size={18} /> {isVerifying ? 'Analyzing...' : 'START SMART VERIFICATION'}
               </Button>
             </div>
           </Card>
@@ -247,50 +249,50 @@ export const Profile: React.FC = () => {
           <Card className="timeline-v2-card">
             <div className="timeline-header">
               <History size={18} />
-              <h4>Activity Journal</h4>
+              <h4>Recent Activity Log</h4>
             </div>
             <div className="journal-items">
               <div className="journal-entry">
                 <div className="entry-dot verified"></div>
                 <div className="entry-text">
-                  <strong>10:30 AM Today</strong>
-                  <p>Donated 15 boxes of Snacks to Hope NGO</p>
+                  <strong>Today, 10:45 AM</strong>
+                  <p>Handed over 50kg surplus meals to Robin Hood Army</p>
                 </div>
               </div>
               <div className="journal-entry">
                 <div className="entry-dot verified"></div>
                 <div className="entry-text">
                   <strong>Yesterday</strong>
-                  <p>Trust Score boosted by 2% for on-time delivery</p>
+                  <p>Trust Score increased by 5 pts for quality consistency</p>
                 </div>
               </div>
               <div className="journal-entry">
                 <div className="entry-dot"></div>
                 <div className="entry-text">
-                  <strong>12 April</strong>
-                  <p>Joined Aahara Setu Network</p>
+                  <strong>12 April 2025</strong>
+                  <p>Verified account 'Platinum Partner' status granted</p>
                 </div>
               </div>
             </div>
           </Card>
 
           <Card className="network-card">
-            <h4>Linked Partners</h4>
+            <h4>Verified Network</h4>
             <div className="partners-list">
               <div className="partner-tiny">
-                <img src="/logo.png" alt="NGO" />
-                <span>Robin Hood Army</span>
+                <Users size={16} />
+                <span>Robin Hood Army (NGO)</span>
               </div>
               <div className="partner-tiny">
-                <img src="/logo.png" alt="Hospital" />
-                <span>Grace Hospital</span>
+                <Users size={16} />
+                <span>Akshaya Patra (Primary Partner)</span>
               </div>
             </div>
           </Card>
 
-          <div className="trust-disclaimer glass">
-            <Info size={16} />
-            <p>Your platinum status enables 0-charge pickups within 10km radius.</p>
+          <div className="trust-disclaimer">
+            <Info size={20} />
+            <p>Your current score qualifies you for the 'Zero Waste Elite' badge. Keep helping others to maintain this status!</p>
           </div>
         </div>
       </div>
