@@ -13,10 +13,32 @@ const SAFETY_CHECKLIST = [
   'Prepared in a clean & hygienic environment',
 ];
 
+const FOOD_CATEGORIES = [
+  { value: 'Main Course', label: 'Main Course' },
+  { value: 'Bakery', label: 'Bakery' },
+  { value: 'Dessert', label: 'Dessert' },
+  { value: 'Healthy / Salad', label: 'Healthy / Salad' },
+  { value: 'Snacks', label: 'Snacks' },
+  { value: 'Beverages', label: 'Beverages' },
+  { value: 'Mixed / Other', label: 'Mixed / Other' },
+];
+
+const DIETARY_INFO = [
+  { value: 'None', label: 'Not specified' },
+  { value: 'Vegan', label: 'Vegan' },
+  { value: 'Vegetarian', label: 'Vegetarian' },
+  { value: 'Non-Vegetarian', label: 'Non-Vegetarian' },
+  { value: 'Gluten Free', label: 'Gluten Free' },
+  { value: 'Nut Free', label: 'Nut Free' },
+];
+
 export const Upload: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(SAFETY_CHECKLIST.length).fill(false));
+  const [category, setCategory] = useState('');
+  const [dietary, setDietary] = useState('None');
+  const [unit, setUnit] = useState('portions');
   const allChecked = checkedItems.every(Boolean);
 
   const toggleCheck = (i: number) => {
@@ -79,21 +101,33 @@ export const Upload: React.FC = () => {
               </div>
 
               <div className="form-row">
-                <div className="form-group">
-                  <label className="input-label">Food Category</label>
-                  <select className="input-field" required>
-                    <option value="">Select category</option>
-                    <option>Main Course</option>
-                    <option>Bakery</option>
-                    <option>Dessert</option>
-                    <option>Healthy / Salad</option>
-                    <option>Snacks</option>
-                    <option>Beverages</option>
-                    <option>Mixed / Other</option>
-                  </select>
+                <div className="form-group" style={{ minWidth: '220px' }}>
+                  <Select 
+                    label="Food Category" 
+                    options={FOOD_CATEGORIES} 
+                    value={category} 
+                    onChange={setCategory} 
+                    required 
+                  />
                 </div>
                 <div className="form-group">
-                  <Input label="Quantity (approx.)" placeholder="e.g., 20 kg, 50 portions" required />
+                  <label className="input-label">Quantity</label>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                    <input type="number" className="input-field" placeholder="e.g., 20" min="1" required style={{ width: '100px' }} />
+                    <div style={{ flex: 1 }}>
+                      <Select 
+                        options={[
+                          { value: 'portions', label: 'portions' },
+                          { value: 'kg', label: 'kg' },
+                          { value: 'liters', label: 'liters' },
+                          { value: 'pieces', label: 'pieces' },
+                          { value: 'boxes', label: 'boxes' },
+                        ]} 
+                        value={unit} 
+                        onChange={setUnit} 
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -101,16 +135,13 @@ export const Upload: React.FC = () => {
                 <div className="form-group">
                   <Input label="Expiry Date & Time" type="datetime-local" required />
                 </div>
-                <div className="form-group">
-                  <label className="input-label">Dietary Info</label>
-                  <select className="input-field">
-                    <option value="">Not specified</option>
-                    <option>Vegan</option>
-                    <option>Vegetarian</option>
-                    <option>Non-Vegetarian</option>
-                    <option>Gluten Free</option>
-                    <option>Nut Free</option>
-                  </select>
+                <div className="form-group" style={{ minWidth: '220px' }}>
+                  <Select 
+                    label="Dietary Info" 
+                    options={DIETARY_INFO} 
+                    value={dietary} 
+                    onChange={setDietary} 
+                  />
                 </div>
               </div>
 
