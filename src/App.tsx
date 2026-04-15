@@ -22,6 +22,9 @@ function AppContent() {
   const location = useLocation();
 
   useEffect(() => {
+    // Disable demo notifications on the Landing/Login page
+    if (location.pathname === '/' || location.pathname === '/receiver-login') return;
+
     const t1 = setTimeout(() => {
       addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
     }, 3000);
@@ -29,7 +32,7 @@ function AppContent() {
       addToast('✅ Match Found', 'Assorted Pastries matched with Hope NGO nearby.', 'success');
     }, 8000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+  }, [location.pathname]);
 
   const addToast = (title: string, message: string, type: 'info' | 'success' | 'warning') => {
     const id = Math.random().toString(36).substr(2, 9);
