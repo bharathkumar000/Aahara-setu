@@ -8,7 +8,6 @@ import {
   Info, LogIn, UserPlus, LogOut
 } from 'lucide-react';
 import './Profile.css';
-import './Login.css';
 
 export const Profile: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAuthenticated') === 'true');
