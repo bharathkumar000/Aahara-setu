@@ -164,8 +164,6 @@ export const Notifications: React.FC = () => {
           </Card>
         </div>
       )}
-    </div>
-
     {toastMessage && (
       <div style={{
         position: 'fixed', bottom: '40px', left: '50%', transform: 'translateX(-50%)',
