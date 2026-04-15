@@ -3,7 +3,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Input } from '../../components/ui/Input/Input';
 import { Select } from '../../components/ui/Select/Select';
-import { Upload as UploadIcon, MapPin, CheckSquare, Square, ShieldCheck, AlertCircle } from 'lucide-react';
+import { MapPin, CheckSquare, Square } from 'lucide-react';
 import './Upload.css';
 
 const SAFETY_CHECKLIST = [
