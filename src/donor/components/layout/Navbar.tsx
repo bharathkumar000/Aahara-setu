@@ -16,6 +16,7 @@ export const Navbar: React.FC = () => {
     { name: t('nav_donate'), path: '/upload', icon: <Upload size={18} /> },
     { name: t('nav_disasters'), path: '/disasters', icon: <Flame size={18} /> },
     { name: t('nav_alerts'), path: '/notifications', icon: <Bell size={18} /> },
+    { name: t('nav_profile'), path: '/profile', icon: <Star size={18} /> },
   ];
 
   return (
@@ -31,7 +32,7 @@ export const Navbar: React.FC = () => {
             <Link
               key={link.path}
               to={link.path}
-              className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+              className={`nav-link ${location.pathname === link.path ? 'active' : ''} ${link.path === '/upload' ? 'donate-pill' : ''}`}
             >
               {link.icon}
               <span>{link.name}</span>
@@ -53,13 +54,6 @@ export const Navbar: React.FC = () => {
               ))}
             </div>
           </div>
-        </div>
-
-        <div className="navbar-actions">
-          <Link to="/profile" className={`nav-link profile-btn ${location.pathname === '/profile' ? 'active' : ''}`}>
-            <Star size={18} />
-            <span>{t('nav_profile')}</span>
-          </Link>
         </div>
       </div>
     </nav>
