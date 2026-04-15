@@ -113,17 +113,24 @@ export const Login: React.FC = () => {
                   required 
                 />
                 
-                <div className="form-group" style={{ marginBottom: '16px' }}>
-                  <label className="input-label" style={{ display: 'block', marginBottom: '6px', fontSize: '0.9rem', color: 'var(--color-text)' }}>Account Type</label>
-                  <select 
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: 'var(--radius-md)', border: '1.5px solid rgba(139, 161, 148, 0.4)', background: 'var(--glass-bg)', color: 'var(--color-text)', fontFamily: 'var(--font-main)' }}
-                    value={role} 
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="donor">Food Donor</option>
-                    <option value="ngo">NGO / Receiver</option>
-                    <option value="volunteer">Volunteer / Driver</option>
-                  </select>
+                <div className="role-toggle-container">
+                  <label className="input-label">I am a...</label>
+                  <div className="role-toggle-group">
+                    <button 
+                      type="button"
+                      className={`role-toggle-btn ${role === 'donor' ? 'active' : ''}`}
+                      onClick={() => setRole('donor')}
+                    >
+                      Food Donor
+                    </button>
+                    <button 
+                      type="button"
+                      className={`role-toggle-btn ${role === 'receiver' ? 'active' : ''}`}
+                      onClick={() => setRole('receiver')}
+                    >
+                      Receiver / NGO
+                    </button>
+                  </div>
                 </div>
               </>
             )}
