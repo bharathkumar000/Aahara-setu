@@ -4,7 +4,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { Input } from '../../components/ui/Input/Input';
 import { Select } from '../../components/ui/Select/Select';
 import { MapPin, CheckSquare, Square, AlertOctagon } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../context/LanguageContext';
 import { supabase } from '../../../lib/supabase';
 import './Upload.css';
@@ -42,6 +42,7 @@ const DIETARY_INFO = [
 export const Upload: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const isDisaster = location.state?.isDisaster || false;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -189,7 +190,7 @@ export const Upload: React.FC = () => {
                 <li><span>🛡️</span> Full legal traceability for every batch</li>
               </ul>
             </div>
-            <Button onClick={() => window.location.href = '/profile'} fullWidth size="lg" className="activate-license-btn">
+            <Button onClick={() => navigate('/profile', { state: { highlightFssai: true } })} fullWidth size="lg" className="activate-license-btn">
               ACTIVATE DONOR LICENSE
             </Button>
           </div>

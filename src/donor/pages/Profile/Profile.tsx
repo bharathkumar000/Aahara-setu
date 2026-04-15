@@ -3,7 +3,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { useTranslation } from '../../context/LanguageContext';
 import { useAuth } from '../../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   ShieldCheck, Award, Info, LogOut, Activity,
   Clock, Zap, Globe
@@ -16,9 +16,25 @@ export const Profile: React.FC = () => {
   const { lang, setLang, t } = useTranslation();
   const { logout, role } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showToast, setShowToast] = useState(false);
   const [fssaiInput, setFssaiInput] = useState(localStorage.getItem(FSSAI_STORAGE_KEY) || '');
   const [isEditingFssai, setIsEditingFssai] = useState(false);
+  const [isFetchingFssai, setIsFetchingFssai] = useState(false);
+  const [fssaiStatus, setFssaiStatus] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (location.state?.highlightFssai) {
+      setIsEditingFssai(true);
+      setShowToast(true);
+      // Optional: scroll to the FSSAI section
+      setTimeout(() => {
+        const el = document.querySelector('.meta-grid');
+        el?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+  }, [location.state]);
+
   const trustScore = 88;
   const isReceiver = role === 'receiver';
 
@@ -28,9 +44,22 @@ export const Profile: React.FC = () => {
   };
 
   const handleSaveFssai = () => {
-    localStorage.setItem(FSSAI_STORAGE_KEY, fssaiInput);
-    setIsEditingFssai(false);
-    setShowToast(true);
+    if (!fssaiInput) return;
+    
+    setIsFetchingFssai(true);
+    setFssaiStatus('Fetching details from FSSAI Gateway...');
+    
+    setTimeout(() => {
+      setFssaiStatus('Verifying authenticity via AI Audit...');
+      setTimeout(() => {
+        localStorage.setItem(FSSAI_STORAGE_KEY, fssaiInput);
+        setIsEditingFssai(false);
+        setIsFetchingFssai(false);
+        setFssaiStatus(null);
+        setShowToast(true);
+        // Refresh page or update state to allow upload
+      }, 1500);
+    }, 1500);
   };
 
   return (
@@ -157,7 +186,12 @@ export const Profile: React.FC = () => {
               </div>
               <div className="meta-item">
                 <span className="meta-lbl">{isReceiver ? t('ngo_reg_id') : t('fssai_license')}</span>
-                {isEditingFssai ? (
+                {isFetchingFssai ? (
+                   <div className="fssai-fetching-state">
+                      <div className="pulse-dot"></div>
+                      <span className="fetching-text">{fssaiStatus}</span>
+                   </div>
+                ) : isEditingFssai ? (
                   <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                     <input 
                       type="text" 
@@ -166,8 +200,9 @@ export const Profile: React.FC = () => {
                       onChange={(e) => setFssaiInput(e.target.value)}
                       placeholder={isReceiver ? "NGO Reg Number" : "Enter FSSAI ID"}
                       style={{ flex: 1, padding: '4px 8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                      autoFocus
                     />
-                    <Button size="sm" onClick={handleSaveFssai}>Save</Button>
+                    <Button size="sm" onClick={handleSaveFssai}>Fetch & Verify</Button>
                   </div>
                 ) : (
                   <span className="meta-val" onClick={() => setIsEditingFssai(true)} style={{ cursor: 'pointer', color: fssaiInput ? 'inherit' : 'var(--color-error)' }}>

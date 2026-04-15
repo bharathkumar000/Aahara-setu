@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../../../donor/components/ui/Button/Button';
+import { Button } from '../../../components/ui/Button/Button';
 import { Card } from '../../../donor/components/ui/Card/Card';
 import { 
   Flame, AlertTriangle, MapPin, Users, Heart, 
-  ArrowRight, Zap, Shield, Plus, X, Globe, Send
+  ArrowRight, Zap, Shield, Plus, X, Globe, Send, Siren
 } from 'lucide-react';
 import './Disasters.css';
 import { supabase } from '../../../lib/supabase';
@@ -38,7 +38,20 @@ export const Disasters: React.FC = () => {
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (data) {
+    const MOCK_DISASTERS: DisasterAlert[] = [
+      {
+        id: 'mock-d-1',
+        type: 'Flood Relief',
+        location: 'Assam High-Waste Zone B',
+        urgency: 'CRITICAL',
+        peopleInNeed: 1200,
+        suppliesNeeded: 'Ready-to-eat meals, Water, Biscuits',
+        impact: 'Severely affected by monsoon',
+        timeRemaining: 'ASAP'
+      }
+    ];
+
+    if (data && data.length > 0) {
       const formatted = data.map((d: any) => ({
         id: d.id,
         type: d.title,
@@ -50,6 +63,8 @@ export const Disasters: React.FC = () => {
         timeRemaining: 'ASAP'
       }));
       setActiveDisasters(formatted);
+    } else {
+      setActiveDisasters(MOCK_DISASTERS);
     }
     setLoading(false);
   };
