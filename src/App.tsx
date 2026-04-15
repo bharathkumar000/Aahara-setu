@@ -17,16 +17,32 @@ import './App.css';
 
 function App() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [authState, setAuthState] = useState({
+    isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+    userRole: localStorage.getItem('userType')
+  });
   const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
+    // Listen for storage changes (helpful for multi-tab or manual overrides)
+    const handleStorageChange = () => {
+      setAuthState({
+        isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+        userRole: localStorage.getItem('userType')
+      });
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // We also need a way to trigger this locally since 'storage' event doesn't fire in the same tab
+    const interval = setInterval(handleStorageChange, 500); 
+
     const t1 = setTimeout(() => {
       addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
     }, 3000);
     const t2 = setTimeout(() => {
       addToast('✅ Match Found', 'Assorted Pastries matched with Hope NGO nearby.', 'success');
     }, 8000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(interval); window.removeEventListener('storage', handleStorageChange); };
   }, []);
 
   const addToast = (title: string, message: string, type: 'info' | 'success' | 'warning') => {
@@ -39,8 +55,7 @@ function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const userRole = localStorage.getItem('userType');
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const { isAuthenticated, userRole } = authState;
 
   return (
     <>
