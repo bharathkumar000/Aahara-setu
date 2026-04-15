@@ -204,4 +204,75 @@ CREATE PUBLICATION aahara_setu_realtime FOR TABLE
 
 ALTER TABLE public.donations REPLICA IDENTITY FULL;
 ALTER TABLE public.claims REPLICA IDENTITY FULL;
+
+---
+
+## 7. Role-Based Authentication Flow (Client & Server)
+
+To ensure that a user is always directed to their respective portal (**Donor Dashboard** vs **NGO/Receiver Marketplace**) after every login, follow these implementation steps.
+
+### A. Automatic Profile Creation (SQL Trigger)
+Running this script in Supabase ensures that every time a new user signs up via Supabase Auth, a corresponding row is created in `public.profiles` automatically.
+
+```sql
+/**
+ * Function: handle_new_user
+ * Triggered on auth.users INSERT to create a public profile.
+ * Extracts 'role' from user_metadata.
+ */
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, email, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', 'Unnamed User'),
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'role', 'donor') -- Defaults to donor 
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger the function every time a user is created
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+```
+
+### B. Passing Role during Sign Up (React/Vite)
+When calling the Supabase `signUp` method, you **must** pass the role in `options.data` so the trigger above can catch it and save it to the DB.
+
+```typescript
+const { data, error } = await supabase.auth.signUp({
+  email: 'user@example.com',
+  password: 'password123',
+  options: {
+    data: {
+      full_name: 'Skyline Hotels', // Matches metadata in Trigger
+      role: 'donor' // critical for redirection logic
+    }
+  }
+});
+```
+
+### C. Persistent Role-Based Redirection 
+Once the user is logged in, your `AuthContext` must fetch the profile from `public.profiles` to determine where to send the user.
+
+```typescript
+// Inside AuthContext on login
+const { data: profile } = await supabase
+  .from('profiles')
+  .select('role')
+  .eq('id', user.id)
+  .single();
+
+if (profile?.role === 'donor') {
+  navigate('/dashboard'); // Take to Donor page
+} else if (profile?.role === 'receiver') {
+  navigate('/receiver'); // Take to NGO page
+}
+```
+
+This architecture ensures that **once a Donor, always a Donor** (unless the profile is manually updated in the DB), providing a consistent and secure role-based experience.
 ```
