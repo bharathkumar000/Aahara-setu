@@ -56,13 +56,28 @@ function AppContent() {
       return;
     }
 
-    const t1 = setTimeout(() => {
-      addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
-    }, 3000);
-    const t2 = setTimeout(() => {
-      addToast('✅ Match Found', 'Assorted Pastries matched with Hope NGO nearby.', 'success');
-    }, 8000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    // Demo notifications: Only show once per session/browser
+    const seen = JSON.parse(localStorage.getItem('seen_demo_notifications') || '[]');
+    let t1: NodeJS.Timeout;
+    let t2: NodeJS.Timeout;
+
+    if (!seen.includes('alert_demo')) {
+      t1 = setTimeout(() => {
+        addToast('⚡ High Priority Alert', 'Paneer Tikka expiring in 45 mins — 0.4 km away!', 'warning');
+        seen.push('alert_demo');
+        localStorage.setItem('seen_demo_notifications', JSON.stringify(seen));
+      }, 3000);
+    }
+
+    if (!seen.includes('match_demo')) {
+      t2 = setTimeout(() => {
+        addToast('✅ Match Found', 'Assorted Pastries matched with Hope NGO nearby.', 'success');
+        seen.push('match_demo');
+        localStorage.setItem('seen_demo_notifications', JSON.stringify(seen));
+      }, 8000);
+    }
+
+    return () => { if (t1) clearTimeout(t1); if (t2) clearTimeout(t2); };
   }, [location.pathname]);
 
   const addToast = (title: string, message: string, type: 'info' | 'success' | 'warning') => {

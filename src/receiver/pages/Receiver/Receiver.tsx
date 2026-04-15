@@ -212,8 +212,10 @@ export const Receiver: React.FC = () => {
 
       <div className="claims-section">
         <div className="claims-tabs">
-          <button className={`claims-tab ${activeTab === 'active' ? 'active' : ''}`} onClick={() => setActiveTab('active')}>Food Listings</button>
-          <button className={`claims-tab ${activeTab === 'pending_proofs' ? 'active' : ''}`} onClick={() => setActiveTab('pending_proofs')}>
+          <button 
+            className={`claims-tab ${activeTab === 'pending_proofs' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('pending_proofs')}
+          >
             Proof Required {items.proofs.length > 0 && <span className="tab-badge">{items.proofs.length}</span>}
           </button>
           <button className={`claims-tab ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>Completed History</button>
