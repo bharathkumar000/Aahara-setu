@@ -14,7 +14,7 @@ export const Traceability: React.FC = () => {
   const [recallProgress, setRecallProgress] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const batches = [
+  const batches = React.useMemo(() => [
     {
       id: 1,
       item: 'Assorted Pastries (Batch #7742)',
@@ -51,7 +51,7 @@ export const Traceability: React.FC = () => {
         { role: 'Receiver', name: 'Awaiting Match', time: '--:--', status: 'pending', location: 'Waiting...' }
       ]
     }
-  ];
+  ], []);
 
   const handleTriggerRecall = () => {
     setIsRecalling(true);
@@ -66,13 +66,15 @@ export const Traceability: React.FC = () => {
     }, 100);
   };
 
-  const filteredBatches = batches.filter(
-    b => b.item.toLowerCase().includes(searchTerm.toLowerCase()) || 
-         b.id.toString().includes(searchTerm) ||
-         b.donor.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBatches = React.useMemo(() => {
+    return batches.filter(
+      b => b.item.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           b.id.toString().includes(searchTerm) ||
+           b.donor.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, batches]);
 
-  const selected = batches.find(b => b.id === activeBatch);
+  const selected = React.useMemo(() => batches.find(b => b.id === activeBatch), [activeBatch, batches]);
 
   return (
     <div className="traceability-page">
