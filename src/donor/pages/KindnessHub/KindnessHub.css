@@ -338,3 +338,71 @@
   .top-three { flex-wrap: wrap; align-items: center; }
   .rank-1, .rank-2, .rank-3 { height: auto; width: 100%; }
 }
+
+@media (max-width: 768px) {
+  .hub-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .hub-tabs {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .hub-tab {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cert-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .generate-report-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cert-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-card {
+    flex-direction: column !important;
+  }
+
+  .cert-visual {
+    width: 100%;
+    flex-direction: row;
+    padding: 16px 24px;
+    border-right: none;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .cert-icon {
+    transform: scale(0.8);
+  }
+
+  .hub-footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .hub-footer button {
+    margin-left: 0 !important;
+  }
+
+  .table-header, .table-row {
+    min-width: 600px;
+  }
+
+  .leaderboard-table-card {
+    overflow-x: auto;
+  }
+}
+

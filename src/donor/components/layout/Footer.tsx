@@ -1,6 +1,4 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Upload, LayoutDashboard, Radio } from 'lucide-react';
+import { Home, Upload, LayoutDashboard, Radio, Flame, Bell, User } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import './Footer.css';
 
@@ -26,13 +24,24 @@ export const Footer: React.FC = () => {
             <LayoutDashboard size={24} />
           </Link>
           
+          <Link to={isReceiver ? "/receiver/disasters" : "/disasters"} className={`dock-icon ${['/disasters', '/receiver/disasters'].includes(location.pathname) ? 'active' : ''}`}>
+            <Flame size={24} />
+          </Link>
+          
           <Link to="/traceability" className={`dock-icon ${location.pathname === '/traceability' ? 'active' : ''}`}>
             <Radio size={24} />
           </Link>
           
-          {/* Action Button: Upload for donor, Request Food maybe for receiver or another icon? Wait, the screenshot just shows "Upload" arrow icon for the 4th icon */}
           <Link to={isReceiver ? "/receiver/explore" : "/upload"} className={`dock-icon ${['/upload', '/receiver/explore'].includes(location.pathname) ? 'active' : ''}`}>
              <Upload size={24} />
+          </Link>
+
+          <Link to="/notifications" className={`dock-icon ${location.pathname === '/notifications' ? 'active' : ''}`}>
+            <Bell size={24} />
+          </Link>
+
+          <Link to="/profile" className={`dock-icon ${location.pathname === '/profile' ? 'active' : ''}`}>
+            <User size={24} />
           </Link>
         </div>
       </div>
