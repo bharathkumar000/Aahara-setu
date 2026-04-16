@@ -1,43 +1,21 @@
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 24px; /* Increased padding for better tap-target and spacing */
-  border-radius: 100px;
-  color: var(--color-text-muted);
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  animation: slideRightText 0.5s ease forwards;
-  opacity: 0;
-}
-
-.navbar-links .nav-link:nth-child(1) { animation-delay: 0.2s; }
-.navbar-links .nav-link:nth-child(2) { animation-delay: 0.3s; }
-.navbar-links .nav-link:nth-child(3) { animation-delay: 0.4s; }
-.navbar-links .nav-link:nth-child(4) { animation-delay: 0.5s; }
-.navbar-links .nav-link:nth-child(5) { animation-delay: 0.6s; }
-.navbar-actions .nav-link { animation-delay: 0.7s; }
-
 .navbar {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 92%;
-  max-width: 1200px;
+  width: min(94vw, 1280px);
   z-index: 1000;
   height: 72px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 40px rgba(79, 99, 61, 0.1);
-  padding: 0 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 100px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  padding: 0 12px 0 24px;
   display: flex;
   align-items: center;
+  transition: all 0.4s ease;
   animation: slideDownNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -135,21 +113,33 @@
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 4px; 
+  gap: 8px; 
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-radius: 100px;
   color: var(--color-text-muted);
   font-weight: 700;
   font-size: 0.85rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  opacity: 0;
+  animation: slideRightText 0.5s ease forwards;
 }
+
+.navbar-links .nav-link:nth-child(1) { animation-delay: 0.1s; }
+.navbar-links .nav-link:nth-child(2) { animation-delay: 0.2s; }
+.navbar-links .nav-link:nth-child(3) { animation-delay: 0.3s; }
+.navbar-links .nav-link:nth-child(4) { animation-delay: 0.4s; }
+.navbar-links .nav-link:nth-child(5) { animation-delay: 0.5s; }
+.navbar-links .nav-link:nth-child(6) { animation-delay: 0.6s; }
+.navbar-links .nav-link:nth-child(7) { animation-delay: 0.7s; }
 
 .nav-link:hover {
   background: rgba(79, 99, 61, 0.05);
