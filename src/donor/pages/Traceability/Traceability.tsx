@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertOctagon, Share2, Search,
   History, Navigation
 } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
 import './Traceability.css';
 
 export const Traceability: React.FC = () => {
@@ -38,12 +39,17 @@ export const Traceability: React.FC = () => {
           ]
         }));
         setLiveBatches(formatted);
+        
+        // Auto-select first batch if none selected
+        if (formatted.length > 0 && !activeBatch) {
+          setActiveBatch(formatted[0].id);
+        }
       }
     };
     fetchBatches();
     const ch = supabase.channel('trace_live').on('postgres_changes', { event: '*', table: 'donations', schema: 'public' }, fetchBatches).subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, []);
+  }, [activeBatch]);
 
   const batches = React.useMemo(() => liveBatches, [liveBatches]);
 
@@ -139,7 +145,7 @@ export const Traceability: React.FC = () => {
           {selected ? (
             <div className="chain-custody-view">
               <div className="chain-header">
-                <h3><History size={20} /> Chain of Custody (Trace ID: #{selected.id}99{selected.id})</h3>
+                <h3><History size={20} /> Chain of Custody (Trace ID: #{selected.id.slice(0, 8)})</h3>
                 <div className="batch-meta-badges">
                   <span className="meta-badge"><Navigation size={14} /> GPS Tracked</span>
                   <span className="meta-badge"><Radio size={14} /> Live Sync</span>

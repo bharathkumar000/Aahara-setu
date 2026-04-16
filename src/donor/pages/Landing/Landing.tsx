@@ -42,14 +42,14 @@ export const Landing: React.FC = () => {
   const ctaIcon = isReceiver ? <Utensils size={20} /> : <Heart size={20} />;
 
   const features = [
-    { icon: <Zap size={20} />, title: 'Urgency Score System', desc: 'Real-time priority based on expiry, quantity, distance & demand.' },
-    { icon: <MapPin size={20} />, title: 'Hunger vs Surplus Heatmap', desc: 'Visualize high-waste zones vs high-demand areas on live maps.' },
-    { icon: <RefreshCw size={20} />, title: 'Auto Redistribution', desc: 'Unclaimed food auto-alerts backup NGOs and nearest shelters.' },
-    { icon: <ShieldCheck size={20} />, title: 'Trust & Safety', desc: 'Food safety checklists, expiry validation & verified donors.' },
-    { icon: <Star size={20} />, title: 'Kindness Score', desc: 'Track community impact — "You helped feed 120 people ❤️"' },
-    { icon: <Wifi size={20} />, title: 'Low-Network Mode', desc: 'Lightweight offline mode & SMS fallback alerts for all zones.' },
-    { icon: <Truck size={20} />, title: 'Micro-Logistics', desc: 'Volunteer & delivery partner coordination built-in.' },
-    { icon: <Leaf size={20} />, title: 'CO₂ Tracker', desc: 'Measure environmental impact per donation in real time.' },
+    { icon: <Zap size={22} />, title: 'Urgency Score System', desc: 'Real-time priority based on expiry, quantity, distance & demand.' },
+    { icon: <MapPin size={22} />, title: 'Hunger vs Surplus Heatmap', desc: 'Visualize high-waste zones vs high-demand areas on live maps.', highlighted: true },
+    { icon: <RefreshCw size={22} />, title: 'Auto Redistribution', desc: 'Unclaimed food auto-alerts backup NGOs and nearest shelters.' },
+    { icon: <ShieldCheck size={22} />, title: 'Trust & Safety', desc: 'Food safety checklists, expiry validation & verified donors.' },
+    { icon: <Star size={22} />, title: 'Kindness Score', desc: 'Track community impact — "You helped feed 120 people ❤️"' },
+    { icon: <Wifi size={22} />, title: 'Low-Network Mode', desc: 'Lightweight offline mode & SMS fallback alerts for all zones.' },
+    { icon: <Truck size={22} />, title: 'Micro-Logistics', desc: 'Volunteer & delivery partner coordination built-in.' },
+    { icon: <Leaf size={22} />, title: 'CO₂ Tracker', desc: 'Measure environmental impact per donation in real time.' },
   ];
 
   return (
@@ -204,10 +204,14 @@ export const Landing: React.FC = () => {
         </div>
         <div className="features-grid">
           {features.map((f, i) => (
-            <Card key={i} className="feature-card">
-              <div className="feature-icon">{f.icon}</div>
-              <h4 className="feature-title">{f.title}</h4>
-              <p className="feature-desc">{f.desc}</p>
+            <Card key={i} className={`feature-card ${f.highlighted ? 'highlighted-feature' : ''}`}>
+              <div className="feature-icon-circle">
+                {f.icon}
+              </div>
+              <div className="feature-content-box">
+                <h4 className="feature-title">{f.title}</h4>
+                <p className="feature-desc">{f.desc}</p>
+              </div>
             </Card>
           ))}
         </div>

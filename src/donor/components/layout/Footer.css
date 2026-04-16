@@ -12,6 +12,12 @@
   pointer-events: none; /* Allows clicking through wrapper */
 }
 
+@media (min-width: 769px) {
+  .floating-footer-wrapper {
+    display: none;
+  }
+}
+
 .floating-footer-dock {
   pointer-events: auto;
   background: rgba(255, 255, 255, 0.95);
