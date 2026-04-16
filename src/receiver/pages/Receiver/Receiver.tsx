@@ -72,7 +72,7 @@ export const Receiver: React.FC = () => {
   });
 
   const fetchLiveClaims = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('claims')
       .select('*, donations(*, profiles(organization_name))')
       .order('created_at', { ascending: false });
