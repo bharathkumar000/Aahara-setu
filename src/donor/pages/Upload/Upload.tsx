@@ -3,7 +3,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Input } from '../../components/ui/Input/Input';
 import { Select } from '../../components/ui/Select/Select';
-import { MapPin, CheckSquare, Square, AlertOctagon } from 'lucide-react';
+import { MapPin, CheckSquare, Square, AlertOctagon, ShieldAlert } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../context/LanguageContext';
 import { supabase } from '../../../lib/supabase';
@@ -57,6 +57,10 @@ export const Upload: React.FC = () => {
   const toggleCheck = (i: number) => {
     setCheckedItems(prev => prev.map((v, idx) => idx === i ? !v : v));
   };
+
+  const isFssaiRequired = category === 'Main Course' || category === 'Fast Food';
+  const isActuallyVerified = !!fssaiId;
+  const canSubmitRaw = allChecked && (!isFssaiRequired || isActuallyVerified);
 
   const [address, setAddress] = useState('');
   const [isDetecting, setIsDetecting] = useState(false);
@@ -169,35 +173,7 @@ export const Upload: React.FC = () => {
     );
   }
 
-  if (!fssaiId) {
-    return (
-      <div className="upload-container force-single-page">
-        <div className="verification-side-layout">
-          <div className="verification-info-side">
-            <div className="lock-icon-premium">🔒</div>
-            <h2 className="gradient-text">License Required</h2>
-            <p className="verification-desc">
-              To ensure public safety, all donors must provide a verified **FSSAI License ID** before initiating a food rescue listing.
-            </p>
-          </div>
-          
-          <div className="verification-action-side">
-            <div className="why-box-premium">
-              <h4>Why is this needed?</h4>
-              <ul>
-                <li><span>🇮🇳</span> Indian Food Safety Compliance</li>
-                <li><span>🤝</span> Builds trust with NGOs & shelters</li>
-                <li><span>🛡️</span> Full legal traceability for every batch</li>
-              </ul>
-            </div>
-            <Button onClick={() => navigate('/profile', { state: { highlightFssai: true } })} fullWidth size="lg" className="activate-license-btn">
-              ACTIVATE DONOR LICENSE
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="upload-container">
@@ -242,6 +218,30 @@ export const Upload: React.FC = () => {
                     required 
                   />
                 </div>
+
+                {isFssaiRequired && (
+                  <div className={`fssai-verification-box animate-fade-in ${isActuallyVerified ? 'verified' : 'unverified'}`}>
+                    <div className="fssai-box-header">
+                       <ShieldAlert size={20} />
+                       <h4>{isActuallyVerified ? 'FSSAI License Active' : 'FSSAI Verification Mandatory'}</h4>
+                    </div>
+                    <p className="fssai-box-desc">
+                      {isActuallyVerified 
+                        ? `License #${fssaiId} is active. This batch will be tagged with full safety traceability.` 
+                        : 'Since this is a prepared meal (Main/Fast), a valid FSSAI ID is required for public safety compliance.'}
+                    </p>
+                    {!isActuallyVerified && (
+                      <Button 
+                        size="sm" 
+                        variant="glass" 
+                        className="fssai-activate-inline"
+                        onClick={() => navigate('/profile', { state: { highlightFssai: true } })}
+                      >
+                         LINK LICENSE TO PROCEED
+                      </Button>
+                    )}
+                  </div>
+                )}
                 <div className="form-group">
                   <label className="input-label">{t('qty_assess')}</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -332,7 +332,7 @@ export const Upload: React.FC = () => {
                 </div>
               </div>
 
-              <Button type="submit" size="lg" fullWidth disabled={isSubmitting || !allChecked} className="hover-lift">
+              <Button type="submit" size="lg" fullWidth disabled={isSubmitting || !canSubmitRaw} className="hover-lift">
                 {isSubmitting ? 'Verifying...' : t('publish_btn')}
               </Button>
             </form>
