@@ -57,13 +57,13 @@ export const Landing: React.FC = () => {
       {/* Hero */}
       <section className="hero-section">
         <div className="hero-content">
-          <div className="hero-eyebrow">🌱 Circular Food Redistribution Network</div>
+          <div className="hero-eyebrow"><Leaf size={14} /> Circular Food Redistribution Network</div>
           <h1 className="hero-title">
-            {t('hero_title').split('.')[0]}<br />
-            <span className="gradient-text">{t('hero_title').split('.')[1]}</span>
+            Reduce Waste<br />
+            <span className="gradient-text">Feed Lives</span>
           </h1>
           <p className="hero-subtitle">
-            {t('hero_subtitle')}
+            A real-time, location-based platform connecting restaurants & hotels with NGOs — powered by smart urgency matching.
           </p>
           <div className="hero-actions">
             <Link to={ctaLink} style={{ textDecoration: 'none' }}>
@@ -96,8 +96,9 @@ export const Landing: React.FC = () => {
               <div className="fcard-sub urgency-medium">⏰ 2 hrs left</div>
             </div>
           </div>
+          <div className="center-glow"></div>
           <div className="floating-card fcard-3">
-            <span>+120 people fed today 🥰</span>
+             <div className="fcard-impact-pill">+120 people fed today 🥰</div>
           </div>
         </div>
       </section>
