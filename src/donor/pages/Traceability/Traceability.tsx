@@ -4,9 +4,10 @@ import { Button } from '../../components/ui/Button/Button';
 import { 
   ShieldAlert, Radio, MapPin, Truck, 
   CheckCircle2, AlertOctagon, Share2, Search,
-  History, Navigation
+  History, Navigation, Trash2
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
+import { useToast } from '../../../context/ToastContext';
 import './Traceability.css';
 
 interface ChainStep {
@@ -19,6 +20,7 @@ interface ChainStep {
 
 interface Batch {
   id: string;
+  isMock?: boolean;
   item: string;
   donor: string;
   status: string;
@@ -31,6 +33,7 @@ interface Batch {
 const MOCK_BATCHES: Batch[] = [
   {
     id: '1991',
+    isMock: true,
     item: 'Assorted Pastries (Batch #7742)',
     donor: 'Baskin & Scones',
     status: 'Delivered',
@@ -43,6 +46,7 @@ const MOCK_BATCHES: Batch[] = [
   },
   {
     id: '9921',
+    isMock: true,
     item: 'Paneer Tikka (Batch #9921)',
     donor: 'Hotel Empire',
     status: 'In Transit',
@@ -55,6 +59,7 @@ const MOCK_BATCHES: Batch[] = [
   },
   {
     id: '4421',
+    isMock: true,
     item: 'Veg Biryani (Batch #4421)',
     donor: 'Royal Palace',
     status: 'Listed',
@@ -69,6 +74,7 @@ const MOCK_BATCHES: Batch[] = [
 
 
 export const Traceability: React.FC = () => {
+  const { addToast } = useToast();
   const [activeBatch, setActiveBatch] = useState<string | null>('1991');
   const [isRecalling, setIsRecalling] = useState(false);
   const [recallProgress, setRecallProgress] = useState(0);
@@ -76,34 +82,49 @@ export const Traceability: React.FC = () => {
 
   const [liveBatches, setLiveBatches] = useState<Batch[]>([]);
 
-  React.useEffect(() => {
-    const fetchBatches = async () => {
-      const { data } = await supabase
-        .from('donations')
-        .select('*, profiles(organization_name)')
-        .order('created_at', { ascending: false });
+  const fetchBatches = async () => {
+    const { data } = await supabase
+      .from('donations')
+      .select('*, profiles(organization_name)')
+      .order('created_at', { ascending: false });
 
-      if (data && data.length > 0) {
-        const formatted = data.map(d => ({
-          id: d.id,
-          rawId: d.id,
-          item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
-          donor: d.profiles?.organization_name || 'Anonymous Donor',
-          status: d.status === 'available' ? 'Listed' : d.status === 'claimed' ? 'In Transit' : 'Delivered',
-          time: new Date(d.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          chain: [
-            { role: 'Donor', name: d.profiles?.organization_name || 'Anonymous', time: '12:00 PM', status: 'verified', location: '12.332, 76.612' },
-            { role: 'Logistics', name: d.status === 'available' ? 'Pending Match' : 'Volunteer #AS-09', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' },
-            { role: 'Receiver', name: d.status === 'available' ? 'Searching...' : 'Hope NGO', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' }
-          ]
-        }));
-        setLiveBatches(formatted);
-      }
-    };
+    if (data) {
+      const formatted = data.map(d => ({
+        id: d.id,
+        item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
+        donor: d.profiles?.organization_name || 'Anonymous Donor',
+        status: d.status === 'available' ? 'Listed' : d.status === 'claimed' ? 'In Transit' : 'Delivered',
+        time: new Date(d.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        chain: [
+          { role: 'Donor', name: d.profiles?.organization_name || 'Anonymous', time: '12:00 PM', status: 'verified', location: '12.332, 76.612' },
+          { role: 'Logistics', name: d.status === 'available' ? 'Pending Match' : 'Volunteer #AS-09', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' },
+          { role: 'Receiver', name: d.status === 'available' ? 'Searching...' : 'Hope NGO', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' }
+        ]
+      }));
+      setLiveBatches(formatted);
+    }
+  };
+
+  React.useEffect(() => {
     fetchBatches();
     const ch = supabase.channel('trace_live').on('postgres_changes', { event: '*', table: 'donations', schema: 'public' }, fetchBatches).subscribe();
     return () => { supabase.removeChannel(ch); };
   }, []);
+
+  const handleDeleteBatch = async (e: React.MouseEvent, batchId: string) => {
+    e.stopPropagation(); // Don't select the batch when deleting
+    
+    if (window.confirm('Are you sure you want to delete this listing? This will remove it for receivers too.')) {
+      const { error } = await supabase.from('donations').delete().eq('id', batchId);
+      if (error) {
+        addToast('Error', 'Failed to delete listing', 'warning');
+      } else {
+        addToast('Deleted', 'Listing removed successfully', 'success');
+        if (activeBatch === batchId) setActiveBatch(null);
+        fetchBatches();
+      }
+    }
+  };
 
   // Merge live Supabase data on top of mock data
   const batches = React.useMemo(() => [...liveBatches, ...MOCK_BATCHES], [liveBatches]);
@@ -189,7 +210,26 @@ export const Traceability: React.FC = () => {
                 onClick={() => setActiveBatch(b.id)}
               >
                 <div className="batch-info">
-                  <h4>{b.item}</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <h4>{b.item}</h4>
+                    {!b.isMock && (
+                      <button 
+                        onClick={(e) => handleDeleteBatch(e, b.id)}
+                        className="delete-batch-btn"
+                        title="Delete Listing"
+                        style={{ 
+                          background: 'none', border: 'none', color: '#ff4d4f', 
+                          padding: '4px', cursor: 'pointer', borderRadius: '4px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          marginLeft: '8px', transition: 'background 0.2s'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 77, 79, 0.1)'}
+                        onMouseOut={(e) => e.currentTarget.style.background = 'none'}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
                   <span>{b.donor} • {b.time}</span>
                 </div>
                 <div className={`status-tag ${b.status.toLowerCase().replace(' ', '-')}`}>
