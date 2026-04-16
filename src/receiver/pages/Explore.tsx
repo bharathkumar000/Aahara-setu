@@ -52,7 +52,7 @@ const MOCK_FOOD_ITEMS: FoodItem[] = [
     name: 'Survival Kits (Bread & Milk)',
     donor: 'Central Relief Hub',
     quantity: '50 units',
-    expiresIn: 'ASAP',
+    expiresIn: 'Nil',
     distance: '2.5 km',
     demand: 'Critical',
     category: 'Emergency',
@@ -449,7 +449,6 @@ export const Explore: React.FC = () => {
                                    setClaimedItemIds(prev => [...prev, selectedItem.id]);
                                    
                                    if (logisticsType === 'rapido') {
-                                     const pickupLocation = encodeURIComponent(selectedItem.donor + ' ' + (selectedItem.distance || ''));
                                      window.open(`https://www.rapido.bike/`, '_blank');
                                      addToast('Success', 'Connecting to Rapido Logistics...', 'success');
                                    } else {

@@ -215,27 +215,13 @@ export const Traceability: React.FC = () => {
                 onClick={() => setActiveBatch(b.id)}
               >
                 <div className="batch-info">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <h4 style={{ flex: 1 }}>{b.item}</h4>
+                  <div className="batch-item-header">
+                    <h4>{b.item}</h4>
                     {b.isMock !== true && (
                       <button 
                         onClick={(e) => handleDeleteBatch(e, b.id)}
                         className="delete-batch-btn"
                         title="Delete Listing"
-                        style={{ 
-                          background: '#fff0f0', border: '1px solid #ffccc7', color: '#ff4d4f', 
-                          padding: '6px', cursor: 'pointer', borderRadius: '6px',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          marginLeft: '12px', transition: 'all 0.2s ease-in-out', zIndex: 10
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.background = '#ffccc7';
-                          e.currentTarget.style.transform = 'scale(1.05)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.background = '#fff0f0';
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
                       >
                         <Trash2 size={16} strokeWidth={2.5} />
                       </button>

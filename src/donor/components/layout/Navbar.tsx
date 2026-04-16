@@ -14,8 +14,8 @@ export const Navbar: React.FC = () => {
   const donorLinks = [
     { name: t('nav_home'), path: '/', icon: <Home size={18} /> },
     { name: t('nav_dashboard'), path: '/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: t('nav_traceability'), path: '/traceability', icon: <Radio size={18} /> },
     { name: t('nav_donate'), path: '/upload', icon: <Upload size={18} /> },
+    { name: t('nav_traceability'), path: '/traceability', icon: <Radio size={18} /> },
     { name: t('nav_disasters'), path: '/disasters', icon: <Flame size={18} /> },
     { name: t('nav_alerts'), path: '/notifications', icon: <Bell size={18} /> },
     { name: t('nav_profile'), path: '/profile', icon: <Star size={18} /> },
