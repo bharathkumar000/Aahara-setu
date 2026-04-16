@@ -234,12 +234,65 @@
   .navbar {
     top: 10px;
     padding: 0 12px;
-    height: 64px;
+    height: 60px;
+    width: 96vw;
   }
+  .navbar-logo { margin-right: 12px; }
+  .navbar-logo-img { height: 36px; }
 }
 
 @media (max-width: 768px) {
+  main {
+    padding: 40px 16px 120px !important;
+  }
+
+  .navbar {
+    top: auto;
+    bottom: 20px;
+    height: 75px;
+    padding: 0 16px;
+    animation: slideUpNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    width: 96vw;
+    border-radius: 40px;
+  }
   .nav-link span { display: none; }
-  .nav-link { padding: 12px; }
-  .navbar-links { gap: 4px; }
+  .nav-link { padding: 8px; gap: 0; }
+  .navbar-links { gap: 4px; justify-content: space-around; width: 100%; align-items: center; }
+  .navbar-container { gap: 0; justify-content: space-between; }
+  
+  .donate-pill { padding: 12px !important; }
+  
+  .disaster-pill {
+    background: var(--color-primary) !important;
+    width: 55px;
+    height: 55px;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    box-shadow: 0 8px 24px rgba(79, 99, 61, 0.4);
+    flex-shrink: 0;
+  }
+  
+  .disaster-pill svg {
+    color: white !important;
+    width: 24px;
+    height: 24px;
+    opacity: 1 !important;
+  }
+
+  .nav-link.active {
+    background: transparent;
+    color: var(--color-primary);
+  }
+  
+  .nav-link.active:not(.disaster-pill) {
+     transform: translateY(-4px);
+  }
+}
+
+@keyframes slideUpNavbar {
+  from { transform: translate(-50%, 100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }

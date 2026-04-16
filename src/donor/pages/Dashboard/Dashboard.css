@@ -831,5 +831,130 @@
 
 @media (max-width: 1024px) {
   .kindness-main-row, .kindness-bottom-row { grid-template-columns: 1fr; }
-  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 0; }
+  .dashboard-main-row, .bottom-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container { gap: 16px; }
+
+  .dashboard-tabs-pills {
+    width: 100%;
+    overflow-x: auto;
+    padding: 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dashboard-tabs-pills::-webkit-scrollbar { display: none; }
+  
+  .tab-pill {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .kpi-card {
+    padding: 24px;
+  }
+
+  .kpi-value-text {
+    font-size: 1.8rem;
+  }
+
+  .chart-card {
+    padding: 24px 16px !important;
+  }
+
+  .bar-chart {
+    gap: 4px;
+    height: 140px;
+  }
+
+  .bar-label {
+    font-size: 0.65rem;
+  }
+
+  .kindness-level-card {
+    flex-direction: column;
+    padding: 24px !important;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .level-badge-large {
+    width: 80px;
+    height: 80px;
+  }
+
+  .kindness-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-insights-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px !important;
+    gap: 16px;
+  }
+
+  .ai-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .ai-actions button {
+    width: 100%;
+  }
+
+  .leaderboard-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .user-prof-mini {
+    gap: 8px;
+  }
+
+  .rank-val {
+    width: 20px;
+    font-size: 0.9rem;
+  }
+
+  /* Heatmap Mobile */
+  .heatmap-card {
+    padding: 20px 16px !important;
+  }
+  
+  .heatmap-card .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .heatmap-card .chart-header h3 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .heatmap-zones {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .heatmap-zone {
+    padding: 16px;
+  }
+  
+  .zone-name {
+    font-size: 0.85rem;
+  }
 }

@@ -342,3 +342,79 @@
   gap: 16px;
   text-align: center;
 }
+
+@media (max-width: 900px) {
+  .trace-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    margin-top: 100px; /* Offset for navbar on mobile */
+  }
+
+  .trace-title-group h1 {
+    font-size: 1.8rem;
+  }
+
+  .trace-layout {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+    padding-bottom: 100px;
+  }
+
+  .trace-sidebar {
+    width: 100%;
+  }
+
+  .batch-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .trace-main {
+    width: 100%;
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .chain-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .batch-meta-badges {
+    flex-wrap: wrap;
+  }
+
+  .chain-step {
+    gap: 16px;
+  }
+
+  .step-content {
+    min-width: 0;
+  }
+
+  .step-name {
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  .recall-action-card {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .recall-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trigger-recall-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

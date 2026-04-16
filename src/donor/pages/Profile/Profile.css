@@ -417,10 +417,24 @@
 }
 
 @media (max-width: 900px) {
-  .profile-layout { grid-template-columns: 1fr; }
-  .profile-header-main { flex-direction: column; text-align: center; }
-  .profile-name-row { align-items: center; }
-  .profile-id-group { justify-content: center; }
+  .profile-page-container { padding: 24px 16px 100px; }
+  .profile-layout { grid-template-columns: 1fr; gap: 24px; display: flex; flex-direction: column; }
+  .premium-header-top { padding: 24px; flex-direction: column-reverse; text-align: center; gap: 20px; }
+  .main-org-name { font-size: 1.8rem; margin-bottom: 12px; }
+  .premium-badges-row { justify-content: center; }
+  .premium-header-bottom { padding: 20px 24px; flex-direction: column; gap: 16px; text-align: center; }
+  .premium-meta-info { flex-direction: column; gap: 10px; align-items: center; }
+  .trust-percentage { font-size: 2rem; }
+  .trust-score-header { flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+  
+  /* Ensure Identity is at the TOP and Sidebar (with Sign Out) is at the BOTTOM */
+  .profile-main-content { order: 1; }
+  .profile-sidebar { order: 2; }
+
+  .profile-signout-btn {
+    width: 100%;
+    margin-top: 40px !important;
+  }
 }
 
 /* Profile Language Switcher */

@@ -201,6 +201,28 @@
 @media (max-width: 1000px) {
   .upload-layout { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  
+  .upload-card {
+    padding: 24px !important;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .upload-form {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .form-group {
+    text-align: left;
+    width: 100%;
+  }
+
+  .input-label {
+    text-align: left;
+    display: block;
+    width: 100%;
+  }
 }
 
 /* Force Single Page Side-by-Side Logic */

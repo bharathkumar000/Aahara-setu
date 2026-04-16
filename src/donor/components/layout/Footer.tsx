@@ -1,60 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Heart, Shield, Camera, Share2, Code } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, Upload, LayoutDashboard, Radio } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 import './Footer.css';
 
 export const Footer: React.FC = () => {
+  const { role } = useAuth();
+  const location = useLocation();
+
+  const isReceiver = role === 'receiver';
+
   return (
-    <footer className="footer">
-      <div className="footer-container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <h3 className="footer-logo">Aahara <span className="gradient-text">Setu</span></h3>
-            <p className="footer-tagline">
-              Connecting surplus with social need. Building a zero-waste future for India's food ecosystem through real-time urgency matching and verified trust.
-            </p>
-            <div className="footer-social">
-              <a href="#" className="social-icon"><Share2 size={20} /></a>
-              <a href="#" className="social-icon"><Camera size={20} /></a>
-              <a href="#" className="social-icon"><Code size={20} /></a>
-            </div>
-          </div>
-
-          <div className="footer-links">
-            <h4>Platform</h4>
-            <Link to="/explore">Claim Food</Link>
-            <Link to="/upload">Donate Surplus</Link>
-            <Link to="/dashboard">Impact Matrix</Link>
-            <Link to="/profile">Profile Hub</Link>
-          </div>
-
-          <div className="footer-links">
-            <h4>Resources</h4>
-            <Link to="#">Food Safety Guide</Link>
-            <Link to="#">NGO Partner Kit</Link>
-            <Link to="#">Volunteer Program</Link>
-            <Link to="#">API Documentation</Link>
-          </div>
-
-          <div className="footer-newsletter">
-            <h4>Join the Revolution</h4>
-            <p>Get weekly updates on regional food rescue impact.</p>
-            <div className="newsletter-form">
-              <input type="email" placeholder="Enter your email" className="footer-input" />
-              <button className="footer-submit-btn">JOIN</button>
-            </div>
-          </div>
+    <footer className="floating-footer-wrapper">
+      <div className="floating-footer-dock">
+        <div className="dock-logo">
+          <img src="/donor/logo.png" alt="Aahara Setu Logo" />
         </div>
-
-        <div className="footer-bottom">
-          <div className="footer-copy">
-            © 2026 Aahara Setu. Built with <Heart size={14} fill="currentColor" /> in Bengaluru.
-          </div>
-          <div className="footer-legal">
-            <a href="#"><Shield size={14} /> Safety Standards</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-          </div>
+        
+        <div className="dock-icons">
+          <Link to="/" className={`dock-icon ${location.pathname === '/' ? 'active' : ''}`}>
+            <Home size={24} />
+          </Link>
+          
+          <Link to={isReceiver ? "/receiver" : "/dashboard"} className={`dock-icon ${['/receiver', '/dashboard'].includes(location.pathname) ? 'active' : ''}`}>
+            <LayoutDashboard size={24} />
+          </Link>
+          
+          <Link to="/traceability" className={`dock-icon ${location.pathname === '/traceability' ? 'active' : ''}`}>
+            <Radio size={24} />
+          </Link>
+          
+          {/* Action Button: Upload for donor, Request Food maybe for receiver or another icon? Wait, the screenshot just shows "Upload" arrow icon for the 4th icon */}
+          <Link to={isReceiver ? "/receiver/explore" : "/upload"} className={`dock-icon ${['/upload', '/receiver/explore'].includes(location.pathname) ? 'active' : ''}`}>
+             <Upload size={24} />
+          </Link>
         </div>
       </div>
     </footer>

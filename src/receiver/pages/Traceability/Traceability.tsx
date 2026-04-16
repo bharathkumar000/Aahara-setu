@@ -12,6 +12,7 @@ export const Traceability: React.FC = () => {
   const [activeBatch, setActiveBatch] = useState<number | null>(1);
   const [isRecalling, setIsRecalling] = useState(false);
   const [recallProgress, setRecallProgress] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const batches = [
     {
@@ -65,6 +66,12 @@ export const Traceability: React.FC = () => {
     }, 100);
   };
 
+  const filteredBatches = batches.filter(
+    b => b.item.toLowerCase().includes(searchTerm.toLowerCase()) || 
+         b.id.toString().includes(searchTerm) ||
+         b.donor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const selected = batches.find(b => b.id === activeBatch);
 
   return (
@@ -106,10 +113,15 @@ export const Traceability: React.FC = () => {
         <div className="trace-sidebar">
           <div className="search-batches">
             <Search size={16} />
-            <input type="text" placeholder="Search Batch ID / Item..." />
+            <input 
+              type="text" 
+              placeholder="Search Batch ID / Item..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="batch-list">
-            {batches.map(b => (
+            {filteredBatches.map(b => (
               <div 
                 key={b.id} 
                 className={`batch-item ${activeBatch === b.id ? 'active' : ''}`}
