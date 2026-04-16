@@ -3,7 +3,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { 
   BarChart3, TrendingDown, Package, CheckCircle2, 
-  Leaf, Zap, Trophy, Award, MapPin, Medal, Star, Heart, ExternalLink, Download, Share2
+  Leaf, Zap, Trophy, Award, Medal, Star, Heart, ExternalLink, Download, Share2
 } from 'lucide-react';
 import { useTranslation } from '../../context/LanguageContext';
 import './Dashboard.css';
@@ -22,14 +22,7 @@ const WEEKLY_DATA = [
 
 const MAX_MEALS = Math.max(...WEEKLY_DATA.map(d => d.meals));
 
-const HEATMAP_ZONES = [
-  { name: 'Koramangala', waste: 88, demand: 25, type: 'surplus' },
-  { name: 'Indiranagar', waste: 74, demand: 38, type: 'surplus' },
-  { name: 'BTM Layout', waste: 12, demand: 94, type: 'demand' },
-  { name: 'Jayanagar', waste: 28, demand: 82, type: 'demand' },
-  { name: 'Whitefield', waste: 62, demand: 58, type: 'balanced' },
-  { name: 'Hebbal', waste: 8, demand: 96, type: 'demand' },
-];
+
 
 interface Leader {
   rank: number;
@@ -57,7 +50,7 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchLiveStats = async () => {
       // Fetch available donations
-      const { count: availableCount } = await supabase
+      await supabase
         .from('donations')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'available');
