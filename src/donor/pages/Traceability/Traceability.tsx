@@ -90,7 +90,7 @@ export const Traceability: React.FC = () => {
       .order('created_at', { ascending: false });
 
     if (data) {
-      const formatted: Batch[] = data.map((d: any) => ({
+      const formatted = data.map(d => ({
         id: d.id,
         item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
         donor: d.profiles?.organization_name || 'Anonymous Donor',
@@ -151,7 +151,7 @@ export const Traceability: React.FC = () => {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return batches;
     
-    return batches.filter((b: Batch) => 
+    return batches.filter((b: any) => 
       b.item.toLowerCase().includes(term) || 
       b.id.toString().toLowerCase().includes(term) ||
       b.donor.toLowerCase().includes(term)
@@ -159,7 +159,7 @@ export const Traceability: React.FC = () => {
   }, [searchTerm, batches]);
 
 
-  const selected = React.useMemo(() => batches.find(b => b.id === activeBatch), [activeBatch, batches]);
+  const selected = React.useMemo(() => batches.find((b: any) => b.id === activeBatch), [activeBatch, batches]);
 
   return (
     <div className="traceability-page">
@@ -208,7 +208,7 @@ export const Traceability: React.FC = () => {
             />
           </div>
           <div className="batch-list">
-            {filteredBatches.map((b: Batch) => (
+            {filteredBatches.map(b => (
               <div 
                 key={b.id} 
                 className={`batch-item ${activeBatch === b.id ? 'active' : ''}`}
@@ -263,7 +263,7 @@ export const Traceability: React.FC = () => {
               </div>
 
               <div className="chain-timeline">
-                {selected.chain.map((step: ChainStep, i: number) => (
+                {selected.chain.map((step: any, i: number) => (
                   <div key={i} className={`chain-step ${step.status}`}>
                     <div className="step-marker">
                       {step.role === 'Donor' ? <MapPin size={18} /> : 

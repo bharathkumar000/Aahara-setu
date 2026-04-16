@@ -72,6 +72,7 @@ export const Explore: React.FC = () => {
   const [foodItems, setFoodItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
   const [claimQty, setClaimQty] = useState(1);
+  const [modalStep, setModalStep] = useState<'init' | 'logistics'>('init');
   const [logisticsType, setLogisticsType] = useState<'self' | 'rapido'>('self');
 
   // Sync claim quantity when selected item changes
@@ -79,6 +80,7 @@ export const Explore: React.FC = () => {
     if (selectedItem) {
       const maxQty = parseInt(selectedItem.quantity) || 10;
       setClaimQty(Math.floor(maxQty / 2) || 1);
+      setModalStep('init'); // Always start at init
     }
   }, [selectedItem]);
 
@@ -96,7 +98,7 @@ export const Explore: React.FC = () => {
       }
 
       if (data) {
-        const formatted: FoodItem[] = data.map((d: any) => ({
+        const formatted = data.map((d: any) => ({
           id: d.id,
           name: d.food_name,
           donor: d.profiles?.organization_name || 'Anonymous Donor',
@@ -138,7 +140,7 @@ export const Explore: React.FC = () => {
     };
   }, []);
 
-  const filteredItems = foodItems.filter(item => {
+  const filteredItems = foodItems.filter((item: any) => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.donor.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = activeFilter === 'all' || item.urgencyLevel === activeFilter;
@@ -153,7 +155,7 @@ export const Explore: React.FC = () => {
     return b.urgencyScore - a.urgencyScore;
   });
 
-  const highUrgencyCount = foodItems.filter(i => i.urgencyLevel === 'high').length;
+  const highUrgencyCount = foodItems.filter((i: any) => i.urgencyLevel === 'high').length;
 
   const handleOpenGoogleMaps = (location: string) => {
     const query = encodeURIComponent(location);
@@ -215,7 +217,7 @@ export const Explore: React.FC = () => {
       </div>
 
       <div className="food-grid">
-        {filteredItems.map(item => (
+        {filteredItems.map((item: any) => (
           <Card key={item.id} className={`food-card hover-lift ${item.isDisaster ? 'disaster-card' : ''}`}>
             {item.isDisaster && (
               <div className="disaster-ribbon">
@@ -287,7 +289,8 @@ export const Explore: React.FC = () => {
               <div className="modal-left-receiver">
                 <div className="modal-branding-head">
                   <h2 className="modal-title">
-                    Review <span className="title-accent">Claim</span>
+                    {modalStep === 'init' ? 'Initiate ' : 'Select '}
+                    <span className="title-accent">{modalStep === 'init' ? 'Claim' : 'Logistics'}</span>
                   </h2>
                 </div>
 
