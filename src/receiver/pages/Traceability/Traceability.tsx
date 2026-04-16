@@ -84,7 +84,7 @@ export const Traceability: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (data && data.length > 0) {
-        const formatted = data.map(d => ({
+        const formatted = data.map((d: any) => ({
           id: d.id,
           item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
           donor: d.profiles?.organization_name || 'Anonymous Donor',
