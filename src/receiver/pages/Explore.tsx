@@ -72,7 +72,6 @@ export const Explore: React.FC = () => {
   const [foodItems, setFoodItems] = useState<FoodItem[]>(MOCK_FOOD_ITEMS);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
   const [claimQty, setClaimQty] = useState(1);
-  const [modalStep, setModalStep] = useState<'init' | 'logistics'>('init');
   const [logisticsType, setLogisticsType] = useState<'self' | 'rapido'>('self');
 
   // Sync claim quantity when selected item changes
@@ -80,7 +79,6 @@ export const Explore: React.FC = () => {
     if (selectedItem) {
       const maxQty = parseInt(selectedItem.quantity) || 10;
       setClaimQty(Math.floor(maxQty / 2) || 1);
-      setModalStep('init'); // Always start at init
     }
   }, [selectedItem]);
 
@@ -289,8 +287,7 @@ export const Explore: React.FC = () => {
               <div className="modal-left-receiver">
                 <div className="modal-branding-head">
                   <h2 className="modal-title">
-                    {modalStep === 'init' ? 'Initiate ' : 'Select '}
-                    <span className="title-accent">{modalStep === 'init' ? 'Claim' : 'Logistics'}</span>
+                    Review <span className="title-accent">Claim</span>
                   </h2>
                 </div>
 
