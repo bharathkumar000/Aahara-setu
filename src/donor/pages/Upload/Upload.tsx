@@ -58,7 +58,7 @@ export const Upload: React.FC = () => {
     setCheckedItems(prev => prev.map((v, idx) => idx === i ? !v : v));
   };
 
-  const isFssaiRequired = category === 'Main Course' || category === 'Fast Food';
+  const isFssaiRequired = category === 'Main Course' || category === 'Fast Food' || category === 'Bakery & Sweets';
   const isActuallyVerified = !!fssaiId;
   const canSubmitRaw = allChecked && (!isFssaiRequired || isActuallyVerified);
 
@@ -228,7 +228,7 @@ export const Upload: React.FC = () => {
                     <p className="fssai-box-desc">
                       {isActuallyVerified 
                         ? `License #${fssaiId} is active. This batch will be tagged with full safety traceability.` 
-                        : 'Since this is a prepared meal (Main/Fast), a valid FSSAI ID is required for public safety compliance.'}
+                        : 'Since this is a prepared meal (Main/Fast/Bakery), a valid FSSAI ID is required for public safety compliance.'}
                     </p>
                     {!isActuallyVerified && (
                       <Button 
