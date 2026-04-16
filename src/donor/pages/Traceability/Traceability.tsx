@@ -9,49 +9,43 @@ import {
 import './Traceability.css';
 
 export const Traceability: React.FC = () => {
-  const [activeBatch, setActiveBatch] = useState<number | null>(1);
+  const [activeBatch, setActiveBatch] = useState<string | null>(null);
   const [isRecalling, setIsRecalling] = useState(false);
   const [recallProgress, setRecallProgress] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const batches = React.useMemo(() => [
-    {
-      id: 1,
-      item: 'Assorted Pastries (Batch #7742)',
-      donor: "Baskin & Scones",
-      status: 'Delivered',
-      time: '14:20 PM',
-      chain: [
-        { role: 'Donor', name: 'McDonald\'s - VVCE', time: '12:05 PM', status: 'verified', location: '12.332, 76.612' },
-        { role: 'Logistics', name: 'Volunteer #AS-09 (Rahul K.)', time: '12:45 PM', status: 'verified', location: '12.340, 76.620' },
-        { role: 'Receiver', name: 'Hope Orphanage', time: '13:15 PM', status: 'verified', location: '12.355, 76.645' }
-      ]
-    },
-    {
-      id: 2,
-      item: 'Paneer Tikka (Batch #9921)',
-      donor: 'Hotel Empire',
-      status: 'In Transit',
-      time: '05 mins left',
-      chain: [
-        { role: 'Donor', name: 'Hotel Empire', time: '14:00 PM', status: 'verified', location: '12.298, 76.639' },
-        { role: 'Logistics', name: 'Self Pickup', time: '14:15 PM', status: 'active', location: '12.305, 76.645' },
-        { role: 'Receiver', name: 'City Shelter B', time: '--:--', status: 'pending', location: '12.312, 76.650' }
-      ]
-    },
-    {
-      id: 3,
-      item: 'Veg Biryani (Batch #4421)',
-      donor: 'Royal Palace',
-      status: 'Listed',
-      time: 'Live Now',
-      chain: [
-        { role: 'Donor', name: 'Royal Palace', time: '17:30 PM', status: 'verified', location: '12.312, 76.650' },
-        { role: 'Logistics', name: 'Pending Claim', time: '--:--', status: 'pending', location: 'Waiting...' },
-        { role: 'Receiver', name: 'Awaiting Match', time: '--:--', status: 'pending', location: 'Waiting...' }
-      ]
-    }
-  ], []);
+  const [liveBatches, setLiveBatches] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchBatches = async () => {
+      const { data } = await supabase
+        .from('donations')
+        .select('*, profiles(organization_name)')
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        const formatted = data.map(d => ({
+          id: d.id,
+          rawId: d.id,
+          item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
+          donor: d.profiles?.organization_name || 'Anonymous Donor',
+          status: d.status === 'available' ? 'Listed' : d.status === 'claimed' ? 'In Transit' : 'Delivered',
+          time: new Date(d.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          chain: [
+            { role: 'Donor', name: d.profiles?.organization_name || 'Anonymous', time: '12:00 PM', status: 'verified', location: '12.332, 76.612' },
+            { role: 'Logistics', name: d.status === 'available' ? 'Pending Match' : 'Volunteer #AS-09', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' },
+            { role: 'Receiver', name: d.status === 'available' ? 'Searching...' : 'Hope NGO', time: '--:--', status: d.status === 'available' ? 'pending' : 'active', location: '...' }
+          ]
+        }));
+        setLiveBatches(formatted);
+      }
+    };
+    fetchBatches();
+    const ch = supabase.channel('trace_live').on('postgres_changes', { event: '*', table: 'donations', schema: 'public' }, fetchBatches).subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, []);
+
+  const batches = React.useMemo(() => liveBatches, [liveBatches]);
 
   const handleTriggerRecall = () => {
     setIsRecalling(true);
