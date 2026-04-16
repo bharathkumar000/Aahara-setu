@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { useToast } from '../../../context/ToastContext';
+import { useAuth } from '../../../context/AuthContext';
 import { Input } from '../../components/ui/Input/Input';
 import { Select } from '../../components/ui/Select/Select';
 import { MapPin, CheckSquare, Square, AlertOctagon } from 'lucide-react';
@@ -173,7 +174,7 @@ export const Upload: React.FC = () => {
       setSubmitted(true);
     } catch (error: any) {
       console.error('Error uploading:', error);
-      addToast('Error', `Upload failed: ${error.message || 'Check console.'}`, 'error');
+      addToast('Error', `Upload failed: ${error.message || 'Check console.'}`, 'warning');
     } finally {
       setIsSubmitting(false);
     }

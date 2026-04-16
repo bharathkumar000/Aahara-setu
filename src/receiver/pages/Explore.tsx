@@ -228,7 +228,7 @@ export const Explore: React.FC = () => {
                 {item.urgencyLevel === 'critical' ? '🆘 CRITICAL' : 
                  item.urgencyLevel === 'high' ? t('urgency_high') : 
                  item.urgencyLevel === 'medium' ? t('urgency_med') : t('urgency_low')} 
-                {(item.urgencyLevel === 'high' || item.urgencyLevel === 'critical') && ` - ${item.expiresIn}`}
+                {(item.urgencyLevel === 'high' || item.urgencyLevel === 'critical') && !item.isDisaster && ` - ${item.expiresIn}`}
               </span>
             </div>
             
@@ -247,7 +247,9 @@ export const Explore: React.FC = () => {
               </div>
               <div className="meta-item">
                 <span className="meta-label">Expires in</span>
-                <span className="meta-value text-danger">{item.expiresIn}</span>
+                <span className={`meta-value ${item.isDisaster ? '' : 'text-danger'}`}>
+                  {item.isDisaster ? 'Nil' : item.expiresIn}
+                </span>
               </div>
               <div className="meta-item">
                 <span className="meta-label">Distance</span>
@@ -472,7 +474,9 @@ export const Explore: React.FC = () => {
                    </div>
                    <div className="spec-row">
                       <span className="spec-label">Expiry</span>
-                      <span className="spec-value expiry-highlight">{selectedItem.expiresIn}</span>
+                      <span className={`spec-value ${selectedItem.isDisaster ? '' : 'expiry-highlight'}`}>
+                        {selectedItem.isDisaster ? 'Nil' : selectedItem.expiresIn}
+                      </span>
                    </div>
                 </div>
 
