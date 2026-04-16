@@ -18,6 +18,7 @@ interface ChainStep {
   location: string;
 }
 
+interface Batch {
   id: string;
   isMock?: boolean;
   item: string;
