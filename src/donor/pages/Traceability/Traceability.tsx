@@ -79,6 +79,7 @@ export const Traceability: React.FC = () => {
   const [isRecalling, setIsRecalling] = useState(false);
   const [recallProgress, setRecallProgress] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [deleteModalItem, setDeleteModalItem] = useState<string | null>(null);
 
   const [liveBatches, setLiveBatches] = useState<Batch[]>([]);
 
@@ -89,7 +90,7 @@ export const Traceability: React.FC = () => {
       .order('created_at', { ascending: false });
 
     if (data) {
-      const formatted = data.map(d => ({
+      const formatted: Batch[] = data.map((d: any) => ({
         id: d.id,
         item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
         donor: d.profiles?.organization_name || 'Anonymous Donor',
@@ -111,19 +112,23 @@ export const Traceability: React.FC = () => {
     return () => { supabase.removeChannel(ch); };
   }, []);
 
-  const handleDeleteBatch = async (e: React.MouseEvent, batchId: string) => {
-    e.stopPropagation(); // Don't select the batch when deleting
+  const handleDeleteBatch = (e: React.MouseEvent, batchId: string) => {
+    e.stopPropagation();
+    setDeleteModalItem(batchId);
+  };
+
+  const confirmDeleteSelectedBatch = async () => {
+    if (!deleteModalItem) return;
     
-    if (window.confirm('Are you sure you want to delete this listing? This will remove it for receivers too.')) {
-      const { error } = await supabase.from('donations').delete().eq('id', batchId);
-      if (error) {
-        addToast('Error', 'Failed to delete listing', 'warning');
-      } else {
-        addToast('Deleted', 'Listing removed successfully', 'success');
-        if (activeBatch === batchId) setActiveBatch(null);
-        fetchBatches();
-      }
+    const { error } = await supabase.from('donations').delete().eq('id', deleteModalItem);
+    if (error) {
+      addToast('Error', 'Failed to delete listing', 'warning');
+    } else {
+      addToast('Deleted', 'Listing removed successfully', 'success');
+      if (activeBatch === deleteModalItem) setActiveBatch(null);
+      fetchBatches();
     }
+    setDeleteModalItem(null);
   };
 
   // Merge live Supabase data on top of mock data
@@ -146,7 +151,7 @@ export const Traceability: React.FC = () => {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return batches;
     
-    return batches.filter(b => 
+    return batches.filter((b: Batch) => 
       b.item.toLowerCase().includes(term) || 
       b.id.toString().toLowerCase().includes(term) ||
       b.donor.toLowerCase().includes(term)
@@ -203,7 +208,7 @@ export const Traceability: React.FC = () => {
             />
           </div>
           <div className="batch-list">
-            {filteredBatches.map(b => (
+            {filteredBatches.map((b: Batch) => (
               <div 
                 key={b.id} 
                 className={`batch-item ${activeBatch === b.id ? 'active' : ''}`}
@@ -211,22 +216,28 @@ export const Traceability: React.FC = () => {
               >
                 <div className="batch-info">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <h4>{b.item}</h4>
-                    {!b.isMock && (
+                    <h4 style={{ flex: 1 }}>{b.item}</h4>
+                    {b.isMock !== true && (
                       <button 
                         onClick={(e) => handleDeleteBatch(e, b.id)}
                         className="delete-batch-btn"
                         title="Delete Listing"
                         style={{ 
-                          background: 'none', border: 'none', color: '#ff4d4f', 
-                          padding: '4px', cursor: 'pointer', borderRadius: '4px',
+                          background: '#fff0f0', border: '1px solid #ffccc7', color: '#ff4d4f', 
+                          padding: '6px', cursor: 'pointer', borderRadius: '6px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          marginLeft: '8px', transition: 'background 0.2s'
+                          marginLeft: '12px', transition: 'all 0.2s ease-in-out', zIndex: 10
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 77, 79, 0.1)'}
-                        onMouseOut={(e) => e.currentTarget.style.background = 'none'}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.background = '#ffccc7';
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.background = '#fff0f0';
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={16} strokeWidth={2.5} />
                       </button>
                     )}
                   </div>
@@ -299,6 +310,20 @@ export const Traceability: React.FC = () => {
           )}
         </div>
       </div>
+
+      {deleteModalItem && (
+        <div className="custom-confirm-overlay">
+          <div className="custom-confirm-card">
+            <div className="confirm-icon"><Trash2 size={24} /></div>
+            <h3>Delete this listing?</h3>
+            <p>Are you sure you want to delete this batch? This will remove it for both you and all NGOs.</p>
+            <div className="confirm-actions">
+              <Button variant="outline" onClick={() => setDeleteModalItem(null)}>Cancel</Button>
+              <Button className="confirm-delete-btn" onClick={confirmDeleteSelectedBatch}>Delete Listing</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -84,7 +84,7 @@ export const Traceability: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (data && data.length > 0) {
-        const formatted = data.map(d => ({
+        const formatted: Batch[] = data.map((d: any) => ({
           id: d.id,
           item: `${d.food_name} (Batch #${d.id.slice(0, 4)})`,
           donor: d.profiles?.organization_name || 'Anonymous Donor',
@@ -124,7 +124,7 @@ export const Traceability: React.FC = () => {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return batches;
     
-    return batches.filter(b => 
+    return batches.filter((b: Batch) => 
       b.item.toLowerCase().includes(term) || 
       b.id.toString().toLowerCase().includes(term) ||
       b.donor.toLowerCase().includes(term)
@@ -181,7 +181,7 @@ export const Traceability: React.FC = () => {
             />
           </div>
           <div className="batch-list">
-            {filteredBatches.map(b => (
+            {filteredBatches.map((b: Batch) => (
               <div 
                 key={b.id} 
                 className={`batch-item ${activeBatch === b.id ? 'active' : ''}`}
