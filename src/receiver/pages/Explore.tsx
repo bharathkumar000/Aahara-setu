@@ -79,14 +79,18 @@ export const Explore: React.FC = () => {
   }, [selectedItem]);
 
   useEffect(() => {
-    // 1. Fetch existing items
     const fetchItems = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('donations')
         .select('*, profiles(organization_name)')
         .eq('status', 'available')
         .order('created_at', { ascending: false });
       
+      if (error) {
+        console.error('Error fetching donations:', error);
+        return;
+      }
+
       if (data) {
         const formatted = data.map((d: any) => ({
           id: d.id,
@@ -94,14 +98,16 @@ export const Explore: React.FC = () => {
           donor: d.profiles?.organization_name || 'Anonymous Donor',
           category: d.category,
           quantity: `${d.quantity_value} ${d.quantity_unit}`,
-          expiresIn: new Date(d.expiry_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          distance: '0.4 km', // Default for demo
+          expiresIn: new Date(d.expiry_time) < new Date() 
+            ? 'Expired' 
+            : new Date(d.expiry_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          distance: '0.4 km',
           demand: 'High',
           urgencyScore: d.urgency_score,
-          urgencyLevel: (d.urgency_score > 90 ? 'high' : d.urgency_score > 60 ? 'medium' : 'low') as 'high' | 'medium' | 'low' | 'critical',
+          urgencyLevel: (d.urgency_score > 90 ? 'high' : d.urgency_score > 60 ? 'medium' : 'low') as any,
           isDisaster: d.is_disaster
         }));
-        setFoodItems([...formatted, ...MOCK_FOOD_ITEMS]);
+        setFoodItems(formatted);
       }
     };
 
@@ -109,23 +115,15 @@ export const Explore: React.FC = () => {
 
     // 2. Subscribe to real-time updates
     const channel = supabase
-      .channel('realtime_food')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'donations' }, (payload) => {
-        const newItem = payload.new as any;
-        const formatted: FoodItem = {
-          id: newItem.id,
-          name: newItem.food_name,
-          donor: 'New Donor', // Profile join not easy in single real-time payload
-          category: newItem.category,
-          quantity: `${newItem.quantity_value} ${newItem.quantity_unit}`,
-          expiresIn: new Date(newItem.expiry_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          distance: '0.4 km',
-          demand: 'High',
-          urgencyScore: newItem.urgency_score,
-          urgencyLevel: (newItem.urgency_score > 90 ? 'high' : newItem.urgency_score > 60 ? 'medium' : 'low') as 'high' | 'medium' | 'low' | 'critical',
-          isDisaster: newItem.is_disaster
-        };
-        setFoodItems(prev => [formatted, ...prev]);
+      .channel('public:donations')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'donations' 
+      }, () => {
+        // Simple and robust: Refresh the whole list on any change
+        // This ensures joins (like donor name) are always correct
+        fetchItems();
       })
       .subscribe();
 
@@ -312,9 +310,18 @@ export const Explore: React.FC = () => {
                   <Button variant="outline" className="btn-cancel" style={{ background: '#e7e5d8', color: '#333' }} onClick={() => setSelectedItem(null)}>CANCEL</Button>
                   <Button 
                     className="btn-confirm" 
-                    onClick={() => {
-                        alert(`Claiming ${claimQty} portions of ${selectedItem.name}. Success!`);
-                        setSelectedItem(null);
+                    onClick={async () => {
+                        const { error } = await supabase
+                          .from('donations')
+                          .update({ status: 'claimed' })
+                          .eq('id', selectedItem.id);
+
+                        if (error) {
+                          alert('Error claiming item: ' + error.message);
+                        } else {
+                          alert(`Claiming ${claimQty} portions of ${selectedItem.name}. Success!`);
+                          setSelectedItem(null);
+                        }
                     }}
                   >
                     {t('claim_now').toUpperCase()}
