@@ -215,22 +215,23 @@ export const Traceability: React.FC = () => {
                 onClick={() => setActiveBatch(b.id)}
               >
                 <div className="batch-info">
-                  <div className="batch-item-header">
-                    <h4>{b.item}</h4>
-                    {b.isMock !== true && (
-                      <button 
-                        onClick={(e) => handleDeleteBatch(e, b.id)}
-                        className="delete-batch-btn"
-                        title="Delete Listing"
-                      >
-                        <Trash2 size={16} strokeWidth={2.5} />
-                      </button>
-                    )}
-                  </div>
+                  <h4>{b.item}</h4>
                   <span>{b.donor} • {b.time}</span>
                 </div>
-                <div className={`status-tag ${b.status.toLowerCase().replace(' ', '-')}`}>
-                  {b.status}
+
+                <div className="batch-actions">
+                  {b.isMock !== true && (
+                    <button 
+                      onClick={(e) => handleDeleteBatch(e, b.id)}
+                      className="delete-batch-btn"
+                      title="Delete Listing"
+                    >
+                      <Trash2 size={16} strokeWidth={2.5} />
+                    </button>
+                  )}
+                  <div className={`status-tag ${b.status.toLowerCase().replace(' ', '-')}`}>
+                    {b.status}
+                  </div>
                 </div>
               </div>
             ))}

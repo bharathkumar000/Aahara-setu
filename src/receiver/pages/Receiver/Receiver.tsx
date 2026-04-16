@@ -363,14 +363,6 @@ displayItems.length === 0 ? (
                 </div>
                 
                 <div className="claim-status-col">
-                  <div className={`status-badge status-${item.status}`}>
-                    {item.status === 'in_transit' && <><Truck size={14} /> On the way</>}
-                    {item.status === 'pending' && <><MapPin size={14} /> Self-Pickup</>}
-                    {item.status === 'proof_required' && <><AlertTriangle size={14} /> Needs Proof</>}
-                    {item.status === 'proof_submitted' && <><Clock size={14} /> Reviewing...</>}
-                    {item.status === 'completed' && <><ShieldCheck size={14} /> Reviewed</>}
-                  </div>
-                  
                   <div className="eta-text">{item.eta}</div>
                   
                   {item.status === 'pending' && (
