@@ -268,101 +268,140 @@ export const Explore: React.FC = () => {
         ))}
       </div>
 
-      {/* --- CLAIM POPUP MODAL --- */}
+      {/* --- HIGH-FIDELITY CLAIM POPUP --- */}
       {selectedItem && (
         <div className="modal-overlay animate-fade-in" onClick={() => setSelectedItem(null)}>
           <div className="claim-modal-box glass animate-slide-up" onClick={e => e.stopPropagation()}>
             <div className="modal-split">
               
-              {/* Left Side: Receiver & Interactive Claim */}
+              {/* Left Side: Interactive Claim Action */}
               <div className="modal-left-receiver">
-                <h2 className="modal-title">Initiate <span className="gradient-text">Claim</span></h2>
-                <div className="receiver-meta-info">
-                  <div className="receiver-badge">NGO RECEIVER</div>
-                  <h4 className="receiver-org">{user?.email?.split('@')[0].toUpperCase() || 'HOPE NGO'}</h4>
-                  <p className="receiver-email">{user?.email}</p>
+                <div className="modal-branding-head">
+                  <h2 className="modal-title">Initiate <span className="title-accent">Claim</span></h2>
                 </div>
 
-                <div className="quantity-interaction-box">
-                  <label className="section-label">HOW MUCH QUANTITY DO YOU NEED?</label>
-                  <div className="qty-visual-row">
-                    <input 
-                      type="range" 
-                      min="1" 
-                      max={parseInt(selectedItem.quantity) || 50} 
-                      value={claimQty}
-                      onChange={(e) => setClaimQty(parseInt(e.target.value))}
-                      className="pretty-slider"
-                    />
-                    <input 
-                      type="number" 
-                      className="quantity-val-box"
-                      min="1"
-                      max={parseInt(selectedItem.quantity) || 50}
-                      value={claimQty}
-                      onChange={(e) => setClaimQty(Math.min(parseInt(e.target.value) || 1, parseInt(selectedItem.quantity) || 50))}
-                    />
+                <div className="receiver-card-visual">
+                  <div className="receiver-status-tag">NGO RECEIVER</div>
+                  <div className="receiver-main-row">
+                    <div className="receiver-logo-circle">
+                      {user?.email?.charAt(0).toUpperCase() || 'H'}
+                    </div>
+                    <div className="receiver-details">
+                      <h4 className="receiver-name-bold">{user?.email?.split('@')[0].toUpperCase() || 'HOPE NGO'}</h4>
+                      <p className="receiver-email-sub">{user?.email || 'verified_ngo@aahara.org'}</p>
+                    </div>
                   </div>
-                  <p className="qty-helper-text">Max available: {selectedItem.quantity}</p>
                 </div>
 
-                <div className="modal-actions-footer">
-                  <Button variant="outline" className="btn-cancel" style={{ background: '#e7e5d8', color: '#333' }} onClick={() => setSelectedItem(null)}>CANCEL</Button>
-                  <Button 
-                    className="btn-confirm" 
-                    onClick={async () => {
-                        const { error } = await supabase
-                          .from('donations')
-                          .update({ status: 'claimed' })
-                          .eq('id', selectedItem.id);
+                <div className="quantity-selection-area">
+                  <label className="input-field-label">HOW MUCH QUANTITY DO YOU NEED?</label>
+                  <div className="interactive-qty-row">
+                    <div className="slider-container-pretty">
+                      <input 
+                        type="range" 
+                        min="1" 
+                        max={parseInt(selectedItem.quantity) || 50} 
+                        value={claimQty}
+                        onChange={(e) => setClaimQty(parseInt(e.target.value))}
+                        className="modern-range-slider"
+                      />
+                      <div className="slider-bounds">
+                        <span>1</span>
+                        <span>Max available: {selectedItem.quantity}</span>
+                      </div>
+                    </div>
+                    <div className="qty-numeric-display">
+                      <input 
+                        type="number" 
+                        value={claimQty}
+                        onChange={(e) => setClaimQty(Math.min(parseInt(e.target.value) || 1, parseInt(selectedItem.quantity) || 50))}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                        if (error) {
-                          alert('Error claiming item: ' + error.message);
-                        } else {
-                          alert(`Claiming ${claimQty} portions of ${selectedItem.name}. Success!`);
-                          setSelectedItem(null);
-                        }
-                    }}
+                <div className="modal-primary-actions">
+                  <div className="action-buttons-grid">
+                    <Button 
+                      variant="outline" 
+                      className="modal-cancel-btn"
+                      onClick={() => setSelectedItem(null)}
+                    >
+                      CANCEL
+                    </Button>
+                    <Button 
+                      className="modal-claim-btn" 
+                      onClick={async () => {
+                          const { error } = await supabase
+                            .from('donations')
+                            .update({ status: 'claimed' })
+                            .eq('id', selectedItem.id);
+
+                          if (error) {
+                            alert('Error claiming item: ' + error.message);
+                          } else {
+                            alert(`Claiming ${claimQty} portions of ${selectedItem.name}. Success!`);
+                            setSelectedItem(null);
+                          }
+                      }}
+                    >
+                      CLAIM NOW
+                    </Button>
+                  </div>
+                  <Button 
+                    fullWidth 
+                    className="modal-maps-btn"
+                    onClick={() => handleOpenGoogleMaps(selectedItem.donor + " " + selectedItem.distance)}
                   >
-                    {t('claim_now').toUpperCase()}
+                    <MapIcon size={18} /> OPEN IN GOOGLE MAPS (Leaflet)
                   </Button>
                 </div>
-
-                <Button className="btn-google-maps" onClick={() => handleOpenGoogleMaps(selectedItem.donor + " " + selectedItem.distance)}>
-                  <MapIcon size={18} /> OPEN IN GOOGLE MAPS (Leaflet)
-                </Button>
               </div>
 
-              {/* Right Side: Donor & Item Details */}
-              <div className="modal-right-donor">
-                <label className="section-label-light">DONOR DETAILS</label>
-                <div className="donor-brand-box">
-                   <div className="donor-avatar-mini">{selectedItem.donor.charAt(0)}</div>
-                   <div className="donor-brand-text">
-                      <h3 className="donor-org-name">{selectedItem.donor}</h3>
-                      <span className="donor-verified-badge">✓ Verified Donor</span>
+              {/* Right Side: Donor Identity & Safety (Dark Theme) */}
+              <div className="modal-right-donor-dark">
+                <div className="donor-pane-header">
+                   <label className="pane-sup-label">DONOR DETAILS</label>
+                </div>
+
+                <div className="donor-identity-block">
+                   <div className="donor-pill-avatar">
+                      {selectedItem.donor.charAt(0)}
+                   </div>
+                   <div className="donor-name-stack">
+                      <h3 className="donor-org-full">{selectedItem.donor}</h3>
+                      <div className="verified-check-row">
+                        <div className="check-circle-mini">✓</div>
+                        <span>Verified Donor</span>
+                      </div>
                    </div>
                 </div>
 
-                <div className="item-details-list">
-                   <div className="item-detail-row">
-                      <span className="det-lbl">Item Name</span>
-                      <span className="det-val">{selectedItem.name}</span>
+                <div className="item-specs-grid">
+                   <div className="spec-row">
+                      <span className="spec-label">Item Name</span>
+                      <span className="spec-value">{selectedItem.name}</span>
                    </div>
-                   <div className="item-detail-row">
-                      <span className="det-lbl">Category</span>
-                      <span className="det-val">{selectedItem.category}</span>
+                   <div className="spec-row">
+                      <span className="spec-label">Category</span>
+                      <span className="spec-value">{selectedItem.category}</span>
                    </div>
-                   <div className="item-detail-row">
-                      <span className="det-lbl">Expiry</span>
-                      <span className="det-val text-danger">{selectedItem.expiresIn}</span>
+                   <div className="spec-row">
+                      <span className="spec-label">Expiry</span>
+                      <span className="spec-value expiry-highlight">{selectedItem.expiresIn}</span>
                    </div>
                 </div>
 
-                <Card className="safety-info-card glass" style={{ marginTop: '20px', background: 'rgba(255,255,255,0.05)' }}>
-                    <div className="safety-header" style={{ fontWeight: 800, color: '#fff' }}>🛡️ Safety Assured</div>
-                    <p className="safety-text" style={{ fontSize: '0.8rem', opacity: 0.8, color: '#fff' }}>This donor has passed all 5 points of the Aahara Safety Audit for this batch.</p>
-                </Card>
+                <div className="safety-assurance-section">
+                   <div className="safety-card-dark">
+                      <div className="safety-badge-header">
+                        🛡️ Safety Assured
+                      </div>
+                      <p className="safety-audit-text">
+                        This donor has passed all 5 points of the Aahara Safety Audit for this batch.
+                      </p>
+                   </div>
+                </div>
               </div>
 
             </div>
@@ -370,81 +409,7 @@ export const Explore: React.FC = () => {
         </div>
       )}
 
-      {/* Modal CSS in file */}
-      <style>{`
-        .modal-overlay {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0,0,0,0.7);
-          backdrop-filter: blur(8px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          padding: 20px;
-        }
-        .claim-modal-box {
-          background: #fff;
-          width: 100%;
-          max-width: 900px;
-          border-radius: 28px;
-          overflow: hidden;
-          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-        .modal-split { display: flex; min-height: 500px; }
-        .modal-left-receiver { flex: 1.2; padding: 40px; display: flex; flex-direction: column; gap: 24px; }
-        .modal-right-donor { flex: 0.8; padding: 40px; background: #2c3e2e; color: white; display: flex; flex-direction: column; gap: 24px; }
-        
-        .modal-title { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
-        .receiver-meta-info { 
-           background: rgba(79, 99, 61, 0.05);
-           padding: 20px;
-           border-radius: 16px;
-           border: 1px solid rgba(79, 99, 61, 0.1);
-        }
-        .receiver-badge { font-size: 0.65rem; font-weight: 800; color: #4f633d; margin-bottom: 4px; }
-        .receiver-org { font-size: 1.2rem; font-weight: 800; color: #333; }
-        .receiver-email { font-size: 0.9rem; color: #666; }
 
-        .qty-visual-row { display: flex; align-items: center; gap: 20px; }
-        .quantity-val-box { 
-          width: 80px; 
-          padding: 12px; 
-          border-radius: 12px; 
-          border: 2px solid #e2e8f0;
-          font-weight: 800;
-          font-size: 1.1rem;
-          text-align: center;
-          outline: none;
-        }
-        .quantity-val-box:focus { border-color: #4f633d; }
-        .qty-helper-text { font-size: 0.75rem; color: #94a3b8; font-weight: 600; margin-top: 8px; }
-
-        .modal-actions-footer { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-top: auto; }
-        .btn-google-maps { width: 100%; margin-top: 16px; gap: 10px !important; background: #4f633d !important; color: white !important; }
-
-        .section-label-light { color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .donor-brand-box { display: flex; align-items: center; gap: 16px; }
-        .donor-avatar-mini { 
-          width: 50px; height: 50px; background: #4f633d; border-radius: 14px; 
-          display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;
-        }
-        .donor-brand-text { display: flex; flex-direction: column; }
-        .donor-verified-badge { font-size: 0.75rem; color: #a3e635; font-weight: 600; }
-        
-        .item-details-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
-        .item-detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        .det-lbl { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
-        .det-val { font-size: 0.95rem; font-weight: 700; }
-
-        .animate-slide-up { animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        @media (max-width: 768px) {
-          .modal-split { flex-direction: column; }
-          .modal-right-donor { display: none; }
-        }
-      `}</style>
     </div>
   );
 };

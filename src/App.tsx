@@ -29,6 +29,19 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const isAuthPage = location.pathname === '/login';
+  const showFooter = !isAuthPage;
+
+  const addToast = (title: string, message: string, type: 'info' | 'success' | 'warning') => {
+    const id = Math.random().toString(36).substr(2, 9);
+    setToasts((prev) => [...prev, { id, title, message, type }]);
+    setTimeout(() => removeToast(id), 6000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
   useEffect(() => {
     // Auth Redirects
     if (!isAuthenticated && location.pathname !== '/login') {
@@ -79,19 +92,6 @@ function AppContent() {
 
     return () => { if (t1) clearTimeout(t1); if (t2) clearTimeout(t2); };
   }, [location.pathname]);
-
-  const addToast = (title: string, message: string, type: 'info' | 'success' | 'warning') => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { id, title, message, type }]);
-    setTimeout(() => removeToast(id), 6000);
-  };
-
-  const removeToast = (id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const isAuthPage = location.pathname === '/login';
-  const showFooter = !isAuthPage;
 
   return (
     <>
