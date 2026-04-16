@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '../../../donor/components/ui/Button/Button';
 import { Card } from '../../../donor/components/ui/Card/Card';
 import { 
-  Flame, AlertTriangle, MapPin, Users, Heart, 
-  ArrowRight, Zap, Shield, Plus, X, Globe, Send, Siren
+  AlertTriangle, MapPin, Users, Heart, 
+  Zap, Plus, X, Globe, Send
 } from 'lucide-react';
 import './Disasters.css';
 import { supabase } from '../../../lib/supabase';
