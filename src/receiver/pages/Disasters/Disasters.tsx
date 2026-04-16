@@ -188,47 +188,47 @@ export const Disasters: React.FC = () => {
       {/* --- BROADCAST MODAL --- */}
       {isModalOpen && (
         <div className="modal-overlay glass animate-fade-in" onClick={() => setIsModalOpen(false)} style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
         }}>
           <div className="broadcast-modal-box" onClick={e => e.stopPropagation()} style={{
-            background: '#111', border: '1px solid #333', borderRadius: '24px', padding: '40px',
-            width: '100%', maxWidth: '500px', boxShadow: '0 0 50px rgba(225, 29, 72, 0.2)'
+            background: '#FFFDF7', border: '1px solid #E2E8F0', borderRadius: '24px', padding: '40px',
+            width: '100%', maxWidth: '500px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
           }}>
             <div className="modal-head" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
                <h2 style={{ color: '#e11d48', display: 'flex', alignItems: 'center', gap: '12px', margin: 0 }}>
                  <Globe size={24} /> Broadcast SOS
                </h2>
-               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#666' }}><X /></button>
+               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer' }}><X /></button>
             </div>
 
             <form onSubmit={handleBroadcast} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                <div className="input-group">
-                 <label style={{ fontSize: '0.75rem', color: '#888', fontWeight: 800, textTransform: 'uppercase' }}>Disaster Title</label>
+                 <label style={{ fontSize: '0.75rem', color: '#4F633D', fontWeight: 800, textTransform: 'uppercase' }}>Disaster Title</label>
                  <input 
                    required
                    placeholder="e.g. Flash Floods Relief"
                    value={broadcastData.title}
                    onChange={e => setBroadcastData({...broadcastData, title: e.target.value})}
-                   style={{ width: '100%', background: '#222', border: '1px solid #333', padding: '12px', borderRadius: '12px', color: 'white', marginTop: '4px' }}
+                   style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '12px', borderRadius: '12px', color: '#2D3A2A', marginTop: '4px' }}
                  />
                </div>
                <div className="input-group">
-                 <label style={{ fontSize: '0.75rem', color: '#888', fontWeight: 800, textTransform: 'uppercase' }}>Location</label>
+                 <label style={{ fontSize: '0.75rem', color: '#4F633D', fontWeight: 800, textTransform: 'uppercase' }}>Location</label>
                  <input 
                    required
                    placeholder="Affected Zone / Neighborhood"
                    value={broadcastData.location}
                    onChange={e => setBroadcastData({...broadcastData, location: e.target.value})}
-                   style={{ width: '100%', background: '#222', border: '1px solid #333', padding: '12px', borderRadius: '12px', color: 'white', marginTop: '4px' }}
+                   style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '12px', borderRadius: '12px', color: '#2D3A2A', marginTop: '4px' }}
                  />
                </div>
                <div className="input-group">
-                 <label style={{ fontSize: '0.75rem', color: '#888', fontWeight: 800, textTransform: 'uppercase' }}>Severity</label>
+                 <label style={{ fontSize: '0.75rem', color: '#4F633D', fontWeight: 800, textTransform: 'uppercase' }}>Severity</label>
                  <select 
                    value={broadcastData.severity}
                    onChange={e => setBroadcastData({...broadcastData, severity: e.target.value})}
-                   style={{ width: '100%', background: '#222', border: '1px solid #333', padding: '12px', borderRadius: '12px', color: 'white', marginTop: '4px' }}
+                   style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '12px', borderRadius: '12px', color: '#2D3A2A', marginTop: '4px' }}
                  >
                    <option value="critical">🆘 CRITICAL</option>
                    <option value="high">🟠 HIGH</option>
@@ -236,24 +236,24 @@ export const Disasters: React.FC = () => {
                  </select>
                </div>
                <div className="input-group">
-                 <label style={{ fontSize: '0.75rem', color: '#888', fontWeight: 800, textTransform: 'uppercase' }}>Needs (Comma separated)</label>
+                 <label style={{ fontSize: '0.75rem', color: '#4F633D', fontWeight: 800, textTransform: 'uppercase' }}>Needs (Comma separated)</label>
                  <input 
                    required
                    placeholder="e.g. Rice, Water, Biscuits"
                    value={broadcastData.needs}
                    onChange={e => setBroadcastData({...broadcastData, needs: e.target.value})}
-                   style={{ width: '100%', background: '#222', border: '1px solid #333', padding: '12px', borderRadius: '12px', color: 'white', marginTop: '4px' }}
+                   style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '12px', borderRadius: '12px', color: '#2D3A2A', marginTop: '4px' }}
                  />
                </div>
                <div className="input-group">
-                 <label style={{ fontSize: '0.75rem', color: '#888', fontWeight: 800, textTransform: 'uppercase' }}>People Affected</label>
+                 <label style={{ fontSize: '0.75rem', color: '#4F633D', fontWeight: 800, textTransform: 'uppercase' }}>People Affected</label>
                  <input 
                    type="number"
                    required
                    placeholder="Approx. count"
                    value={broadcastData.people_in_need}
                    onChange={e => setBroadcastData({...broadcastData, people_in_need: e.target.value})}
-                   style={{ width: '100%', background: '#222', border: '1px solid #333', padding: '12px', borderRadius: '12px', color: 'white', marginTop: '4px' }}
+                   style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '12px', borderRadius: '12px', color: '#2D3A2A', marginTop: '4px' }}
                  />
                </div>
 
