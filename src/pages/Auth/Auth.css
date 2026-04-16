@@ -299,11 +299,60 @@
 }
 
 @media (max-width: 900px) {
-  .auth-split-card {
-    grid-template-columns: 1fr;
-    border-radius: 40px;
+  .auth-fullscreen {
+    padding: 10px;
+    background: #fff;
   }
+
+  .auth-split-card {
+    flex-direction: column;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: auto;
+    background: transparent;
+  }
+
   .auth-visual-panel {
     display: none;
+  }
+
+  .auth-form-panel {
+    width: 100%;
+    padding: 40px 20px;
+    transform: none !important;
+    background: transparent;
+  }
+
+  .is-signup .auth-form-panel {
+    transform: none !important;
+  }
+
+  .welcome-text {
+    font-size: 2.2rem;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .access-line {
+    font-size: 0.65rem;
+    margin-bottom: 25px;
+  }
+
+  /* Reset sliding border radius logic for mobile */
+  .is-signup .auth-visual-panel {
+    transform: none !important;
+  }
+
+  .demo-creds {
+    margin-top: 20px;
+  }
+
+  .creds-tags {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .auth-extra-links {
+    margin-top: 40px;
   }
 }
