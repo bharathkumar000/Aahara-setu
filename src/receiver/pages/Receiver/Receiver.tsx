@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '../../../donor/components/ui/Card/Card';
 import { Button } from '../../../donor/components/ui/Button/Button';
 import { MapPin, Clock, Truck, ChevronRight, PackageOpen, Utensils, AlertTriangle, ShieldCheck, UploadCloud, X, ImagePlus, Zap } from 'lucide-react';
@@ -60,6 +61,7 @@ const PAST_CLAIMS: ClaimedItem[] = [
 ];
 
 export const Receiver: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'active' | 'pending_proofs' | 'history' | 'ai_match'>('ai_match');
   
   const [items, setItems] = useState({
@@ -285,7 +287,7 @@ export const Receiver: React.FC = () => {
                        A matching item for your priority demand <strong>"{matchedDemand.item}"</strong> was just listed 
                        by <strong>Baskin & Scones</strong> (0.8km away). Claim it now before others!
                     </p>
-                    <Button fullWidth className="btn-claim-matched">Claim Early (Priority Access)</Button>
+                    <Button fullWidth className="btn-claim-matched" onClick={() => navigate('/receiver/explore')}>Claim Early (Priority Access)</Button>
                   </Card>
                )}
 
@@ -311,7 +313,7 @@ export const Receiver: React.FC = () => {
                   A donor just listed <strong>Mixed Vegetable Sambar</strong> nearby. 
                   Pairing this with your rice increases impact score by <strong>+45%</strong>.
                 </p>
-                <Button fullWidth variant="outline">Claim Matching Item</Button>
+                <Button fullWidth variant="outline" onClick={() => navigate('/receiver/explore')}>Claim Matching Item</Button>
               </Card>
             </div>
           ) : 

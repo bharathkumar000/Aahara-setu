@@ -103,7 +103,7 @@ export const Disasters: React.FC = () => {
     
     // Format needs as an array
     const needsArray = broadcastData.needs
-      ? broadcastData.needs.split(',').map(s => s.trim()).filter(s => s.length > 0)
+      ? broadcastData.needs.split(',').map((s: any) => s.trim()).filter((s: any) => s.length > 0)
       : [];
 
     const { error } = await supabase.from('disaster_alerts').insert({

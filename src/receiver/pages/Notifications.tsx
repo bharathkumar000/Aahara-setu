@@ -76,11 +76,11 @@ export const Notifications: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
   const filtered = filter === 'unread' ? notifications.filter(n => !n.read) : notifications;
 
-  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  const markAllRead = () => setNotifications(prev => prev.map((n: any) => ({ ...n, read: true })));
   const clearAll = () => setNotifications([]);
   
   const markRead = (id: string, link?: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    setNotifications(prev => prev.map((n: any) => n.id === id ? { ...n, read: true } : n));
     if (link) {
       navigate(link);
     }

@@ -305,7 +305,7 @@ export const Explore: React.FC = () => {
                           <Award size={20} />
                         </div>
                         <div className="receiver-details">
-                          <h4 className="receiver-name-bold">{user?.email?.split('@')[0].toUpperCase() || 'HOPE NGO'}</h4>
+                          <h4 className="receiver-name-bold">{(user?.email?.split('@')[0] || 'HOPE NGO').toUpperCase()}</h4>
                           <p className="receiver-email-sub">{user?.email || 'verified_ngo@aahara.org'}</p>
                         </div>
                       </div>
