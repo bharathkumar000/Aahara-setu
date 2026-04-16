@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, LayoutDashboard, Radio, Flame, Bell, Globe } from 'lucide-react';
+import { Home, LayoutDashboard, Radio, Flame, Bell, Globe, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import './Footer.css';
@@ -43,6 +43,10 @@ export const Footer: React.FC = () => {
           
           <Link to={isReceiver ? "/receiver/notifications" : "/notifications"} className={`dock-icon ${['/notifications', '/receiver/notifications'].includes(location.pathname) ? 'active' : ''}`}>
             <Bell size={22} />
+          </Link>
+
+          <Link to="/profile" className={`dock-icon ${location.pathname === '/profile' ? 'active' : ''}`}>
+            <User size={22} />
           </Link>
         </div>
       </div>

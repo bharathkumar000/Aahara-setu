@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
@@ -7,20 +7,34 @@ import {
   MapPin, Star, Truck, Wifi, RefreshCw, Upload, Tag, Link as LinkIcon, CheckCircle2
 } from 'lucide-react';
 import { useTranslation } from '../../context/LanguageContext';
-import './Landing.css';
-
 import { useAuth } from '../../../context/AuthContext';
+import './Landing.css';
 
 const COUNTER_TARGETS = { meals: 12450, people: 8300, donors: 450, co2: 3200 };
 
-import { useInView } from 'react-intersection-observer';
+// Custom hook to replace missing react-intersection-observer
+function useInView({ threshold = 0.1, triggerOnce = true } = {}) {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setInView(true);
+        if (triggerOnce) observer.unobserve(entry.target);
+      }
+    }, { threshold });
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [threshold, triggerOnce]);
+
+  return { ref, inView };
+}
 
 const CountUp: React.FC<{ target: number; duration: number; suffix?: string }> = ({ target, duration, suffix = '' }) => {
   const [count, setCount] = useState(0);
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
     if (inView) {

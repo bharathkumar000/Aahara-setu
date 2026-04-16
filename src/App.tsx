@@ -90,7 +90,7 @@ function AppContent() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const showFooter = location.pathname === '/' || location.pathname === '/profile';
+  const showFooter = !isAuthPage;
 
   const isAuthPage = location.pathname === '/login';
 

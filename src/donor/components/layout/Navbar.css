@@ -250,18 +250,18 @@
   }
 
   .navbar {
-    top: auto;
-    bottom: 20px;
-    height: 75px;
+    top: 10px;
+    height: 64px;
     padding: 0 16px;
-    animation: slideUpNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     width: 96vw;
     border-radius: 40px;
+    bottom: auto; /* Ensure it stays top */
+    transform: translateX(-50%);
   }
-  .nav-link span { display: none; }
-  .nav-link { padding: 8px; gap: 0; }
-  .navbar-links { gap: 4px; justify-content: space-around; width: 100%; align-items: center; }
-  .navbar-container { gap: 0; justify-content: space-between; }
+  .nav-link { display: none; } /* Use Footer Dock for mobile nav */
+  .navbar-logo { margin: 0 auto; }
+  .logo-text { display: none; }
+}
   
   .donate-pill { padding: 12px !important; }
   
