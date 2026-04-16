@@ -1,12 +1,13 @@
-# <div align="center"> <img src="./public/logo.png" width="80" style="margin-bottom: 20px" /><br/> AAHARA SETU <br/> <sub>The Circular Food Redistribution Network</sub> </div>
-
----
-
 <div align="center">
+  <img src="./public/assets/banner.png" width="100%" alt="Aahara Setu - Food Redistribution Network" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 30px;" />
+  
+  <h1>AAHARA SETU</h1>
+  <p><i>The Intelligent Bridge Between Food Surplus and Global Need</i></p>
+
   <img src="https://img.shields.io/badge/UX/UI-PREMIUM-4F633D?style=for-the-badge&logo=figma&logoColor=white" />
   <img src="https://img.shields.io/badge/ENGINE-REACT_19-blue?style=for-the-badge&logo=react&logoColor=white" />
   <img src="https://img.shields.io/badge/DATABASE-SUPABASE_POSTGIS-green?style=for-the-badge&logo=supabase&logoColor=white" />
-  <img src="https://img.shields.io/badge/MOBILE-OPTIMIZED-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Logistics-RAPIDO_API-yellow?style=for-the-badge" />
 </div>
 
 <br/>
