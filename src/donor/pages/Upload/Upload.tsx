@@ -47,7 +47,7 @@ export const Upload: React.FC = () => {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const isDisaster = location.state?.isDisaster || false;
+  const [isDisaster, setIsDisaster] = useState(location.state?.isDisaster || false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -263,7 +263,7 @@ export const Upload: React.FC = () => {
             setExpiry(new Date(Date.now() + 3600000).toISOString().slice(0, 16));
             setAddress('2.5 km - Central Relief Hub');
             setCheckedItems(new Array(SAFETY_CHECKLIST.length).fill(true));
-            navigate('/upload', { state: { isDisaster: true } });
+            setIsDisaster(true);
           }}
           style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444', borderRadius: '100px', cursor: 'pointer', fontWeight: 600 }}
         >
@@ -279,6 +279,7 @@ export const Upload: React.FC = () => {
             setExpiry(new Date(Date.now() + 2700000).toISOString().slice(0, 16));
             setAddress('0.4 km - Gaurav Sweets');
             setCheckedItems(new Array(SAFETY_CHECKLIST.length).fill(true));
+            setIsDisaster(false);
           }}
           style={{ padding: '8px 16px', background: 'rgba(79, 99, 61, 0.1)', border: '1px solid #4F633D', color: '#4F633D', borderRadius: '100px', cursor: 'pointer', fontWeight: 600 }}
         >
@@ -294,6 +295,7 @@ export const Upload: React.FC = () => {
             setExpiry(new Date(Date.now() + 7200000).toISOString().slice(0, 16));
             setAddress('1.2 km - Skyline Hotels');
             setCheckedItems(new Array(SAFETY_CHECKLIST.length).fill(true));
+            setIsDisaster(false);
           }}
           style={{ padding: '8px 16px', background: 'rgba(139, 161, 148, 0.1)', border: '1px solid #8BA194', color: '#4F633D', borderRadius: '100px', cursor: 'pointer', fontWeight: 600 }}
         >

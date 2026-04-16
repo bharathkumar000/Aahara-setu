@@ -18,9 +18,9 @@ export const Auth: React.FC = () => {
     
     // Demo identification logic
     let targetRole: UserRole = role;
-    if (email === '1' && password === '1') targetRole = 'donor';
-    if (email === '2' && password === '2') targetRole = 'receiver';
-    if (email === '3' && password === '3') targetRole = 'admin';
+    if (email === '11' && password === '11') targetRole = 'donor';
+    if (email === '22' && password === '22') targetRole = 'receiver';
+    if (email === '33' && password === '33') targetRole = 'admin';
 
     login(email, targetRole);
     
@@ -120,9 +120,9 @@ export const Auth: React.FC = () => {
                <div className="demo-creds">
                   <span>DEMO CREDENTIALS (ID - PASS):</span>
                   <div className="creds-tags">
-                     <span className="tag blue">DONOR: 1 - 1</span>
-                     <span className="tag green">NGO: 2 - 2</span>
-                     <span className="tag yellow">ADMIN: 3 - 3</span>
+                     <span className="tag blue">DONOR: 11 - 11</span>
+                     <span className="tag green">NGO: 22 - 22</span>
+                     <span className="tag yellow">ADMIN: 33 - 33</span>
                   </div>
                </div>
              )}
