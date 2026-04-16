@@ -22,11 +22,14 @@ export const Profile: React.FC = () => {
   const [isEditingFssai, setIsEditingFssai] = useState(false);
   const [isFetchingFssai, setIsFetchingFssai] = useState(false);
   const [fssaiStatus, setFssaiStatus] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState('✨ Settings mode enabled. You can now modify your organization details.');
 
   React.useEffect(() => {
     if (location.state?.highlightFssai) {
       setIsEditingFssai(true);
+      setToastMessage('✨ Verification required. Please enter your ID.');
       setShowToast(true);
+      setTimeout(() => setShowToast(false), 4000);
       // Optional: scroll to the FSSAI section
       setTimeout(() => {
         const el = document.querySelector('.meta-grid');
@@ -39,8 +42,9 @@ export const Profile: React.FC = () => {
   const isReceiver = role === 'receiver';
 
   const handleEditProfile = () => {
+    setToastMessage('✨ Settings mode enabled. You can now modify your organization details.');
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setTimeout(() => setShowToast(false), 4000);
   };
 
   const handleSaveFssai = () => {
@@ -56,7 +60,9 @@ export const Profile: React.FC = () => {
         setIsEditingFssai(false);
         setIsFetchingFssai(false);
         setFssaiStatus(null);
+        setToastMessage('✅ Verification Successful! You can now start donating.');
         setShowToast(true);
+        setTimeout(() => setShowToast(false), 4000);
         // Refresh page or update state to allow upload
       }, 1500);
     }, 1500);
@@ -66,7 +72,23 @@ export const Profile: React.FC = () => {
     <div className="profile-page-container">
       {showToast && (
         <div className="custom-toast">
-          ✨ Settings mode enabled. You can now modify your organization details.
+          <span>{toastMessage}</span>
+          <button 
+            onClick={() => setShowToast(false)} 
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              color: 'inherit', 
+              cursor: 'pointer', 
+              fontSize: '1.2rem', 
+              padding: '0 4px',
+              marginLeft: '8px',
+              fontWeight: 'bold',
+              opacity: 0.6
+            }}
+          >
+            ×
+          </button>
         </div>
       )}
       <div className="profile-layout">

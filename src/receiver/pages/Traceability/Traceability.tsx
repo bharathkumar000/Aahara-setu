@@ -37,6 +37,18 @@ export const Traceability: React.FC = () => {
         { role: 'Logistics', name: 'Self Pickup', time: '14:15 PM', status: 'active', location: '12.305, 76.645' },
         { role: 'Receiver', name: 'City Shelter B', time: '--:--', status: 'pending', location: '12.312, 76.650' }
       ]
+    },
+    {
+      id: 3,
+      item: 'Veg Biryani (Batch #4421)',
+      donor: 'Royal Palace',
+      status: 'Listed',
+      time: 'Live Now',
+      chain: [
+        { role: 'Donor', name: 'Royal Palace', time: '17:30 PM', status: 'verified', location: '12.312, 76.650' },
+        { role: 'Logistics', name: 'Pending Claim', time: '--:--', status: 'pending', location: 'Waiting...' },
+        { role: 'Receiver', name: 'Awaiting Match', time: '--:--', status: 'pending', location: 'Waiting...' }
+      ]
     }
   ];
 

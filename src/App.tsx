@@ -40,7 +40,7 @@ function AppContent() {
                                 ['/profile', '/traceability', '/disasters', '/'].includes(location.pathname);
       
       if (role === 'receiver' && !isReceiverAllowed) {
-        navigate('/receiver');
+        navigate('/');
       }
       if (role === 'donor' && location.pathname.startsWith('/receiver')) {
         navigate('/');

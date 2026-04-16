@@ -139,6 +139,45 @@
   align-items: flex-start;
 }
 
+.dashboard-tabs-pills {
+  display: flex;
+  background: white;
+  padding: 6px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(0,0,0,0.05);
+  gap: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  margin-bottom: 24px;
+}
+
+.tab-pill {
+  border: none;
+  background: white;
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748B;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.tab-pill.active {
+  background: #4F633D;
+  color: white;
+  box-shadow: 0 8px 20px rgba(79, 99, 61, 0.3);
+  border-color: #4F633D;
+}
+
+.tab-pill:not(.active):hover {
+  background: rgba(0,0,0,0.02);
+  color: #1E293B;
+}
+
 .kpi-icon-badge {
   width: 44px; height: 44px;
   border-radius: 14px;

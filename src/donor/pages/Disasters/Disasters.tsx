@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
-import { Flame, AlertTriangle, MapPin, Users, Heart, ArrowRight, Zap, Shield } from 'lucide-react';
+import { Flame, AlertTriangle, MapPin, Users, Heart, ArrowRight, Zap, Shield, Plus } from 'lucide-react';
 import './Disasters.css';
 import { supabase } from '../../../lib/supabase';
 
@@ -90,6 +90,8 @@ export const Disasters: React.FC = () => {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   return (
     <div className="disasters-container">
       <header className="disasters-header">
@@ -109,11 +111,20 @@ export const Disasters: React.FC = () => {
         </div>
       ) : (
         <section className="active-alerts">
-          <div className="section-header-row">
-            <h2 className="alert-section-title">
+          <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 className="alert-section-title" style={{ margin: 0 }}>
               <AlertTriangle className="alert-icon-pulse" /> Active Critical Zones
             </h2>
-            <span className="live-badge">LIVE UPDATES</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <Button 
+                className="broadcast-btn animate-pulse" 
+                onClick={() => showToast('Switch to NGO/Receiver mode to Broadcast Emergency alerts.')}
+                style={{ borderRadius: '100px', background: '#e11d48', color: 'white', gap: '8px', height: '40px', fontSize: '0.9rem' }}
+              >
+                <Plus size={18} /> Broadcast Emergency
+              </Button>
+              <span className="live-badge" style={{ margin: 0 }}>LIVE UPDATES</span>
+            </div>
           </div>
           
           <div className="alerts-grid">

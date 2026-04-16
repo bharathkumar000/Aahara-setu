@@ -25,7 +25,7 @@ export const Auth: React.FC = () => {
     login(email, targetRole);
     
     if (targetRole === 'donor') navigate('/');
-    else if (targetRole === 'receiver') navigate('/receiver');
+    else if (targetRole === 'receiver') navigate('/');
     else if (targetRole === 'admin') navigate('/admin');
   };
 

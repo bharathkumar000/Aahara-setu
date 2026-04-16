@@ -117,17 +117,10 @@ export const Disasters: React.FC = () => {
   return (
     <div className="disasters-container">
       <header className="disasters-header">
-        <div className="header-top-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <div className="header-top-row">
           <div className="emergency-badge">
             <Siren size={16} /> EMERGENCY RESPONSE ACTIVE
           </div>
-          <Button 
-            className="broadcast-btn animate-pulse" 
-            onClick={() => setIsModalOpen(true)}
-            style={{ borderRadius: '100px', background: '#e11d48', color: 'white', gap: '8px' }}
-          >
-            <Plus size={20} /> Broadcast Emergency
-          </Button>
         </div>
         
         <h1 className="disasters-title">Disaster <span className="relief-text">Relief</span> Portal</h1>
@@ -138,11 +131,20 @@ export const Disasters: React.FC = () => {
       </header>
 
       <section className="active-alerts">
-        <div className="section-header-row">
-          <h2 className="alert-section-title">
+        <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 className="alert-section-title" style={{ margin: 0 }}>
             <AlertTriangle className="alert-icon-pulse" /> Active Critical Zones
           </h2>
-          <span className="live-badge">LIVE UPDATES</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Button 
+              className="broadcast-btn animate-pulse" 
+              onClick={() => setIsModalOpen(true)}
+              style={{ borderRadius: '100px', background: '#e11d48', color: 'white', gap: '8px', height: '40px', fontSize: '0.9rem' }}
+            >
+              <Plus size={18} /> Broadcast Emergency
+            </Button>
+            <span className="live-badge" style={{ margin: 0 }}>LIVE UPDATES</span>
+          </div>
         </div>
         
         <div className="alerts-grid">
