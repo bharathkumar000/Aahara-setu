@@ -15,7 +15,9 @@ export const Footer: React.FC = () => {
       <div className="floating-footer-dock">
         
         <div className="dock-logo">
-          <img src="/logo_aahara.png" alt="Aahara Setu" />
+          <Link to="/">
+            <img src="/donor/logo.png" alt="Aahara Setu" />
+          </Link>
         </div>
 
         <div className="dock-icons">
@@ -27,7 +29,7 @@ export const Footer: React.FC = () => {
             <LayoutDashboard size={22} />
           </Link>
 
-          <Link to="/explore" className={`dock-icon ${location.pathname === '/explore' ? 'active' : ''}`}>
+          <Link to={isReceiver ? "/receiver/explore" : "/explore"} className={`dock-icon ${location.pathname.includes('/explore') ? 'active' : ''}`}>
             <Globe size={22} />
           </Link>
           
@@ -39,7 +41,7 @@ export const Footer: React.FC = () => {
             <Flame size={24} />
           </Link>
           
-          <Link to="/notifications" className={`dock-icon ${location.pathname === '/notifications' ? 'active' : ''}`}>
+          <Link to={isReceiver ? "/receiver/notifications" : "/notifications"} className={`dock-icon ${['/notifications', '/receiver/notifications'].includes(location.pathname) ? 'active' : ''}`}>
             <Bell size={22} />
           </Link>
         </div>
