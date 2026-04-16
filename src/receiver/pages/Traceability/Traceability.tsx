@@ -181,7 +181,7 @@ export const Traceability: React.FC = () => {
             />
           </div>
           <div className="batch-list">
-            {filteredBatches.map(b => (
+            {filteredBatches.map((b: any) => (
               <div 
                 key={b.id} 
                 className={`batch-item ${activeBatch === b.id ? 'active' : ''}`}
