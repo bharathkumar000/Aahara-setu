@@ -251,9 +251,9 @@ export const ClaimView: React.FC = () => {
                   <div style={{ textAlign: 'center', margin: '8px 0', fontSize: '0.75rem', fontWeight: 800, color: '#999', letterSpacing: '1px' }}>OR BOOK PARTNER</div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://ola.com')}>🚕 Ola</Button>
-                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://rapido.com')}>🏍️ Rapido</Button>
-                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://uber.com')}>🚙 Uber</Button>
+                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://www.olacabs.com/')}>🚕 Ola</Button>
+                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://www.rapido.bike/')}>🏍️ Rapido</Button>
+                    <Button variant="outline" style={{ borderRadius: '12px', height: '50px', fontWeight: 700 }} onClick={() => window.open('https://www.uber.com/')}>🚙 Uber</Button>
                   </div>
                   
                   <Button variant="ghost" fullWidth style={{ marginTop: '16px', color: '#666', fontWeight: 700 }} onClick={() => setStep('details')}>

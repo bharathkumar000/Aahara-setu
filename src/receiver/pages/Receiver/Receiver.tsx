@@ -4,6 +4,7 @@ import { Card } from '../../../donor/components/ui/Card/Card';
 import { Button } from '../../../donor/components/ui/Button/Button';
 import { MapPin, Clock, Truck, ChevronRight, PackageOpen, Utensils, AlertTriangle, ShieldCheck, UploadCloud, X, ImagePlus, Zap } from 'lucide-react';
 import '../../styles/Receiver.css';
+import { supabase } from '../../../lib/supabase';
 
 interface ClaimedItem {
   id: string;
@@ -27,7 +28,7 @@ const ACTIVE_CLAIMS: ClaimedItem[] = [
   }
 ];
 
-const PROOF_REQUIRED_CLAIMS: ClaimedItem[] = [
+const MOCK_PROOFS: ClaimedItem[] = [
   { 
     id: 'p1', 
     name: 'Fresh Salad Bowls', 
@@ -66,9 +67,39 @@ export const Receiver: React.FC = () => {
   
   const [items, setItems] = useState({
     active: ACTIVE_CLAIMS,
-    proofs: PROOF_REQUIRED_CLAIMS,
+    proofs: MOCK_PROOFS,
     history: PAST_CLAIMS
   });
+
+  const fetchLiveClaims = async () => {
+    const { data, error } = await supabase
+      .from('claims')
+      .select('*, donations(*, profiles(organization_name))')
+      .order('created_at', { ascending: false });
+    
+    if (data) {
+      const liveProofs: ClaimedItem[] = data.map((c: any) => ({
+        id: c.id,
+        name: c.donations?.food_name || 'Food Batch',
+        donor: c.donations?.profiles?.organization_name || 'Anonymous Donor',
+        quantity: `${c.donations?.quantity_value} ${c.donations?.quantity_unit}`,
+        status: (c.status === 'active' ? 'proof_required' : 'completed') as any,
+        eta: 'Delivered Just Now',
+        distance: 'Local'
+      }));
+      
+      setItems(prev => ({
+        ...prev,
+        proofs: [...liveProofs, ...MOCK_PROOFS]
+      }));
+    }
+  };
+
+  React.useEffect(() => {
+    fetchLiveClaims();
+    const sub = supabase.channel('claims_realtime').on('postgres_changes', { event: '*', table: 'claims', schema: 'public' }, fetchLiveClaims).subscribe();
+    return () => { supabase.removeChannel(sub); };
+  }, []);
 
   const [uploadingForId, setUploadingForId] = useState<string | null>(null);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -82,7 +113,7 @@ export const Receiver: React.FC = () => {
   const requiresProof = items.proofs.some(i => i.status === 'proof_required');
 
   const unverifiedCount = items.proofs.length;
-  const accountLocked = unverifiedCount >= 2;
+  const accountLocked = unverifiedCount >= 5; // Relaxed for demo
 
   const handleUploadClick = (id: string) => {
     setUploadingForId(id);
@@ -354,17 +385,6 @@ displayItems.length === 0 ? (
                     </Button>
                   )}
 
-                  {item.status === 'proof_submitted' && (
-                    <Button className="track-btn" disabled style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', border: '1px solid #f59e0b' }}>
-                      <Clock size={18} style={{ marginRight: '6px' }} /> Reviewing...
-                    </Button>
-                  )}
-
-                  {item.status === 'completed' && (
-                    <Button className="track-btn" disabled style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid #22c55e' }}>
-                      <ShieldCheck size={18} style={{ marginRight: '6px' }} /> Verified & Reviewed
-                    </Button>
-                  )}
                 </div>
 
               </Card>

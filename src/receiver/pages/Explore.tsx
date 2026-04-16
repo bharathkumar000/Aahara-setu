@@ -414,20 +414,54 @@ export const Explore: React.FC = () => {
                           </Button>
                           <Button 
                             className="modal-claim-btn" 
-                            onClick={() => {
-                                 // Local removal for stable demo (bypasses DB column errors)
-                                 setClaimedItemIds(prev => [...prev, selectedItem.id]);
-                                 
-                                 if (logisticsType === 'rapido') {
-                                   const pickupLocation = encodeURIComponent(selectedItem.donor + ' ' + (selectedItem.distance || ''));
-                                   window.open(`https://parcel.rapido.bike/?pickup=${pickupLocation}`, '_blank');
-                                   addToast('Success', 'Redirecting to Rapido Parcel...', 'success');
-                                 } else {
-                                   addToast('Success', 'Item claimed successfully! NGO informed.', 'success');
-                                 }
+                            onClick={async () => {
+                                 try {
+                                   // 1. Get current profile ID for receiver
+                                   const { data: profile } = await supabase
+                                     .from('profiles')
+                                     .select('id')
+                                     .eq('role', 'receiver')
+                                     .limit(1)
+                                     .single();
 
-                                 setSelectedItem(null);
-                                 setModalStep('init');
+                                   const receiverId = profile?.id || '00000000-0000-0000-0000-000000000000';
+
+                                   // 2. Update donation status in DB
+                                   const { error: updateError } = await supabase
+                                     .from('donations')
+                                     .update({ status: 'claimed' })
+                                     .eq('id', selectedItem.id);
+
+                                   if (updateError) throw updateError;
+
+                                   // 3. Create entry in claims table
+                                   const { error: claimError } = await supabase
+                                     .from('claims')
+                                     .insert([{
+                                       donation_id: selectedItem.id,
+                                       receiver_id: receiverId,
+                                       status: 'active'
+                                     }]);
+                                   
+                                   if (claimError) throw claimError;
+
+                                   // Local removal for UI responsiveness
+                                   setClaimedItemIds(prev => [...prev, selectedItem.id]);
+                                   
+                                   if (logisticsType === 'rapido') {
+                                     const pickupLocation = encodeURIComponent(selectedItem.donor + ' ' + (selectedItem.distance || ''));
+                                     window.open(`https://www.rapido.bike/`, '_blank');
+                                     addToast('Success', 'Connecting to Rapido Logistics...', 'success');
+                                   } else {
+                                     addToast('Success', 'Item claimed successfully! NGO informed.', 'success');
+                                   }
+
+                                   setSelectedItem(null);
+                                   setModalStep('init');
+                                 } catch (err: any) {
+                                   console.error('Claim error:', err);
+                                   addToast('Error', 'Failed to claim item. Check console.', 'warning');
+                                 }
                              }}
                           >
                             CONFIRM CLAIM

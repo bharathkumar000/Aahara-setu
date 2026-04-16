@@ -41,7 +41,7 @@ export const Disasters: React.FC = () => {
           peopleInNeed: 1200,
           suppliesNeeded: 'Ready-to-eat meals, Water, Biscuits',
           impact: 'Severely affected by monsoon',
-          timeRemaining: 'ASAP'
+          timeRemaining: 'Nil'
         },
         {
           id: 'mock-d-2',
@@ -64,11 +64,12 @@ export const Disasters: React.FC = () => {
           peopleInNeed: d.people_in_need || 500,
           suppliesNeeded: Array.isArray(d.needs) ? d.needs.join(', ') : (d.needs || 'Various food items'),
           impact: d.impact_desc || 'Urgent support required',
-          timeRemaining: 'ASAP'
+          timeRemaining: 'Nil'
         }));
         setActiveDisasters(formatted);
       } else {
-        setActiveDisasters(MOCK_DISASTERS);
+        const MOCK_NIL = MOCK_DISASTERS.map(d => ({ ...d, timeRemaining: d.id === 'mock-d-1' ? 'Nil' : d.timeRemaining }));
+        setActiveDisasters(MOCK_NIL);
       }
     } catch (err) {
       console.error('Fetch error:', err);
