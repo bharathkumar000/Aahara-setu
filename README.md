@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./public/assets/banner.png" width="100%" alt="Aahara Setu - Food Redistribution Network" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 30px;" />
   
-  <h1>AAHARA SETU</h1>
+  <h1>AAHARA SETUU</h1>
   <p><i>The Intelligent Bridge Between Food Surplus and Global Need</i></p>
 
   <img src="https://img.shields.io/badge/UX/UI-PREMIUM-4F633D?style=for-the-badge&logo=figma&logoColor=white" />
